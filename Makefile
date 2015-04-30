@@ -1,4 +1,4 @@
-TARGET=thesis
+TARGET := thesis
 include Makefile.include
-PDFLATEX := $(PDFLATEX) -synctex=1
+PDFLATEX := $(subst pdflatex,xelatex,$(PDFLATEX)) -synctex=1
 EXTRACLEAN := $(TARGET).synctex.gz
