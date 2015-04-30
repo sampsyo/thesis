@@ -170,17 +170,25 @@ work and the contributions to the original style.
 
 \cleardoublepage
 
+
+% PART 1
 \pagenumbering{arabic}
 %\setcounter{page}{90}
 % use \cleardoublepage here to avoid problems with pdfbookmark
 \cleardoublepage
 \part{Some Kind of Manual}
-\include{Chapters/Chapter01}
+\chapter{Introduction}
+\label{ch:introduction}
+A bunch of text will go here.
 
+
+% APPENDIX
 \appendix
 \cleardoublepage
 \part{Appendix}
-\include{Chapters/Chapter0A}
+\chapter{Appendix Test}
+An appendix could go here.
+
 
 % BIB
 % work-around to have small caps also here in the headline
@@ -193,6 +201,7 @@ work and the contributions to the original style.
 \bibliographystyle{plainnat}
 \label{app:bibliography}
 \bibliography{Bibliography}
+
 
 % COLOPHON
 \pagestyle{empty}
@@ -212,6 +221,7 @@ Happy users of \texttt{classicthesis} usually send a real postcard to the author
 \end{center}
 \bigskip
 \noindent\finalVersionString
+
 
 % DECLARATION
 \refstepcounter{dummy}
