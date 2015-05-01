@@ -6,11 +6,11 @@
 
 \input{classicthesis-config}
 
-%\hyphenation{put special hyphenation here}
+% I don't know why classicthesis wants this. Something about hyperlinks?
+\newcounter{dummy}
 
 \begin{document}
 \raggedbottom
-\selectlanguage{american}
 %\renewcommand*{\bibname}{new name}
 \pagenumbering{roman}
 \pagestyle{plain}
@@ -124,11 +124,6 @@ Legovini, Steffen Prochnow, Nicolas Repp, Hinrich Harms,
  Roland Winkler, J\"org Weber,
  and the whole \LaTeX-community for support, ideas and
  some great software.
-\bigskip
-\noindent\emph{Regarding \mLyX}: The \mLyX\ port was intially done by
-\emph{Nicholas Mariette} in March 2009 and continued by
-\emph{Ivo Pletikosi\'c} in 2011. Thank you very much for your
-work and the contributions to the original style.
 \endgroup
 
 
@@ -211,7 +206,7 @@ An appendix could go here.
 \section*{Colophon}
 This document was typeset using the typographical look-and-feel \texttt{classicthesis} developed by Andr\'e Miede.
 The style was inspired by Robert Bringhurst's seminal book on typography ``\emph{The Elements of Typographic Style}''.
-\texttt{classicthesis} is available for both \LaTeX\ and \mLyX:
+\texttt{classicthesis} is available for both \LaTeX:
 \begin{center}
 \url{http://code.google.com/p/classicthesis/}
 \end{center}
