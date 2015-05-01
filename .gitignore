@@ -1,0 +1,11 @@
+thesis.pdf
+*.bbl
+*.blg
+*.log
+*.out
+*.vtc
+*.lof
+*.lot
+*.synctex.gz
+*.toc
+revision.tex
