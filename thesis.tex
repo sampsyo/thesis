@@ -4,34 +4,20 @@
                 american,%
                 ]{scrreprt}
 
-% Title page data.
-\newcommand{\myTitle}{A Classic Thesis Style\xspace}
-\newcommand{\mySubtitle}{An Homage to The Elements of Typographic Style\xspace}
-\newcommand{\myDegree}{Doktor-Ingenieur (Dr.-Ing.)\xspace}
-\newcommand{\myName}{Andr\'e Miede\xspace}
-\newcommand{\myProf}{Put name here\xspace}
-\newcommand{\myOtherProf}{Put name here\xspace}
-\newcommand{\mySupervisor}{Put name here\xspace}
-\newcommand{\myFaculty}{Put data here\xspace}
-\newcommand{\myDepartment}{Put data here\xspace}
-\newcommand{\myUni}{Put data here\xspace}
-\newcommand{\myLocation}{Darmstadt\xspace}
-\newcommand{\myTime}{August 2012\xspace}
-\newcommand{\myVersion}{version 4.1\xspace}
-
 \usepackage[square,numbers]{natbib}
 \usepackage{amsmath}
-
 \usepackage{xspace} % to get the spacing after macros right
 \usepackage{mparhack} % get marginpar right
 \usepackage{fixltx2e} % fixes some LaTeX stuff
 \usepackage[printonlyused,smaller]{acronym}
-
 \usepackage[pdfpagelabels]{hyperref}
 \usepackage{graphicx}
-
 \usepackage{tabularx}
     \setlength{\extrarowheight}{3pt} % increase table row height
+\usepackage{etoolbox}
+
+% Thesis metadata.
+\input{metadata}
 
 \hypersetup{
     colorlinks=false,
@@ -39,8 +25,8 @@
     linktocpage=true,
     breaklinks=true,
     hypertexnames=true,
-    pdftitle={\myTitle},
-    pdfauthor={\textcopyright\ \myName, \myUni, \myFaculty},
+    pdftitle={\metadata{title}},
+    pdfauthor={\textcopyright\ \metadata{author}, \metadata{school}},
     pdfsubject={},
     pdfkeywords={},
     pdfcreator={pdfLaTeX},
@@ -91,16 +77,13 @@
         \hfill
         \vfill
         \begingroup
-            \color{Maroon}\spacedallcaps{\myTitle} \\ \bigskip
+            \color{Violet}\spacedallcaps{Hardware and Software} \\
+            \color{Violet}\spacedallcaps{for Approximate Computing} \\ \bigskip
         \endgroup
-        \spacedlowsmallcaps{\myName}
+        \spacedlowsmallcaps{Adrian Sampson}
         \vfill
-        \mySubtitle \\ \medskip
-        %\myDegree \\
-        %\myDepartment \\
-        %\myFaculty \\
-        %\myUni \\ \bigskip
-        \myTime\ -- \myVersion
+        foo \\ \medskip
+        foo\ -- bar
         \vfill
     \end{center}
   \end{addmargin}
@@ -111,24 +94,10 @@
 \thispagestyle{empty}
 \hfill
 \vfill
-\noindent\myName: \textit{\myTitle,} \mySubtitle, %\myDegree,
-\textcopyright\ \myTime
+\noindent\metadata{author}: \textit{\metadata{title},}
+\textcopyright\ TK
 %\bigskip
-%
-%\noindent\spacedlowsmallcaps{Supervisors}: \\
-%\myProf \\
-%\myOtherProf \\
-%\mySupervisor
-%
-%\medskip
-%
-%\noindent\spacedlowsmallcaps{Location}: \\
-%\myLocation
-%
-%\medskip
-%
-%\noindent\spacedlowsmallcaps{Time Frame}: \\
-%\myTime
+% more stuff here
 
 
 % DEDICATION
@@ -291,12 +260,12 @@ Happy users of \texttt{classicthesis} usually send a real postcard to the author
 \thispagestyle{empty}
 Put your declaration here.
 \bigskip
-\noindent\textit{\myLocation, \myTime}
+\noindent\textit{who knows what goes here}
 \smallskip
 \begin{flushright}
     \begin{tabular}{m{5cm}}
         \\ \hline
-        \centering\myName \\
+        \centering\metadata{author} \\
     \end{tabular}
 \end{flushright}
 
