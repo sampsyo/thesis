@@ -82,22 +82,64 @@
         \endgroup
         \spacedlowsmallcaps{Adrian Sampson}
         \vfill
-        foo \\ \medskip
-        foo\ -- bar
+        A dissertation \\
+        submitted in partial fulfillment of the \\
+        requirements for the degree of \\
+        \medskip
+        \metadata{degree} \\
+        \bigskip
+        \metadata{school} \\
+        \smallskip
+        \metadata{year}
         \vfill
+        Reading Committee: \\
+        \smallskip
+        Luis Ceze, Chair \\
+        \smallskip
+        Dan Grossman, Chair \\
+        \smallskip
+        Mark Oskin
+        \vfill
+        Program Authorized to Offer Degree: \\
+        \smallskip
+        \metadata{department}
     \end{center}
   \end{addmargin}
 \end{titlepage}
 
 
-% TITLE BACK
+% COPYRIGHT PAGE
+\cleardoublepage
 \thispagestyle{empty}
-\hfill
-\vfill
-\noindent\metadata{author}: \textit{\metadata{title},}
-\textcopyright\ TK
-%\bigskip
-% more stuff here
+\begin{center}
+    \vspace*{20ex}
+    \textcopyright\ \metadata{year} \\
+    \bigskip
+    \metadata{author}
+\end{center}
+
+
+% ABSTRACT
+\cleardoublepage
+\thispagestyle{empty}
+\pdfbookmark[1]{Abstract}{Abstract}
+
+\begin{center}
+    \spacedlowsmallcaps{Abstract} \\
+    \bigskip
+    \spacedallcaps{Hardware and Software} \\
+    \spacedallcaps{for Approximate Computing} \\
+    \bigskip
+    \metadata{author} \\
+    \bigskip
+    Chairs of the Supervisory Committee: \\
+    Associate Professor Luis Ceze \\
+    Professor Dan Grossman \\
+    \metadata{department} \\
+    \bigskip
+\end{center}
+
+Abstract goes here. Blah blah blah.
 
 
 % DEDICATION
@@ -108,61 +150,14 @@
 \pdfbookmark[1]{Dedication}{Dedication}
 \vspace*{3cm}
 \begin{center}
-    \emph{Ohana} means family. \\
-    Family means nobody gets left behind, or forgotten. \\ \medskip
-    --- Lilo \& Stitch
+    \textit{Foo.}
+    \\ \medskip
+    --- Bar
 \end{center}
-
-\medskip
-\begin{center}
-    Dedicated to the loving memory of Rudolf Miede. \\ \smallskip
-    1939\,--\,2005
-\end{center}
-
-
-% ABSTRACT
-%\renewcommand{\abstractname}{Abstract}
-\cleardoublepage
-\pdfbookmark[1]{Abstract}{Abstract}
-\begingroup
-\let\clearpage\relax
-\let\cleardoublepage\relax
-\let\cleardoublepage\relax
-\chapter*{Abstract}
-Short summary of the contents in English\dots
-\endgroup
-\vfill
-
-
-% ACKS
-\cleardoublepage
-\pdfbookmark[1]{Acknowledgments}{acknowledgments}
-\begin{flushright}{\slshape
-    We have seen that computer programming is an art, \\
-    because it applies accumulated knowledge to the world, \\
-    because it requires skill and ingenuity, and especially \\
-    because it produces objects of beauty.} \\ \medskip
-    --- \defcitealias{knuth:1974}{Donald E. Knuth}\citetalias{knuth:1974} \citep{knuth:1974}
-\end{flushright}
-\bigskip
-\begingroup
-\let\clearpage\relax
-\let\cleardoublepage\relax
-\let\cleardoublepage\relax
-\chapter*{Acknowledgments}
-Regarding the typography and other help, many thanks go to Marco
-Kuhlmann, Philipp Lehman, Lothar Schlesier, Jim Young, Lorenzo
-Pantieri and Enrico Gregorio\footnote{Members of GuIT (Gruppo
-Italiano Utilizzatori di \TeX\ e \LaTeX )}, J\"org Sommer,
-Joachim K\"ostler, Daniel Gottschlag, Denis Aydin, Paride
-Legovini, Steffen Prochnow, Nicolas Repp, Hinrich Harms,
- Roland Winkler, J\"org Weber,
- and the whole \LaTeX-community for support, ideas and
- some great software.
-\endgroup
 
 
 % CONTENTS
+\renewcommand{\contentsname}{Table of Contents}
 \pagestyle{scrheadings}
 %\phantomsection
 \refstepcounter{dummy}
@@ -176,48 +171,26 @@ Legovini, Steffen Prochnow, Nicolas Repp, Hinrich Harms,
 \renewcommand{\chaptermark}[1]{\markboth{\spacedlowsmallcaps{#1}}{\spacedlowsmallcaps{#1}}}
 \renewcommand{\sectionmark}[1]{\markright{\thesection\enspace\spacedlowsmallcaps{#1}}}
 \clearpage
-\begingroup
-    \let\clearpage\relax
-    \let\cleardoublepage\relax
-    \let\cleardoublepage\relax
-
-    % Figures
-    %\phantomsection
-    \refstepcounter{dummy}
-    %\addcontentsline{toc}{chapter}{\listfigurename}
-    \pdfbookmark[1]{\listfigurename}{lof}
-    \listoffigures
-
-    \vspace*{8ex}
-
-    % Tables
-    \refstepcounter{dummy}
-    %\addcontentsline{toc}{chapter}{\listtablename}
-    \pdfbookmark[1]{\listtablename}{lot}
-    \listoftables
-    \vspace*{8ex}
-\endgroup
 
 \cleardoublepage
 
+
+% ACKS
+\cleardoublepage
+\pdfbookmark[1]{Acknowledgments}{acknowledgments}
+\chapter*{Acknowledgments}
+
+Acknowledgments go here.~\cite{sommerville:1992}
+
+
+\pagenumbering{arabic}
 
 % PART 1
-\pagenumbering{arabic}
-%\setcounter{page}{90}
-% use \cleardoublepage here to avoid problems with pdfbookmark
 \cleardoublepage
-\part{Some Kind of Manual}
+\part{Approximate Computing}
 \chapter{Introduction}
 \label{ch:introduction}
 A bunch of text will go here.
-
-
-% APPENDIX
-\appendix
-\cleardoublepage
-\part{Appendix}
-\chapter{Appendix Test}
-An appendix could go here.
 
 
 % BIB
@@ -234,39 +207,15 @@ An appendix could go here.
 
 
 % COLOPHON
+\cleardoublepage
 \pagestyle{empty}
-\hfill
-\vfill
+\vspace*{20ex}
 \pdfbookmark[0]{Colophon}{colophon}
 \section*{Colophon}
-This document was typeset using the typographical look-and-feel \texttt{classicthesis} developed by Andr\'e Miede.
-The style was inspired by Robert Bringhurst's seminal book on typography ``\emph{The Elements of Typographic Style}''.
-\texttt{classicthesis} is available for both \LaTeX:
-\begin{center}
-\url{http://code.google.com/p/classicthesis/}
-\end{center}
-Happy users of \texttt{classicthesis} usually send a real postcard to the author, a collection of postcards received so far is featured here:
-\begin{center}
-\url{http://postcards.miede.de/}
-\end{center}
-\bigskip
-\noindent\finalVersionString
+This thesis was designed using Andr\'e Miede's
+\texttt{classicthesis} style for \LaTeX.
+The body is set in Crimson Text, an open-source typeface by Sebastian Kosch.
+Every last word was typed in vim.
 
-
-% DECLARATION
-\refstepcounter{dummy}
-\pdfbookmark[0]{Declaration}{declaration}
-\chapter*{Declaration}
-\thispagestyle{empty}
-Put your declaration here.
-\bigskip
-\noindent\textit{who knows what goes here}
-\smallskip
-\begin{flushright}
-    \begin{tabular}{m{5cm}}
-        \\ \hline
-        \centering\metadata{author} \\
-    \end{tabular}
-\end{flushright}
 
 \end{document}
