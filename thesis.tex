@@ -13,8 +13,11 @@
 \usepackage[pdfpagelabels]{hyperref}
 \usepackage{graphicx}
 \usepackage{tabularx}
-    \setlength{\extrarowheight}{3pt} % increase table row height
 \usepackage{etoolbox}
+\usepackage{listings}
+\usepackage[eulerchapternumbers,listings,%
+            pdfspacing,%floatperchapter,%linedheaders,%
+            beramono,eulermath,parts]{classicthesis}
 
 % Thesis metadata.
 \input{metadata}
@@ -32,10 +35,6 @@
     pdfcreator={pdfLaTeX},
     pdfproducer={LaTeX with hyperref and classicthesis}
 }
-
-\usepackage[eulerchapternumbers,listings,%
-            pdfspacing,%floatperchapter,%linedheaders,%
-            beramono,eulermath,parts]{classicthesis}
 
 % XeTeX fonts.
 \usepackage{fontspec}
@@ -56,6 +55,21 @@
 \renewcommand{\PrelimWords}{%
     rev. \Revision%
     }
+
+% Listings.
+\lstset{
+    language=Java,
+    emph={@Approx, @Precise, @Top, @Context, endorse, @Approximable, assert},
+    emphstyle=\bfseries,
+    columns=fullflexible,
+    basicstyle=\sffamily\small,
+    aboveskip=1mm plus 1mm minus 1mm,
+    belowskip=1mm plus 1mm minus 1mm,
+}
+\newcommand{\ilcode}[1]{\textsf{#1}}
+
+% From classicthesis: increase table row height
+\setlength{\extrarowheight}{3pt}
 
 % I don't know why classicthesis wants this. Something about hyperlinks?
 \newcounter{dummy}
@@ -190,9 +204,7 @@ Acknowledgments go here.~\cite{sommerville:1992}
 % PART 1
 \cleardoublepage
 \part{Approximate Computing}
-\chapter{Introduction}
-\label{ch:introduction}
-A bunch of text will go here.
+\input{text/background}
 
 
 % BIB

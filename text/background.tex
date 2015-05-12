@@ -1,0 +1,596 @@
+\chapter{Introduction}
+\label{ch:introduction}
+
+Computer systems typically provide strong, specific guarantees for their behavior. A
+programmer can reasonably expect that the processor never exposes timing
+errors and never loses a bit in its cache or main memory. When errors do
+occasionally happen, such as when cosmic rays flips bits in DRAM, they are
+treated as rare outliers rather than part of typical operation.
+But providing perfect accuracy at all levels of the system comes at a high
+cost. Circuits must be clocked so that they effectively never violate timing;
+due to process variability, DRAM must be refreshed frequently enough to
+account for the worst cell among the billions on a chip.
+
+Meanwhile, many common applications have intrinsic tolerance to inaccuracies
+in computation. Applications in domains like computer vision, media
+processing, machine learning, and sensor data analysis already incorporate
+imprecision in their operation. These applications are \emph{approximate
+programs}: a range of possible values can be considered ``correct'' outputs
+for a given input. From the perspective of an approximate program, today's
+systems are overprovisioned with accuracy. Since the program is resilient, it
+does
+not need every arithmetic operation to be precisely correct and every byte of memory to be preserved
+exactly. \emph{Approximate computing} is a set of techniques that exploit this
+tolerance to trade off accuracy for resource consumption like performance and
+energy efficiency.
+
+However, applying approximation without discipline would make the construction
+of reliable software nearly impossible. For approximate computation to be
+usable, it must be confined to the error-tolerant parts of the program.  It
+must not, for example, lead to uncontrolled jumps or wild pointers. My
+research focuses on techniques that collaborate with the programmer to balance
+efficiency and correctness. This research area, which I call \emph{disciplined
+approximate programming}, provides approximate behavior in careful ways that
+enable the construction of reliable software despite their own unreliability.
+
+My work so far in this area has explored disciplined approximate programming
+in the context of programming languages, CPU architecture, hardware
+acceleration, storage technologies, profile-driven compilation, and programmer
+tools. I describe these projects in Section~\ref{sec:prelim} to characterize
+their successes and shortcomings. Using the lessons from this preliminary work
+as background, I propose two new research projects in
+Section~\ref{sec:proposed}. First, I describe a technique for analyzing
+programs with nondeterministic approximation to characterize the probability
+that they will produce acceptable output. Second, I propose an exploration
+into applying fine-grained, statically controlled approximation to the process
+of hardware design.
+
+
+\paragraph{Thesis}
+
+I plan to demonstrate in my dissertation that \textit{familiar programming
+models can incorporate approximate computing in a way that enables large
+efficiency gains without introducing unworkable complexity into the
+development process}. There are two broad components to this thesis: the
+design of programming languages and tools that safely incorporate approximate
+semantics; and the implementation of efficient, approximate systems that match
+those semantics. My dissertation will focus on co-designing these two
+components with the goal of gaining efficiency without sacrificing
+programmability.
+
+
+\section{Related Work}
+
+Approximate computing research combines insights from hardware engineering,
+architecture, system design, programming languages, and even application
+domains like machine learning. I have confined this section to describe work
+that considers the possibility of exposing errors, incorrectness, and
+uncertainty to applications. I will not discuss the large body of work on
+traditional fault tolerance, which attempts to recover from faults to compute
+results without error.
+
+\subsection{Application-Level Error Tolerance}
+\label{sec:related:studies}
+
+Many authors have identified the property of error tolerance in existing
+``soft''
+applications. A large class of studies have examined this property by
+injecting errors into certain parts of applications and assessing the
+execution quality in terms of both crashes and output fidelity~\cite{li06,
+li07, li08, dekruijf-selse09, wong-selse06, palem-arcs, freton, besteffort,
+yeh, thaker-iiswc06, efc, llfi}.
+
+It is a consensus among many of these studies that different parts of the
+application have different impacts on reliability and fidelity. Some conclude
+that there is a useful distinction between critical and non-critical program
+points (typically instructions)~\cite{palem-arcs, thaker-iiswc06, flikker,
+llfi}.
+The work tends to assume that at least the instructions involved in control
+flow are critical~\cite{thaker-iiswc06}. In my work, I use this idea of
+distinguishing between critical and noncritical components to help the
+programmer express approximations with bounded effects on the program as a
+whole. In each of the approximate system components I have designed, the
+execution substrate supports precise (traditional) and relaxed operation to
+exploit this distinction. An important question, however, is the granularity
+at which to switch between these two modes. Section~\ref{sec:prelim} discusses
+this challenge in more detail.
+
+This class of work also typically attempts to classify the kinds of programs
+that can tolerate error injection gracefully. For example, papers have focused
+on video~\cite{freton}, recognition and mining~\cite{besteffort}, physical
+simulation~\cite{yeh}, and optimization~\cite{hogwild}.
+
+Aside from existing software, some studies have evaluated error-resilience in
+integrated circuit designs~\cite{breuer, scalable-effort-hardware}. These
+studies focus on the kinds of applications that are typically implemented with
+application-specific circuits: media codecs, numerical kernels, and digital
+signal processing.
+
+
+\subsection{Exploiting Resilience in Architecture}
+
+The existence of a large class of error-resilient applications has motivated
+research into techniques that exploit this property to reduce resource usage.
+Specifically, designs have emerged that extend circuits and processor
+architectures to trade off error for energy, time, manufacturing yield, or
+verification complexity.
+
+Since floating-point operations are both expensive and inexact, they make a
+profitable target for this research direction. Researchers have designed units
+that dynamically adapt mantissa width~\cite{bitwidthred}, ``fuzzily'' memoize
+similar arithmetic computations~\cite{fuzzymemo}, or tolerate timing
+errors~\cite{palem-adders, impact, kumarhpca, hizli, adder-metrics}. Alternative number
+representations work in tandem with relaxed functional units to bound the
+numerical error that can result from bit flips~\cite{stanleymarbell}. SRAM
+structures spend significant static power on retaining data, so they represent
+another opportunity for fidelity trade-offs~\cite{hybrid-sram}. Similarly,
+DRAM structures can reduce the power spent on refresh cycles where bit flips
+are allowed~\cite{flikker}.
+In my own work, I have extended an existing language an existing ISA to
+support an abstract notion of approximation that can encapsulate this
+disparate collection of hardware approximation techniques. Rather than
+focusing on adding new approximation capabilities to CPU architectures, my
+work primarily focuses on how they can be made usable in the development of
+approximate programs.
+
+Some recent work has also proposed general techniques for making quality trade-offs
+when synthesizing and optimizing general hardware
+circuits~\cite{lossysynthesis, palem-pruning}. My proposed work on approximate
+hardware design (Section~\ref{sec:proposed:hw}) builds on this research direction.
+
+As a dual to adding errors in some circuits, some researchers have
+explored differential fault protection in the face of universally unreliable
+circuits. As process sizes continue to shrink, it is likely that reliable
+transistors will become the minority; redundancy and checking will be
+necessary to provide reliable operation~\cite{li-asplos08}. Circuit design
+techniques have been proposed that reduce the cost of redundancy by providing
+it selectively for certain instructions in a CPU~\cite{wreft} or certain
+blocks in a DSP~\cite{unequal-protection, ant}. More recently, Yetim, Martonosi,
+and Malik proposed a technique that uses coarse-grained quality techniques to
+allow errors even in processor control logic~\cite{martonosi-date}.
+
+
+\subsection{Exploiting Resilience with Program Transformations}
+\label{sec:related:software}
+
+Aside from system-level accuracy trade-offs, there are opportunities for
+adapting \emph{algorithms} to execute with varying precision. Algorithmic
+quality--complexity trade-offs are not new: approximation algorithms are a
+well-studied area of complexity theory and many domains, notably real-time
+vision and graphics, have ad-hoc ``cheap'' implementations of computations
+that are prohibitively expensive to compute exactly.
+
+In contrast to these
+traditional views on approximation, recent work has sought to provide
+tools for transforming real programs---as opposed to high-level
+algorithmic specifications---to explore practical relaxations.
+Transformations include removing portions of a program's dynamic execution
+(termed \emph{code perforation})~\cite{perforation-fse}, unsound
+parallelization of serial programs~\cite{quickstep}, eliminating
+synchronization in parallel programs~\cite{dubstep, races-ibm, hogwild},
+identifying and adjusting parameters that control output
+quality~\cite{dynamicknobs}, randomizing portions of deterministic
+programs~\cite{zhu-popl12, sasa-sas11}, dynamically choosing between
+different programmer-provided implementations of the same
+specification~\cite{green}, and replacing pure computations with invocations
+of a trained neural network~\cite{benchnn, temam-isca}.
+
+Central to each of these program transformation techniques are the questions
+of automation and quality. For a relaxation to be generally useful, it should
+be applicable automatically with only minimal programmer involvement but
+should still result in transformed code that the programmer is happy with.
+Recently, a set of techniques have been proposed to help constrain the space
+of possible transformations to those that result in a profitable
+quality trade-off. Quality of service profiling~\cite{qosprof} uses many
+executions to identify parts of a program that are likely to be good
+candidates for transformation. Some verification tools and proof systems help
+the programmer prove relationships between the original program and a
+candidate relaxed version~\cite{carbin-pldi, carbin-races, carbin-pepm,
+rice-transformation-semantics}.
+Another approach constrains the programming model to help express programs
+that refine their results as they run longer, permitting quality trade-offs in
+hard real-time settings~\cite{chung90}.
+
+As with hardware approximation, my own work has focused on unifying software
+approximation techniques so that they can be most useful for programmers.
+Namely, the ACCEPT project (Section~\ref{sec:prelim:accept}) identifies a
+subset of transformations that can be applied automatically while preserving
+guarantees requested by the programmer. The research seeks to constrain
+existing optimizations---most of which do not carry safety guarantees---using
+lightweight program annotation.
+
+
+\subsection{Exploiting Resilience in Other Systems}
+
+While architecture optimizations and program transformations dominate the
+field of proposed exploitations of approximate software, some recent work has
+explored the same trade-off in other components of computer systems. Network
+communication, with its reliance on imperfect underlying channels, exhibits
+opportunities for fidelity trade-offs~\cite{softcast, luo-globecom, apex,
+smpmup2006}. Notably, SoftCast~\cite{softcast} transmits images and video by
+making the signal magnitude directly proportional to pixel luminance. BlinkDB
+is a database system that can respond to queries that include a required
+accuracy band on their output~\cite{blinkdb}. By eschewing redundancy and
+recovery in a fault-tolerant distributed system, researchers at Wisconsin were
+able to make quality trade-offs in a supercomputing
+setting~\cite{dekruijf-icpp}.
+
+
+\subsection{Probabilistic Computation}
+
+Several research projects have proposed radically different models of
+computation that, rather than adapting existing software to expose its error
+resilience, are based exclusively on probabilistic reasoning. Most
+prominently, Probabilistic CMOS~\cite{pcmos, pcmos-cacm, palem-dac-position}
+and stochastic processors~\cite{stochasticproc} expose the probabilistic
+behavior of transistors as part of their ISA.
+Other preliminary efforts from MIT~\cite{batesmit, lyric, mansinghka-circuits} and
+Stanford~\cite{ersa} fall into the same category.
+
+While these designs have shown large efficiency gains on a restricted domain
+of problems, the challenge remains to develop a programming model that allows
+developers to efficiently express general applications. \emph{Probabilistic
+programming}, a separate effort in the machine learning community, helps
+express inference and learning algorithms by making probability a first-class
+concern~\cite{church}. Similarly, recent work has sought to express
+uncertainties in the context of traditional, imperative programming
+languages~\cite{uncertaint}. These programming models incorporate algorithmic
+probabilities---such as those inherent in sensor readings or machine learning
+model parameters---but do not yet address the computational probabilities of
+techniques like PCMOS and stochastic processors.
+
+One of my proposed projects (Section~\ref{sec:proposed:se}) uses a technique
+that resembles probabilistic computation in its incorporation of probabilities
+into the semantics of an approximate program. Rather than letting the
+programmer express probabilities directly, however, my proposed system
+represents the approximate behavior of the underlying system
+probabilistically.
+
+
+\subsection{Robustness Analysis}
+
+As the studies in Section~\ref{sec:related:studies} repeatedly find, error
+tolerance varies greatly in existing software, both within and between
+programs. Several program analysis approaches have been proposed to evaluate
+and enhance error resilience properties. SJava analyzes programs to prove that
+errors only temporarily disrupt the execution path of a program~\cite{sjava}.
+Program smoothing~\cite{smoothing-cav, smoothing-pldi, smoothing-fse} and
+``robustification''~\cite{robustification} both find continuous, mathematical
+functions that resemble the input--output behavior of numerical programs.
+Finally, Cong and Gururaj describe a technique for automatically
+distinguishing between critical and non-critical instructions for the purpose
+of selective fault tolerance~\cite{cong-iccad}
+
+
+
+
+
+\section{Preliminary Work}
+\label{sec:prelim}
+
+In this section, I enumerate my completed and in-progress work on
+disciplined approximate programming. The purpose of this section is to set the stage
+for my proposed work by distilling lessons from the successes and shortcomings
+of my prior work.unrelated 
+To focus on the work most relevant to my thesis topic, I omit some ongoing
+research that I am partially involved in to varying degrees. These include
+projects on analog neural networks, neural networks on FPGAs, and approximate
+wireless networking.
+I also omit my unrelated work on safe parallel programming and
+performance analysis for mobile Web browsers.
+
+My work concerns the incorporation of approximate computing
+into traditional execution models, existing
+languages, and legacy software.
+(A different approach, resembling probabilistic
+programming~\cite{church}, would eschew traditional semantics for a completely
+new programming model.)
+I see the three themes of \emph{programmability},
+\emph{granularity}, and \emph{nondeterminism} as underlying my work in this
+area.
+
+\paragraph{Programmability and safety.}
+
+Imprecise results pose a threat to the feasibility of writing correct
+programs. Clearly, a programming model in which arbitrary, incorrect results
+are possible for any operation is too difficult to program. The programming
+language and its associated runtime systems need to provide tools that let
+programmers describe software's latent resilience to approximation. At the
+same time, these tools must not add
+untenable
+complexity to the practice of software development. In my work, these
+tools are in the form of lightweight extensions to traditional programming
+languages.
+
+\paragraph{Granularity and composability.}
+
+When approximate computing is introduced in the context of a traditional
+programming model, there are several choices for the kinds of computations
+that are optimized with approximation. A system can approximate a whole
+program or algorithm at once, a discrete program component like a function,
+loop, or block, or individual operations (e.g., instructions).
+Approximating an entire algorithm 
+offers a large window of potential relaxations,
+requiring only that a transformed version of the algorithm produce outputs
+acceptably similar to the original.
+But such a large space of possible optimizations can make a search of the
+quality--efficiency trade-off space intractable, and black-box transformations
+risk being opaque to programmer understanding and control.
+Conversely, introducing approximation at the granularity of individual
+instructions allows direct programmer control over imprecision. But it can
+obscure the ways that local error patterns compose to affect the whole
+program.
+
+\paragraph{Nondeterminism and probabilities.}
+
+Many of the techniques available for exploiting approximate applications do so
+nondeterministically. For example, a low-voltage functional unit that allows
+timing errors will compute correctly for most invocations but will produce wrong
+answers with low probability. But the distribution is rarely uniform: the
+probability and pattern of errors in an overclocked functional unit depends on
+its input and different output bits will have different probabilities of being
+correct. When multiple probabilistic components are invoked repeatedly and
+their results combined, the impact on the computation is even more obscure.
+Understanding and controlling probabilistic system components is critical to
+composing them to do useful work.
+
+
+\subsection{EnerJ: Safely Programming Approximate Systems}
+\label{sec:prelim:enerj}
+
+EnerJ is a type system for expressing programs' resilience to approximate
+execution~\cite{enerj}. In EnerJ, programmers distinguish between the precise
+portion of a program---those that should carry traditional semantics---and
+parts that can safely be relaxed. EnerJ's type system borrows from static data
+flow systems for security (seminally, Jif~\cite{jif}) to provide a static
+noninterference guarantee for precise data. Using EnerJ, programmers can rely
+on a proof that data marked as precise remains untainted by the errors arising
+from approximation.
+
+For EnerJ's evaluation, we annotated a variety of Java
+programs and simulated an array of hardware approximation techniques to assess
+their energy benefits and error impact. To assess the quality impact of
+approximate computing, we developed application-specific \emph{quality
+metrics} for each benchmark. A quality metric quantifies the application's
+output fidelity by comparing it to the output of a precise execution on a
+scale from 0.0 (completely useless) to 1.0 (identical to the pristine output).
+I reused this quality metric concept in all of my subsequent evaluations for
+later research. Quality measurement is critical to expressing programmer
+intent and user expectations; while I do not explore it, there is an
+opportunity for future work on helping programmers design good quality
+metrics.
+
+EnerJ's focus is on programmability. Using a lightweight, conceptually simple
+annotation set, EnerJ programs can express approximation opportunities in
+arithmetic operations, data elements, and algorithm selection. Programmers can
+take advantage of a collection of disparate hardware approximation techniques
+without reasoning carefully about the semantics of each. And its static
+guarantees help quarantine the approximate component's nondeterminism while
+incurring no runtime overhead.
+
+In retrospect, EnerJ's programming model has two important limitations. First,
+by providing approximation at a very fine grain---individual instructions and
+cache lines---EnerJ constrains the parts of a program that can be
+considered approximate. For example, consider this function (adapted from the original
+paper) that computes the average of a list of numbers:
+
+\begin{lstlisting}
+@Approx float[] nums;
+...
+@Approx float total = 0.0;
+for (int i = 0; i < nums.length; ++i)
+  total += nums[i];
+return total / nums.length;
+\end{lstlisting}
+
+The programmer has marked the input data, \ilcode{nums}, and the intermediate
+variable \ilcode{total}, as approximate.
+The loop iteration variable, \ilcode{i}, is implicitly marked as precise. This
+is compulsory under EnerJ's semantics: since approximate variables can take
+arbitrary values, approximating \ilcode{i} could lead to out-of-bounds errors
+and even nontermination. (This is why EnerJ forbids approximate values from
+being used in control flow and array indexing.) But a good approximation
+of this code does not need perfectly precise iteration over \ilcode{nums}: an
+acceptable computation could sample nondeterministically from the array.
+Here, EnerJ's fine-grained approach to approximation forces it to be
+conservative.
+
+Second, EnerJ does not expose any information about probabilities to the
+programmer. We made this design choice intentionally to allow EnerJ's
+semantics to generalize over a wide variety of implementation techniques. But
+while we need an initial distinction between critical components and those
+that can tolerate even a small amount of error, opportunity is lost when
+different parts of a program can tolerate more error---or even a different
+distribution of errors---than others. Programmers must pessimistically
+assume a worst-case approximate execution and therefore treat components with
+intermediate error resilience as precise.
+
+\subsection{Truffle: Selective Reliability in CPUs}
+
+Truffle is a processor architecture that implements EnerJ's semantics to save
+energy~\cite{truffle}. It uses a secondary, subcritical voltage that allows timing errors in
+a portion of the logic and retention errors in a portion of the SRAM.
+We
+designed an ISA extension for approximate architectures that can serve as a
+target for EnerJ-like languages that provides approximation per instruction,
+per register, and per cache line.
+The architecture uses replicated functional units, one running at the nominal
+voltage and one running at the subcritical voltage, and steers instructions to the
+appropriate unit based on a flag in the instruction. Each row in the SRAMs for
+the register file and data cache carries a precision flag that controls the
+voltage sent to the row; instructions control the precision of each line
+dynamically by setting this flag.
+
+To evaluate the Truffle design,
+we reused the simulation infrastructure from the EnerJ evaluation and paired
+it with a extension of a standard architectural energy model~\cite{mcpat}.
+Results ranged from a 5\% energy efficiency \emph{loss} to a 43\%
+consumption reduction.
+
+These results emphasize the efficiency limits of very fine-grained
+approximation. Even in a maximally approximate program---in which every
+arithmetic instruction and every byte of memory is marked as
+approximate---much of Truffle's energy is spent on precise work. Fetching
+code, scheduling instructions, indexing into SRAMs, computing addresses, and
+tracking precision state all must be performed reliably to avoid violating
+the semantics of the EnerJ-like ISA.
+Modern processors spend as much energy on
+control as they do on computation itself, so any technique that optimizes only
+computation will quickly encounter Amdahl's law.
+
+Together, EnerJ and Truffle illustrate an essential shortcoming of
+fine-grained approximation: it conservatively avoids relaxing \emph{control}
+in terms of both the program (e.g., pointers and control flow) and the
+execution substrate (e.g., fetch and decode).
+
+\subsection{Neural Processing Units: Black-Box Approximation via Learning}
+
+Neural Processing Units represent a hybrid compiler--accelerator approach to
+the problem of approximation granularity~\cite{npu}. The technique relaxes a
+pure-functional portion of a program---a pure C function, in our
+implementation---by observing its input/output behavior in a set of test runs.
+This empirical characterization of the function is used to train a function
+approximator based on an artificial neural network. Since neural networks have
+efficient hardware implementations, the transformed function can be much
+faster and lower-power than the original code. We designed a hardware neural
+network accelerators to unlock these potential gains in transformed programs.
+
+The NPU technique distinguishes itself from EnerJ and Truffle by applying
+approximation based on observed inputs and outputs rather than the structure
+of the code itself. This approach removes many practical restrictions on the
+granularity of approximation: any computation with well-defined inputs and
+outputs is a candidate for NPU-based relaxation. In our evaluation, we were
+able to transform code regions that contained complex control flow, memory
+allocation, and pointer arithmetic---all of which EnerJ and Truffle would have
+classified as precise. As a result, our simulations demonstrated a 3$\times$
+average energy reduction---far better than our results for Truffle.
+
+But the coarser granularity comes at a cost of programmer visibility and
+control. Since the NPU technique treats the target code as a black box, the
+programmer has no direct influence over the performance and accuracy of the
+resulting neural network. Instead, the programmer has to try applying the
+transformation to a variety of candidate functions and hope that some will
+yield a profitable accuracy--efficiency trade-off.
+This shortcoming demonstrates a tension in my work so far between
+programmability and efficiency.
+
+\subsection{Approximate Storage in Flash and Phase-Change Memory}
+
+Recently, I worked on a project that exploits the unique properties of
+solid-state memory technologies, such as flash and phase-change memory,
+to provide approximate storage. Our techniques use two properties common to these memories:
+near-term wear-out and an underlying analog, continuous substrate. First, since
+failed cells are commonplace, we can store approximate data in the otherwise
+unusable regions of memory that contain these cells. Second, while memories
+necessarily expose a digital interface to the rest of the system, the
+underlying material---chalcogenide, in PCM's case---is intrinsically analog
+and probabilistic. Exposing a limited amount of the material's stochastic
+behavior enables savings in performance and power.
+We simulated systems that use approximate PCM both as main memory and as
+persistent, disk-like storage and demonstrated that our techniques can improve
+memory write performance and extend the useful life of a memory module.
+
+These designs are distinct from my other work in their focus on storage as
+opposed to computation. An important lesson from this project is the
+opportunity for reasoning about and controlling the probability distribution
+of nondeterministic approximation errors. In both techniques, the distribution
+of bit errors is decidedly nonuniform: the locations of failed bits is already
+tracked by the memory system and analog storage substrates exhibit error
+according to a distribution arising from the physical process. Because we have
+information about the pattern of errors that occur in the approximate
+memories, we were able to more effectively mitigate the errors' impact on the
+application.
+
+Our implementation performs this mitigation in an mostly application-agnostic
+way: by prioritizing higher bits over lower ones, for example. But exposing
+distribution information at other levels of the system stack could yield
+further benefits. Exposing these properties to the programmer, for instance,
+contrasts with EnerJ's simplistic approach of completely obscuring error
+information but could enable more approximation opportunities.
+
+\subsection{ACCEPT: An Approximate Compiler}
+\label{sec:prelim:accept}
+
+I am currently working on a compiler-based approach to optimizing approximate
+programs, called ACCEPT (for Approximate C Compiler for Energy and Performance
+Trade-offs). The project's goal is to harness the wide variety of
+algorithmic approximation techniques enumerated in
+Section~\ref{sec:related:software} with a compilation workflow that is both
+\emph{automatic} and \emph{safe}. Using a lightweight annotation system
+resembling EnerJ's, the compiler constrains the space of optimizations avoid
+transformations that observably affect precise data.
+
+The central challenge of this work is bridging the gap between fine-grained,
+code-centric annotations to coarse, code-centric program transformations. To
+reuse the averaging example from Section~\ref{sec:prelim:enerj}, ACCEPT
+permits transformation (i.e., perforation~\cite{perforation}) of the
+\ilcode{for} loop even though the loop control itself is not marked as
+approximate. It accomplishes this by analyzing the effects of each candidate
+code transformation and proving that changes can only affect the
+observed values of approximate variables. Although it can affect the values of
+precise \emph{intermediate} variables, ACCEPT permits a modified version of
+EnerJ's guarantee: any \emph{observation} of a precise variable is identical
+to the equivalent observation in a pristine execution.
+
+In this sense, ACCEPT is an attempt to combine the potential efficiency gains
+of coarse-grained approximation strategies like NPUs with the fine-grained
+programmer control of Truffle and EnerJ. Since ACCEPT's program relaxations,
+unlike NPUs' learning-based approach, are based on the \emph{implementation}
+of approximate computations, the performance and precision impacts of each
+transformation can be explained in terms of code changes to the original
+program. ACCEPT exploits this property to provide programmer feedback that
+illuminates which code changes are successful and which are prevented by the
+current annotations. Developers can use this information to guide the compiler
+to a better solution. This feedback loop resembles techniques used in
+parallelizing compilers (e.g., Cray's~\cite{canal}).
+
+While ACCEPT's whole-program analysis enables its coarse-grained
+transformations, it also complicates the task of identifying the best such
+transformation. The compiler needs to consider many types of optimizations as
+they apply to many different portions of the program, and each optimization
+may compose subtly with the others. Exploring this search space can require
+a large number of executions, which may make it unworkable for large programs
+when a human is in the loop. This shortcoming illustrates an important
+pattern: a large scope of possible optimizations implies a large search space.
+Techniques that make this search space faster to explore---by reducing the
+size or simplifying the evaluation of each point---can help in generating
+better approximations.
+
+
+\subsection{Dynamic Monitoring of Nondeterministic Approximation}
+\label{sec:prelim:monitor}
+
+I recently worked on a tool that addresses the programmability challenge posed
+by nondeterministic approximation. Since testing can never capture
+the full set of possible dynamic executions, uncertainty necessarily remains
+when deploying software that can, via probabilistic behavior, go arbitrarily
+wrong. Worse, even executions on the identical inputs can result in
+widely varying result quality. Our system constrains the possible impacts of
+nondeterministic approximation by directly measuring them and raising a
+runtime exception when quality is degraded beyond a threshold. The program can
+respond by re-executing the approximate computation or increasing its
+precision level.
+
+The central challenge of this work is the design of monitoring strategies that
+are cheap enough to leave enabled in production. When performance is no object,
+as it is during development, it suffices to use high-overhead approaches like our
+own earlier work on prototyping and autotuning~\cite{enercaml} and Misailovic
+et al.'s profiler~\cite{qosprof}.
+While no single low-overhead approach
+generalizes to all approximate computations, we identify three strategies that
+vary in their overhead, the kinds of computations they can monitor, and the
+strength of their guarantees.
+
+Our approaches have low overhead partially because they apply to
+coarse-grained regions of code. Instead of checking the effects of
+approximation after every arithmetic operation or when reading from any
+approximate variable, we require the programmer to specify quality in terms of
+the output of an entire approximate computation. This granularity choice
+results in infrequent checks and allows programmers to write quality
+evaluation where it is most natural: only at variables that represent outputs, not intermediate
+values.
+
+One important takeaway from this work is the utility of dynamic enforcement
+to constrain the effects of nondeterminism and unknown probabilities. While
+static analysis is infeasible when the pattern of approximation is unknown,
+dynamic techniques can directly observe and cope with nondeterministic events.
