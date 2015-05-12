@@ -22,6 +22,9 @@
 \usepackage{tikz}
 \usepackage{import}
 \usepackage{multirow}
+\usepackage{ntheorem}
+\usepackage[shorthand,inference]{semantic}  % EnerJ proofs.
+\usepackage{supertabular}
 
 % Thesis metadata.
 \input{metadata}
@@ -77,6 +80,16 @@
 
 % I don't know why classicthesis wants this. Something about hyperlinks?
 \newcounter{dummy}
+
+% For EnerJ (proofs).
+\newtheorem{definition}{Definition}[section]
+\newtheorem{lemma}[definition]{Lem\-ma}
+\newtheorem{assumption}[definition]{Assumption}
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{corollary}[definition]{Corollary}
+\newcommand\proofcase[1]{\vspace{4mm plus 1mm minus 1mm}\noindent\textbf{#1}}
+\def\qed{\unskip\kern 10pt{\unitlength1pt\linethickness{.4pt}\framebox(6,6){}}}
+
 
 \begin{document}
 \raggedbottom
@@ -214,6 +227,7 @@ Acknowledgments go here.~\cite{sommerville:1992}
 \chapter{EnerJ}
 \label{ch:enerj}
 \subimport*{enerj/}{epaj}
+\subimport*{enerj/}{ott_epaj_proofs}
 
 
 % BIB
