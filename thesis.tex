@@ -6,6 +6,7 @@
 
 \usepackage[square,numbers]{natbib}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{xspace} % to get the spacing after macros right
 \usepackage{mparhack} % get marginpar right
 \usepackage{fixltx2e} % fixes some LaTeX stuff
@@ -18,6 +19,9 @@
 \usepackage[eulerchapternumbers,listings,%
             pdfspacing,%floatperchapter,%linedheaders,%
             beramono,eulermath,parts]{classicthesis}
+\usepackage{tikz}
+\usepackage{import}
+\usepackage{multirow}
 
 % Thesis metadata.
 \input{metadata}
@@ -152,7 +156,7 @@
     \bigskip
 \end{center}
 
-\input{text/abstract}
+\subimport*{text/}{abstract}
 
 
 % DEDICATION
@@ -204,7 +208,12 @@ Acknowledgments go here.~\cite{sommerville:1992}
 % PART 1
 \cleardoublepage
 \part{Approximate Computing}
-\input{text/background}
+\subimport*{text/}{background}
+
+
+\chapter{EnerJ}
+\label{ch:enerj}
+\subimport*{enerj/}{epaj}
 
 
 % BIB
