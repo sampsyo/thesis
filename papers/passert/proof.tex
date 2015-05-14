@@ -102,7 +102,7 @@ do not contain \textbf{while} loops.
   Furthermore let $H_c$ be such that
   $(\Sigma, H_s(v)) \judge_o H_c(v)$
   for all variables $v$. Then
-  $(\Sigma, H_c, s) \to_c^* (\Sigma', H_c', s')$,
+  $(\Sigma, H_c, s) \to_c^{*} (\Sigma', H_c', s')$,
   where
   $\Sigma = \sigma_1:\sigma_2:\dots:\sigma_k:\Sigma'$.
   Furthermore,
@@ -124,7 +124,7 @@ do not contain \textbf{while} loops.
   \item Non-terminating while loops, especially those involving
     sampling, are difficult to handle in the induction.  The statement
     of the lemma guarantees that the while loop must terminate (since
-    $\to_s^*$ requires a finite number of steps), but the possibility
+    $\to_s^{*}$ requires a finite number of steps), but the possibility
     for while loops to not terminate still complicates the proof.
   \end{itemize}
    
@@ -133,13 +133,13 @@ do not contain \textbf{while} loops.
   exactly as many elements as the concrete semantics consumes.  The
   second problem requires a careful analysis of the ``merge''
   function.  This is also why we assume a single step in $\to_s$ but a
-  number of steps in $\to_c^*$.  Finally, the last problem is avoided
+  number of steps in $\to_c^{*}$.  Finally, the last problem is avoided
   by a nested induction over the number of times the \textbf{while}
   loop is unrolled.  Since we assume the symbolic semantics terminate,
   the loop must at some point unroll fully, so the induction is
   founded.
 
-  As mentioned, we induct over the number of steps taken by $\to_s^*$.
+  As mentioned, we induct over the number of steps taken by $\to_s^{*}$.
   At each step, we assume that the future steps will satisfy the
   statement of the lemma.  We consider each case individually.
 
@@ -171,15 +171,15 @@ do not contain \textbf{while} loops.
     the case is trivial, so suppose $s_1$ is not \textbf{skip}.
     Furthermore, let $(n, H_s, s_1) \to_s (m', H_s', s_1')$.
     By induction, we also have
-    $(\Sigma, H_c, s_1) \to_c^* (\Sigma'', H_c', s_1')$,
+    $(\Sigma, H_c, s_1) \to_c^{*} (\Sigma'', H_c', s_1')$,
     with the expected properties relating $\Sigma'$ and $k$, and
     $H_c'$ and $H_s'$.  But then since
     $(n, H_s, s_1 ; s_2) \to_s (m', H_s', s_1' ; s_2)$
     and
-    $(\Sigma, H_c, s_1 ; s_2) \to_c^* (\Sigma'', H_c', s_1' ; s_2)$,
+    $(\Sigma, H_c, s_1 ; s_2) \to_c^{*} (\Sigma'', H_c', s_1' ; s_2)$,
     this case is established with $m = m'$ and $\Sigma' = \Sigma''$.
     (We omit the lemma that
-    $s_1 \to^* s_1'$ implies $s_1 ; s_2 \to^* s_1' ; s_2$,
+    $s_1 \to^{*} s_1'$ implies $s_1 ; s_2 \to^{*} s_1' ; s_2$,
     with the expected behavior of the other parameters.)
   \item[$\mathbf{if}\:c\:s_1\:s_2$]
     First, consider that per lemma~\ref{lem:cond},
@@ -201,13 +201,13 @@ do not contain \textbf{while} loops.
     or
     $(\Sigma, H_c, \mathbf{if}\:c\:s_1\:s_2) \to (\Sigma', H_c', s_2)$.
     We know that
-    $(n, H_s, s_1) \to_s^* (m_t, H_{st}, \mathbf{skip})$
+    $(n, H_s, s_1) \to_s^{*} (m_t, H_{st}, \mathbf{skip})$
     and
-    $(n, H_s, s_2) \to_s^* (m_f, H_{sf}, \mathbf{skip})$.
+    $(n, H_s, s_2) \to_s^{*} (m_f, H_{sf}, \mathbf{skip})$.
     But then by induction, we know that
-    $(\Sigma, H_c, s_1) \to_c^* (\Sigma_t, H_{ct}, \mathbf{skip})$
+    $(\Sigma, H_c, s_1) \to_c^{*} (\Sigma_t, H_{ct}, \mathbf{skip})$
     or
-    $(\Sigma, H_c, s_2) \to_c^* (\Sigma_f, H_{cf}, \mathbf{skip})$,
+    $(\Sigma, H_c, s_2) \to_c^{*} (\Sigma_f, H_{cf}, \mathbf{skip})$,
     where the relationship of $\Sigma_t$ to $m_t$, of $\Sigma_f$ to
     $m_f$, of $H_{ct}$ to $H_{st}$, and of $H_{cf}$ to $H_{sf}$ are
     as expected.
@@ -249,10 +249,10 @@ We now extend the equivalence to programs that contain while loops.
 We require that the symbolic evaluation terminate.
 
 \begin{lemma} \label{lem:whil}
-  Let $(n, H_s, s) \to_s^* (m, H_s', \mathbf{skip})$.
+    Let $(n, H_s, s) \to_s^{*} (m, H_s', \mathbf{skip})$.
   Further suppose that for all variables $v$,
   $(\Sigma, H_s(v)) \judge_o H_c(v)$.
-  Then $(\Sigma, H_c, s) \to_c^* (\Sigma', H_c', \mathbf{skip})$,
+  Then $(\Sigma, H_c, s) \to_c^{*} (\Sigma', H_c', \mathbf{skip})$,
   and furthermore for all variables $v$,
   $(\Sigma, H_s'(v)) = H_c'(v)$ and also
   $\Sigma = \sigma_1:\dotsb:\sigma_k:\Sigma'$,
@@ -270,22 +270,22 @@ We require that the symbolic evaluation terminate.
   \item[\textbf{skip}] Analogous to $v := e$.
   \item[$s_1 ; s_2$] 
     We must have
-    $(n, H_s, s_1) \to_s^* (n', H_s'', \mathbf{skip})$,
+    $(n, H_s, s_1) \to_s^{*} (n', H_s'', \mathbf{skip})$,
     so by induction
-    $(\Sigma, H_c, s_1) \to_c^* (\Sigma'', H_c'', \mathbf{skip})$,
+    $(\Sigma, H_c, s_1) \to_c^{*} (\Sigma'', H_c'', \mathbf{skip})$,
     with the usual relation between $\Sigma''$ and $n'$, and between
     $H_s''$ and $H_c''$.
     But then again by induction
-    $(n', H_s'', s_2) \to_s^* (m, H_s', \mathbf{skip})$
+    $(n', H_s'', s_2) \to_s^{*} (m, H_s', \mathbf{skip})$
     implies
-    $(\Sigma'', H_c'', s_2) \to_c^* (\Sigma', H_c', \mathbf{skip})$.
+    $(\Sigma'', H_c'', s_2) \to_c^{*} (\Sigma', H_c', \mathbf{skip})$.
     Thus,
-    $(\Sigma, H_c, s_1;s_2) \to_c^* (\Sigma', H_c', \mathbf{skip})$,
+    $(\Sigma, H_c, s_1;s_2) \to_c^{*} (\Sigma', H_c', \mathbf{skip})$,
     and this case is established.
   \item[$\mathbf{if}\:c\:s_1\:s_2$]
-    If $(n, H_s, \mathbf{if}\:c\:s_1\:s_2) \to^* (n', H_s', \mathbf{skip})$,
-    we must have $(n, H_s, s_1) \to^* (n_t, H_{st}', \mathbf{skip})$
-    and $(n, H_s, s_2) \to^* (n_f, H_{sf}', \mathbf{skip})$.  Then,
+      If $(n, H_s, \mathbf{if}\:c\:s_1\:s_2) \to^{*} (n', H_s', \mathbf{skip})$,
+      we must have $(n, H_s, s_1) \to^{*} (n_t, H_{st}', \mathbf{skip})$
+      and $(n, H_s, s_2) \to^{*} (n_f, H_{sf}', \mathbf{skip})$.  Then,
     analogously to the argument in lemma~\ref{lem:stmt}, this case can
     be established.
   \item[$\mathbf{while}\:c\:s$]
@@ -298,7 +298,7 @@ We require that the symbolic evaluation terminate.
     and thus (by lemma~\ref{lem:cond})
     $(H_c, c) \judge_c \mathbf{false}$.
     Then
-    $(\Sigma, H_c, \mathbf{while}\:c\:s) \to^* (\Sigma, H_c, \mathbf{skip})$.
+    $(\Sigma, H_c, \mathbf{while}\:c\:s) \to^{*} (\Sigma, H_c, \mathbf{skip})$.
     But by assumption,
     $(n, H_s, \mathbf{while}\:c\:s) \to (n, H_s, \mathbf{skip})$,
     so the inductive statement holds.
@@ -326,9 +326,9 @@ Then $(\Sigma, H_0, p) \judge_c b$ if and only if $(\Sigma, x) \judge_o b$.
 
   Let the program $p$ be $s\:;;\:\passert\:c$.
   If $(0, H_0, p) \judge_s \{ x \}$, then
-  $(0, H_0, s) \to_s^* (n, H_s, \mathbf{skip})$.
+  $(0, H_0, s) \to_s^{*} (n, H_s, \mathbf{skip})$.
   Then by lemma~\ref{lem:whil},
-  $(\Sigma, H_0, s) \to_s^* (\Sigma', H_c, \mathbf{skip}$,
+  $(\Sigma, H_0, s) \to_s^{*} (\Sigma', H_c, \mathbf{skip}$,
   with the expected relation between $H_c$ and $H_s$.
   But then due to this relation,
   if $(H_s, c) \judge_s \{ y \}$,
