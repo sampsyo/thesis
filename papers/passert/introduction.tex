@@ -52,7 +52,7 @@ estimate is significantly different from
 For example, consider the following function, which adds
 Gaussian noise to users' true locations to protect their privacy.
 %
-\begin{lstlisting}[language=Python]
+\begin{lstlisting}
   def obfuscate_location(location):
     noise = random.gauss(0,1)
     d = distance(location, location + noise)

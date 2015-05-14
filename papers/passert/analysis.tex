@@ -21,7 +21,7 @@ evaluating deterministic computations and introducing symbolic
 values---probability-distribution expression trees---to represent
 probabilistic values. For example, the following statement: 
 %
-\begin{lstlisting}[language=Python]
+\begin{lstlisting}
   a = b + 2
 \end{lstlisting}
 %
@@ -71,7 +71,7 @@ we produce conditional probabilities
 based on control-flow divergence. For example, consider this simple
 program:
 %
-\begin{lstlisting}[language=Python]
+\begin{lstlisting}
   if a:  b = c   else:  b = d
 \end{lstlisting}
 %
@@ -117,7 +117,7 @@ model and violate the acyclic definition of a Bayesian network. For
 example, consider a loop that accumulates samples and exits when the
 sum reaches a threshold:
 %
-\begin{lstlisting}[language=Python]
+\begin{lstlisting}
   v = 0.0
   while v < 10.0:
     v += random.uniform(-0.5, 1.0)
@@ -142,7 +142,7 @@ non-probabilistic bounds. For example, we evaluated an image filter
 (\bench{sobel}) that loops over the pixel array and applies a probabilistic
 convolution to each window. The nested loops resemble:
 %
-\begin{lstlisting}[language=Python]
+\begin{lstlisting}
   for x in 0..width:
     for y in 0..height:
       filter(image[x][y])

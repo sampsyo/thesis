@@ -150,7 +150,7 @@ It uses the draw to compute the sample, $d(\sigma)$.
   \inferrule[while]{ }{(\Sigma, H, \mathbf{while}\:c\:s) \to_c (\Sigma, H,
     \mathbf{if}\:c\:(s ; \mathbf{while}\:c\:s)\:\mathbf{skip})}
 
-\inferrule[passert]{(\Sigma, H_0, s) \to_c^*
+    \inferrule[passert]{(\Sigma, H_0, s) \to_c^{*}
   (\Sigma', H', \mathbf{skip}) \\ (H', c) \judge_c b}
           {(\Sigma, H_0, s\:;;\:\passert\:c) \judge_c b}
 \end{mathpar}
@@ -167,11 +167,11 @@ It uses the draw to compute the sample, $d(\sigma)$.
 The result of an execution under the concrete semantics is the result
 of the \passert condition after evaluating the program body.  We use
 the standard definition of
-$\to_c^*$ as the reflexive, transitive closure of the
+$\to_c^{*}$ as the reflexive, transitive closure of the
 small step judgment:
 %
 \begin{mathpar}
-\inferrule[passert]{(\Sigma, H_0, s) \to_c^*
+  \inferrule[passert]{(\Sigma, H_0, s) \to_c^{*}
   (\Sigma', H', \mathbf{skip}) \\ (H', c) \judge_c b}
           {(\Sigma, H_0, s\:;;\:\passert\:c) \judge_c b}
 \end{mathpar}
@@ -254,8 +254,8 @@ suggest quotation or suspended evaluation.
   \inferrule[progn]{(n, H, s_1) \to_s (n', H', s_1')}{(n, H, s_1;s_2)
     \to_s (n', H', s_1'\:;\:s_2)} \and
   \inferrule[prog1]{ }{(n, H, \mathbf{skip};s_2) \to_s (n, H, s_2)} \and
-  \inferrule[if]{(H, c) \judge_s \{ x \} \\ (n, H, b_t) \to_s^* (m_t, H_t,
-    \mathbf{skip}) \\ (n, H, b_f) \to_s^* (m_f, H_f, \mathbf{skip})}
+  \inferrule[if]{(H, c) \judge_s \{ x \} \\ (n, H, b_t) \to_s^{*} (m_t, H_t,
+  \mathbf{skip}) \\ (n, H, b_f) \to_s^{*} (m_f, H_f, \mathbf{skip})}
             {(n, H, \mathbf{if}\:c\:b_t\:b_f) \to_s
               (\{\mathbf{if}\:x\:m_t\:m_f\})\mathtt{merge}(H_t, H_f, \{ x \}), \mathbf{skip})}
     \and
@@ -266,7 +266,7 @@ suggest quotation or suspended evaluation.
     \forall \Sigma, (\Sigma, \{ x \}) \judge_o \mathbf{false}}
     {(n, H, \mathbf{while}\:c\:s) \to (n, H, \mathbf{skip})}
 
-  \inferrule[passert]{(0, H_0, s) \to_s^* (n, H', \mathbf{skip}) \\
+    \inferrule[passert]{(0, H_0, s) \to_s^{*} (n, H', \mathbf{skip}) \\
     (H', c) \judge_s \{ x \}}
     {(H_0, s\:;;\:\passert\:c) \judge_s \{ x \}}
 
@@ -326,8 +326,8 @@ Using the \texttt{merge} function, we write the rule for \textbf{if}
 statements:
 %
 \begin{mathpar}
-  \inferrule[if]{(H, c) \judge_s \{ x \} \\ (H, b_t) \to_s^* (H_t,
-    \mathbf{skip}) \\ (H, b_f) \to_s^* (H_f, \mathbf{skip})}
+    \inferrule[if]{(H, c) \judge_s \{ x \} \\ (H, b_t) \to_s^{*} (H_t,
+    \mathbf{skip}) \\ (H, b_f) \to_s^{*} (H_f, \mathbf{skip})}
             {(n, H, \mathbf{if}\:c\;b_t\:b_f) \to_s (n, \mathtt{merge}(H_t,
               H_f, \{ x \}), \mathbf{skip})}
 \end{mathpar}
@@ -368,7 +368,7 @@ future work.}
 We can now define the symbolic evaluation of programs:
 %
 \[
-\inferrule[passert]{(0, H_0, s) \to_s^* (n, H', \mathbf{skip}) \\
+    \inferrule[passert]{(0, H_0, s) \to_s^{*} (n, H', \mathbf{skip}) \\
   (H', c) \judge_s \{ x \}}
           {(H_0, s\:;;\:\passert\:c) \judge_s \{ x \}}
 \]
