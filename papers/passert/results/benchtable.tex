@@ -1,0 +1,76 @@
+\bench{gpswalk} &
+Location sensing and velocity calculation \newline
+\passert: Velocity is within normal walking speed &
+\perfdata{time-gpswalk-dummy-run} &
+\perfdata{time-gpswalk-sample-analyze} &
+\perfdata{time-gpswalk-sample-run} &
+\optsdata{gpswalk-arithIdent} &
+\optsdata{gpswalk-knownDist} &
+\optsdata{gpswalk-clt}
+\\
+\addlinespace[0.6ex]
+\bench{salary} &
+Calculate average of concrete obfuscated salaries \newline
+\passert: Obfuscated mean is close to true mean &
+\perfdata{time-salary-dummy-run} &
+\perfdata{time-salary-sample-analyze} &
+\perfdata{time-salary-sample-run} &
+\optsdata{salary-arithIdent} &
+\optsdata{salary-knownDist} &
+\optsdata{salary-clt}
+\\
+\addlinespace[0.6ex]
+\bench{salary-abs} &
+\bench{salary} with abstract salaries drawn from a distribution \newline
+\passert: As above &
+\perfdata{time-salary-abs-dummy-run} &
+\perfdata{time-salary-abs-sample-analyze} &
+\perfdata{time-salary-abs-sample-run} &
+\optsdata{salary-abs-arithIdent} &
+\optsdata{salary-abs-knownDist} &
+\optsdata{salary-abs-clt}
+\\
+\addlinespace[0.6ex]
+\bench{kmeans} &
+Approximate clustering \newline
+\passert: Total distance is within threshold &
+\perfdata{time-kmeans-dummy-run} &
+\perfdata{time-kmeans-sample-analyze} &
+\perfdata{time-kmeans-sample-run} &
+\optsdata{kmeans-arithIdent} &
+\optsdata{kmeans-knownDist} &
+\optsdata{kmeans-clt}
+\\
+\addlinespace[0.6ex]
+\bench{sobel} &
+Approximate image filter \newline
+\passert: Average pixel difference is small &
+\perfdata{time-sobel-dummy-run} &
+\perfdata{time-sobel-sample-analyze} &
+\perfdata{time-sobel-sample-run} &
+\optsdata{sobel-arithIdent} &
+\optsdata{sobel-knownDist} &
+\optsdata{sobel-clt}
+\\
+\addlinespace[0.6ex]
+\bench{hotspot} &
+Approximate CMOS thermal simulation \newline
+\passert: Temperature error is low &
+\perfdata{time-hotspot-dummy-run} &
+\perfdata{time-hotspot-sample-analyze} &
+\perfdata{time-hotspot-sample-run} &
+\optsdata{hotspot-arithIdent} &
+\optsdata{hotspot-knownDist} &
+\optsdata{hotspot-clt}
+\\
+\addlinespace[0.6ex]
+\bench{inversek2j} &
+Approximate robotics control \newline
+\passert: Computed angles are close to inputs &
+\perfdata{time-inversek2j-dummy-run} &
+\perfdata{time-inversek2j-sample-analyze} &
+\perfdata{time-inversek2j-sample-run} &
+\optsdata{inversek2j-arithIdent} &
+\optsdata{inversek2j-knownDist} &
+\optsdata{inversek2j-clt}
+\\

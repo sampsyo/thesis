@@ -1,0 +1,36 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Conclusion}
+Programs use and compute with probabilistic data---be it big data or
+sensors or machine learning.  Probabilistic programs are ubiquitous,
+yet we lack tools and analyses to help programmers understand their
+meaning. This paper embraces randomness and demonstrates how to
+represent arbitrary programs as a Bayesian network and thus give them
+a well-defined, probabilistic semantics.  Programmers then express
+properties of probabilistic variables in a \passert.  We introduce
+\emph{probabilistic evaluation} which extracts distributions from
+programs, optimizes them with algebras over probability distributions,
+and then verifies them directly or with hypothesis testing.  Case
+studies on three application domains show that probabilistic evaluation
+can verify important correctness properties
+and that our approach is orders of
+magnitude more efficient than stress testing.
+
+
+% A probabilistic assertion implies that the quality of a program's is
+% itself approximate. With \passerts, programmers explicitly express
+% this fact. 
+By exposing approximate quality conditions, we create a
+formalism for principled but approximate transformations.  Akin to the
+way that dataflow formalism created a rigorous and fertile foundation
+for traditional compiler optimization of deterministic programs, this
+or some other probabilistic formalism should prove fertile for compiler optimization
+of probabilistic programs.
+
+\xxx[Kathryn]{OR: this probabilistic formalism could prove fertile for compiler optimization of probabilistic programs.}
+
+  \xxx[Kathryn]{Do we all believe this last statement?  Todd, got this
+    line of thinking started and I agree, but either the weak version
+    in there now or this stronger one in the comment might be too bold
+    for a submission.  What do you think?}
+ 

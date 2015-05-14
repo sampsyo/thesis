@@ -1,0 +1,218 @@
+\section{Distribution Extraction} 
+\label{sec:distex}
+
+
+Given a program with a \passert $e$ and either a concrete input or a
+distribution over inputs,
+\tool performs a probabilistic evaluation
+by building and optimizing a Bayesian-network representation of the statements
+required to evaluate the \passert.  This section describes
+distribution extraction, which is the first step in this process.
+Distribution extraction produces a symbolic Bayesian network representation
+that corresponds to the slice of the program contributing to $e$.
+\tool treats randomness as symbolic and
+deterministic components as concrete.
+The process is similar to symbolic execution and to lazy evaluation in
+functional languages.
+
+\paragraph{Distributions as Symbolic Values}
+\mayhap performs a forward pass over the program, concretely
+evaluating deterministic computations and introducing symbolic
+values---probability-distribution expression trees---to represent
+probabilistic values. For example, the following statement: 
+%
+\begin{lstlisting}[language=Python]
+  a = b + 2
+\end{lstlisting}
+%
+computes $a$ concretely when $b$ is not probabilistic.  If, prior to the above
+statement, the program assigns \lil{b = 5}, then we perform the
+addition and set $a=7$.  However, if \lil{b = gaussian()}, we
+add a node to the Bayesian network, representing $b$
+symbolically as a Gaussian distribution.  We then create a sum node for
+$a$ with two parents: $b$'s Gaussian  and $2$'s constant (point mass) distribution.
+
+As this mixed symbolic and concrete execution proceeds, it eagerly
+evaluates any purely deterministic statements but builds a Bayesian-network
+representation
+of the forward slice of any probabilistic statements.  This
+process embodies a symbolic execution in which the symbolic values are
+probability distributions. Our approach differs from typical symbolic
+execution
+in how it handles control flow (see below).  
+
+When the analysis reaches a statement \passert $e$, \mayhap records the Bayesian network
+rooted at $e$. It then optimizes the network and samples the
+resulting distribution.
+Compared to sampling the entire program repeatedly, sampling the extracted
+distribution can be more efficient even without optimizations since it
+eliminates redundant, non-probabilistic
+computation. 
+
+%  the work
+% that would be wasted in a straightforward sampling approach to
+% evaluating \passerts---by sampling the specialized distribution (as in
+% Section~\ref{sec:sample}), we sample only the portion of the program
+% that changes from execution to execution.
+
+\label{sec:conditionals}
+
+
+\paragraph{Conditionals}
+% Any symbolic execution technique must address the possibility of control flow
+% based on symbolic values. 
+When conditionals and loops are based on purely
+concrete values, distribution extraction proceeds down one side
+of the control flow branch as usual. When conditions operate on probabilistic variables, the analysis
+must capture the effect of both branch directions.
+
+To analyze the probability distribution of a conditional statement,
+we produce conditional probabilities
+based on control-flow divergence. For example, consider this simple
+program:
+%
+\begin{lstlisting}[language=Python]
+  if a:  b = c   else:  b = d
+\end{lstlisting}
+%
+in which $a$ is probabilistic. Even if both $c$
+and $d$ are discrete, the value of $b$ is probabilistic since it depends on
+the value of $a$. We can write the conditional probability distributions $\prob{B}$
+for $b$ conditioned on both possible values for $a$:
+%
+\begin{align*}
+  \Pr[B \;|\; A = \mathrm{true}] &= \Pr[C]\\
+  \Pr[B \;|\; A = \mathrm{false}] &= \Pr[D]
+\end{align*}
+%
+Instead, to simplify the representation of probabilities and to enable more
+straightforward analysis, we \emph{marginalize} the condition $a$ to
+produce an unconditional distribution for $b$. Using marginalization, we
+write the unconditional distribution $\prob{B}$ as:
+%
+\begin{align*}
+    \Pr[B] &= \sum_a \Pr[B\;|\; A = a] \prob{A = a} \\
+           &= \Pr[B \;|\; A = \mathrm{true}] \prob{A = \mathrm{true}} \\
+           & \qquad {}
+            + \Pr[B \;|\; A = \mathrm{false}] \prob{A = \mathrm{false}} \\
+           &= \Pr[C] \cdot \prob{A=\mathrm{true}} \\
+           & \qquad {}
+            + \Pr[D] \cdot (1 - \prob{A=\mathrm{true}})
+\end{align*}
+%
+This expression computes the distribution for $b$ as a function of the
+distributions for $a$, $c$, and $d$. Intuitively, the probabilistic evaluation rewrites
+the condition to read \lil{b = a * c + (1 - a) * d}. This algebraic
+representation enables some optimizations described
+in Section~\ref{sec:expectation}.
+
+\label{sec:loops}
+
+
+\paragraph{Loops and External Code}
+Loops with probabilistic conditions can, in general, run for an
+unbounded number of iterations. Representing unbounded execution would
+induce cycles in our graphical
+model and violate the acyclic definition of a Bayesian network. For
+example, consider a loop that accumulates samples and exits when the
+sum reaches a threshold:
+%
+\begin{lstlisting}[language=Python]
+  v = 0.0
+  while v < 10.0:
+    v += random.uniform(-0.5, 1.0)
+\end{lstlisting}
+%
+If the random sample is negative in every iteration, then the
+loop will never exit. The probability of this divergence is small but non-zero.
+
+Prior work has dealt with probabilistic loops by restricting the program
+to linear operators~\cite{sriram-pldi}. \tool relaxes this
+assumption by treating a loop as a
+black box that generates samples (i.e., the loop may run for an
+unbounded but finite number of iterations), similar to a known
+probability distribution such as \code{random.uniform}.
+This representation avoids creating cycles.
+In particular, \tool represents a loop body with a
+\emph{summary node}, where variables read by the loop are
+edges \emph{into} the node and variables written by the loop are edges \emph{out} of the node.
+
+In practice, many loops in probabilistic programs have
+non-probabilistic bounds. For example, we evaluated an image filter
+(\bench{sobel}) that loops over the pixel array and applies a probabilistic
+convolution to each window. The nested loops resemble:
+%
+\begin{lstlisting}[language=Python]
+  for x in 0..width:
+    for y in 0..height:
+      filter(image[x][y])
+\end{lstlisting}
+%
+While the computed pixel array contains probabilistic data, the dimensions
+\code{width} and \code{height} are fixed
+for a particular image. \tool extracts complete distributions from these common
+concrete-bounded loops without black-box sampling.
+
+\tool uses a similar black-box mechanism when interfacing with library code whose
+implementation is not available for analysis---for example, when passing a
+probabilistic value to the \code{cos()} function from the C standard library.
+This straightforward approach prevents statistical optimizations inside the
+library function or loop body but lets \tool analyze more programs.
+
+\paragraph{Analyzing Loops with Probabilistic Path Pruning}
+We propose another way to analyze loops with probabilistic bounds by
+building on the path pruning techniques used in traditional symbolic
+execution.  Typically, path pruning works by proving that some paths
+are infeasible. If the analysis determines that a path constraint
+is unsatisfiable, it halts exploration of that path.  Probabilistic evaluation
+instead needs to discover when a given path is \emph{unlikely} rather
+than impossible, i.e., when the conditions that lead to following this
+path at run time have a probability that falls below a
+threshold.  We propose tracking a path probability expression for each
+explored path and periodically sampling these distributions to
+prune unlikely paths.
+This extension handles general probabilistic
+control flow in programs that are likely to terminate eventually.
+Intuitively, the more iterations the loop
+executes, the less likely it is to execute another iteration.
+Programs with a significant probability of running forever before
+reaching a \passert can still prevent the analysis from terminating,
+but this behavior likely indicates a bug.
+We leave the evaluation of
+this more precise analysis to future work.
+
+% Assume a simple probabilistic program with a loop that lacks
+% concrete bounds (i.e., the bounds are statistical).
+
+% x = uniform(0,1)
+% w = 0
+% Label:
+%   w += x + 1
+%   if w < 100 goto Label
+% z = w * 10
+% passert z < 10
+
+% Note we cannot naively represent this program as a Bayesian
+% network because the loop induces a cycle in the induced graphical
+% model.
+
+% However, if we wrap the body of the loop into its own super-node
+% we can remove the cycle in the graphical model and turn it into a
+% Bayesian network---variables read within the body of the loop
+% will be edges \emph{into} the super-node and variables written by
+% the body of the loop will be edges \emph{out} of the super-node.
+% This provides a mechanism to handle loops.  Of course, \tool is
+% now unable to optimize the contents of the super-node and must
+% sample from it but as we demonstrate in Section~\cite{sec:eval}
+% sampling is still efficient.
+
+% To see this in practice, consider the prior code. We represent
+% the loop's basic block, denoted by Label, as a super-node with
+% edges from the random variable X into the super-node and edges
+% from the super-node into Z.
+
+% The passert asks whether Z < 10 and so \tool verifies the passert
+% as true if E[Z < 10] > 0.5 and false if E[Z < 10] < 0.5.  In
+% particular, we use (i) exact methods which use probabilistic laws
+% to prove E[X<10] < 0.5 or (ii) we use hypothesis testing to
+% estimate E[Z < 10] and bound error in that estimate.

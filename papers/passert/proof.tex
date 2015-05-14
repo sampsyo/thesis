@@ -1,0 +1,344 @@
+\begin{theorem} \label{thm:main}
+Let $(0, H_0, p) \judge_s \{ x \}$, where $x$ is a finite program.
+Then $(\Sigma, H_0, p) \judge_c b$ if and only if $(\Sigma, x) \judge_o b$.
+\end{theorem}
+
+Intuitively, this theorem is true because the distribution extraction
+$\judge_s$ is just a call-by-need lazy evaluation, and $\judge_o$ is
+the projection of $\judge_c$ over this lazy evaluation.  We prove the
+theorem formally here.
+
+The proof of this theorem proceeds by structural induction on $p$.
+First, a few lemmas establish corresponding properties for
+conditionals, expressions, then statements, and finally programs.
+
+\begin{lemma} \label{lem:expr}
+  For $e \in E$, let $(H_s, e) \judge_s \{ x \}$, and suppose that for
+  every variable $a$, $(\Sigma, H_s(a)) \judge_e H_c(a)$.  Then $(H_c,
+  e) \judge_c v$ if and only if $(\Sigma, x) \judge_o v$.
+\end{lemma}
+
+\begin{proof}
+The proof is by induction on $e$.  The condition on $H_s$ and $H_c$ is
+necessary because $H_s$ maps variables to expressions in $E_o$, while
+$H_c$ maps variables to real numbers.  Note that $\Sigma$ is unbound;
+this is because, while $\Sigma$ is necessary for sampling
+distributions in $E_o$, expressions in $E$ do not involve sampling.
+We examine each of five cases individually.
+
+\begin{itemize}
+\item[$e_1 + e_2$] Let $(H_s, e_1) \judge_s \{ x_1 \}$ and $(H_s, e_2)
+  \judge_s \{ x_2 \}$. Also let $(H_c, e_1) \judge_c v_1$ and $(H_c,
+  e_2) \judge_c v_2$, so that $(H_c, e_1 + e_2) \judge_c v_1 + v_2 =
+  v$.  By the definition of $\judge_s$, $(H_s, e_1 + e_2) \judge_s \{
+  x_1 + x_2 \}$, and by induction $(\Sigma, x_1) \judge_o v_1$ and
+  $(\Sigma, x_2) \judge_o v_2$.  Then by the definition of $\judge_o$,
+  $(\Sigma, x) = (\Sigma, x_1 + x_2) \judge_o v_1 + v_2 = v$.  Thus
+  this case is established.
+\item[$e_1 * e_2$] Analogous to $e_1 + e_2$.
+\item[$e_1 \div e_2$] Analogous to $e_1 + e_2$.
+\item[$e_1 \div e_2$] Analogous to $e_1 + e_2$.
+\item[$r$] $(H_s, r) \judge_s \{ r \}$ and $(\Sigma, r) \judge_c r$;
+  on the other hand, $(H_c, r) \judge_c r$.  Thus this case is
+  established.
+\item[$v$] $(H_s, v) \judge_s H_s(v)$, while $(H_c, v) \judge_c
+  H_c(v)$.  But by hypothesis, $(\Sigma, H_s(v)) \judge_e H_c(a)$, so
+  this case is established.
+\end{itemize}
+
+These are all the cases present in the definition of $E$, so the lemma
+is complete.
+
+\end{proof}
+
+\begin{lemma} \label{lem:cond}
+  For $c \in C$, let $(H_s, c) \judge_s \{ x \}$, and suppose that for
+  every variable $a$, $(\Sigma, H_s(a)) \judge_e H_c(a)$.  Then $(H_c,
+  c) \judge_c b$ if and only if $(\Sigma, x) \judge_o b$.
+\end{lemma}
+
+\begin{proof}
+We again use induction, on $c$.  We examine each of five cases
+individually.
+
+\begin{itemize}
+\item[$e_1 < e_2$] By the definition of $\judge_s$, $\{ x \} = \{ x_1
+  + x_2 \}$.  Let $(H_c, e_1) \judge_c v_1$ and $(H_c, e_2) \judge_c
+  v_2$, so that $b = [v_1 < v_2]$.  By lemma~\ref{lem:expr}, $(\Sigma,
+  x_1) \judge_o v_1$ and $(\Sigma, x_2) \judge_o v_2$, so $(\Sigma, x)
+  \judge_o [v_1 < v_2] = b$.  Thus this case is established.
+\item[$e_1 = e_2$] Analogous to $e_1 < e_2$.
+\item[$c_1 \wedge c_2$] Let $(H_s, c_1) \judge_s \{ x_1 \}$ and $(H_s,
+  c_2) \judge_s \{ x_2 \}$. Also let $(H_c, c_1) \judge_c b_1$ and
+  $(H_c, c_2) \judge_c b_2$, so that $(H_c, c_1 \wedge c_2) \judge_c
+  b_1 \wedge b_2 = v$.  By the definition of $\judge_s$, $(H_s, c_1
+  \wedge c_2) \judge_s \{ x_1 \wedge x_2 \}$, and by induction
+  $(\Sigma, x_1) \judge_o b_1$ and $(\Sigma, x_2) \judge_o b_2$.  Then
+  by the definition of $\judge_o$, $(\Sigma, x) = (\Sigma, x_1 \wedge
+  x_2) \judge_o b_1 + b_2 = b$.  Thus this case is established.
+\item[$c_1 \vee c_2$] Analogous to $c_1 \wedge c_2$.
+\item[$\neg c_1$] Let $(H_s, c_1) \judge_s \{ x_1 \}$ and $(H_c, c_1)
+  \judge_c b_1$, so that $(H_c, \neg c_1) \judge_c \neg b_1$.  By the
+  definition of $\judge_s$, $(H_s, \neg c_1) \judge_s \{ \neg x_1 \}$,
+  and by induction $(\Sigma, x_1) \judge_o b_1$, so that $(\Sigma, x)
+  \judge_o \neg b_1 = b$.  Thus this case is established.
+\end{itemize}
+
+These are all the cases present in the definition of $C$, so the lemma
+is complete.
+
+\end{proof}
+
+We now prove a lemma which establishes equivalence for statements that
+do not contain \textbf{while} loops.
+
+\begin{lemma}
+  \label{lem:stmt}
+  Let
+  $(n, H_s, s) \to_s (m, H_s', s')$,
+  where $s$ contains no \textbf{while} statements.
+  Also suppose that $(\Sigma, n) \judge_o l$
+  and $(\Sigma, m) \judge_o l + k$.
+  Furthermore let $H_c$ be such that
+  $(\Sigma, H_s(v)) \judge_o H_c(v)$
+  for all variables $v$. Then
+  $(\Sigma, H_c, s) \to_c^* (\Sigma', H_c', s')$,
+  where
+  $\Sigma = \sigma_1:\sigma_2:\dots:\sigma_k:\Sigma'$.
+  Furthermore,
+  $(\Sigma, H_s'(v)) \judge_o H_c'(v)$
+  for all $v$.
+\end{lemma}
+
+\begin{proof}
+  A few difficulties arise when attempting a naive induction:
+
+  \begin{itemize}
+  \item While $\judge_c$ and $\to_c$ consume an element of $\Sigma$,
+    $\judge_s$ and $\to_s$ simply increment an offset. Our induction
+    must show that this offset is correctly handled.
+  \item While $\to_c$ only evaluates one side of an \textbf{if}
+    statement, $\to_s$ evaluates both.  Proving that this is sound
+    requires proving that the ``merge'' function correctly unifies the
+    two branches.
+  \item Non-terminating while loops, especially those involving
+    sampling, are difficult to handle in the induction.  The statement
+    of the lemma guarantees that the while loop must terminate (since
+    $\to_s^*$ requires a finite number of steps), but the possibility
+    for while loops to not terminate still complicates the proof.
+  \end{itemize}
+   
+  The first problem is avoided by the statement of the lemma: we
+  require that the symbolic semantics increment the sequence offset by
+  exactly as many elements as the concrete semantics consumes.  The
+  second problem requires a careful analysis of the ``merge''
+  function.  This is also why we assume a single step in $\to_s$ but a
+  number of steps in $\to_c^*$.  Finally, the last problem is avoided
+  by a nested induction over the number of times the \textbf{while}
+  loop is unrolled.  Since we assume the symbolic semantics terminate,
+  the loop must at some point unroll fully, so the induction is
+  founded.
+
+  As mentioned, we induct over the number of steps taken by $\to_s^*$.
+  At each step, we assume that the future steps will satisfy the
+  statement of the lemma.  We consider each case individually.
+
+  \begin{itemize}
+  \item[$v := e$] Assume that $(H_c, e) \judge_c x_c$, so that
+    $(\Sigma, H_c, v := e) \to_c (\Sigma, (v \mapsto x):H_c, \mathbf{skip})$.
+    Furthermore, suppose $(H_s, e) \judge_s \{ x_s \}$, so that
+    $(n, H_s, v := e) \to_s (n, (v \mapsto x_s):H_s, \mathbf{skip})$.
+    By lemma~\ref{lem:expr}, $(\Sigma, x_s) \judge_o x_s$.  But then,
+    for all variables $v$, we have
+    $(\Sigma, ((v \mapsto x_s):H_s)(v')) \judge_o ((v \mapsto x_c):H_c)(v')$
+    for all $v'$.  If we set $\Sigma' = \Sigma$ and $k = 0$, we find
+    that in this case our theorem is proven.
+  \item[$v \leftarrow d$] Let $\Sigma = \sigma:\Sigma'$.  Then
+    $(\Sigma, H_c, v \leftarrow d) \to_c (\Sigma', (v \mapsto d(\sigma)):H_c, \mathbf{skip})$
+    On the other hand, in the symbolic semantics,
+    $(\{ n \}, H_s, v \leftarrow d) \to_s (\{ n+1 \}, (v \mapsto \langle d, n \rangle):H_s, \mathbf{skip})$
+    We can see that
+    if $(\Sigma, \{ n \}) \judge_o l$, then $(\Sigma, \{n + 1\}) \judge_o l + 1$,
+    forcing $k = 1$. Indeed, $\Sigma = \sigma_1:\Sigma'$.  Furthermore, since
+    $(\Sigma, \langle d, n \rangle) \judge_o d(\sigma_1) = d(\sigma)$,
+    we know that for all $v'$,
+    $(\Sigma, ((v \mapsto \langle d, n \rangle):H_s)(v')) \judge_o ((v \mapsto d(\sigma)):H_c)(v')$.
+    So this case is established.
+  \item[\textbf{skip}] Since there are no symbolic steps
+    for \textbf{skip}, the lemma is vacuously true.
+  \item[$s_1 ; s_2$] This statement has two cases: where $s_1$ is
+    \textbf{skip}, and where it is not.  If $s_1$ is \textbf{skip},
+    the case is trivial, so suppose $s_1$ is not \textbf{skip}.
+    Furthermore, let $(n, H_s, s_1) \to_s (m', H_s', s_1')$.
+    By induction, we also have
+    $(\Sigma, H_c, s_1) \to_c^* (\Sigma'', H_c', s_1')$,
+    with the expected properties relating $\Sigma'$ and $k$, and
+    $H_c'$ and $H_s'$.  But then since
+    $(n, H_s, s_1 ; s_2) \to_s (m', H_s', s_1' ; s_2)$
+    and
+    $(\Sigma, H_c, s_1 ; s_2) \to_c^* (\Sigma'', H_c', s_1' ; s_2)$,
+    this case is established with $m = m'$ and $\Sigma' = \Sigma''$.
+    (We omit the lemma that
+    $s_1 \to^* s_1'$ implies $s_1 ; s_2 \to^* s_1' ; s_2$,
+    with the expected behavior of the other parameters.)
+  \item[$\mathbf{if}\:c\:s_1\:s_2$]
+    First, consider that per lemma~\ref{lem:cond},
+      we know that if $(H_c, c) \judge_c b$,
+      and $(H_s, c) \judge_s \{ x_s \}$,
+      then $(\Sigma, x_s) \judge_o b$.
+    Now consider two sub-cases:
+      $b$ is true, and $b$ is false.
+    If $b$ is true,
+      then for all expressions $y_t$ and $y_f$,
+      the expression $\mathbf{if}\:x_s\:y_t\:y_f$
+      must evaluate to the same result as $y_t$;
+      otherwise if $b$ is false,
+      to the same result as $y_f$.
+
+    Now, depending on $b$,
+    either
+    $(\Sigma, H_c, \mathbf{if}\:c\:s_1\:s_2) \to (\Sigma', H_c', s_1)$
+    or
+    $(\Sigma, H_c, \mathbf{if}\:c\:s_1\:s_2) \to (\Sigma', H_c', s_2)$.
+    We know that
+    $(n, H_s, s_1) \to_s^* (m_t, H_{st}, \mathbf{skip})$
+    and
+    $(n, H_s, s_2) \to_s^* (m_f, H_{sf}, \mathbf{skip})$.
+    But then by induction, we know that
+    $(\Sigma, H_c, s_1) \to_c^* (\Sigma_t, H_{ct}, \mathbf{skip})$
+    or
+    $(\Sigma, H_c, s_2) \to_c^* (\Sigma_f, H_{cf}, \mathbf{skip})$,
+    where the relationship of $\Sigma_t$ to $m_t$, of $\Sigma_f$ to
+    $m_f$, of $H_{ct}$ to $H_{st}$, and of $H_{cf}$ to $H_{sf}$ are
+    as expected.
+    Thus, when
+    $(n, H_s, \mathbf{if}\:c\:s_1\:s_2) \to (m, H_s', \mathbf{skip})$,
+    we know that
+    $(\Sigma, H_c, \mathbf{if}\:c\:s_1\:s_2) \to (\Sigma', H_c', \mathbf{skip})$
+    as required, where $\Sigma'$ is $\Sigma_t$ or $\Sigma_f$ depending
+    on the condition, and where $H_c'$ is $H_{ct}$ or $H_{cf}$, again
+    depending on the loop condition.
+
+    All that remains to prove is that the symbolic inference rule for
+    the \textbf{if} rule correctly combines $H_{st}$ and $H_{sf}$, and
+    likewise correctly combines $m_t$ and $m_f$.
+    Recall that $b$ is the value of the loop condition, and the loop
+    conditional evaluates symbolically to $x_s$.
+    We do a case analysis on $b$.
+    First, suppose $b$ is true.  Then $\Sigma' = \Sigma_t$, so we know
+    that $\Sigma' = \sigma_1:\dotsb\sigma_k:\Sigma'$ where
+    $(\Sigma, m) = (\Sigma, \mathbf{if}\:x_s\:m_t\:m_f) \judge_o k$.
+    Similarly, since $H_s' = \mathtt{merge}(H_{sf}, H_{st}, x_s)$,
+    we know that for all variable $v$,
+    $(\Sigma, H_s'(v)) = (\Sigma, \mathtt{merge}(H_{st}, H_{sf}, x_s)(v))$
+    This is equal to either $(\Sigma, \mathbf{if}\:x_s\:(H_{st}(v))\:(H_{sf}(v)))$
+    or $(\Sigma, H_{st}(v))$, both of which evaluate to $H_{ct}(v) = H_c'(v)$
+    because $x_s$ evaluates to $b$ which is true, and because
+    $(\Sigma, H_{st}(v)) = H_{ct}(v)$ by induction.
+    The case where $b$ is false is analogous to the case where $b$ is
+    true.
+
+    Thus this case is established.
+  \end{itemize}
+
+  This was the last remaining case (we assume that $s_1$ contains no
+  \textbf{while} statements), so the lemma is done.
+\end{proof}
+
+We now extend the equivalence to programs that contain while loops.
+We require that the symbolic evaluation terminate.
+
+\begin{lemma} \label{lem:whil}
+  Let $(n, H_s, s) \to_s^* (m, H_s', \mathbf{skip})$.
+  Further suppose that for all variables $v$,
+  $(\Sigma, H_s(v)) \judge_o H_c(v)$.
+  Then $(\Sigma, H_c, s) \to_c^* (\Sigma', H_c', \mathbf{skip})$,
+  and furthermore for all variables $v$,
+  $(\Sigma, H_s'(v)) = H_c'(v)$ and also
+  $\Sigma = \sigma_1:\dotsb:\sigma_k:\Sigma'$,
+  where $(\Sigma, m) \judge_o l + k$
+  (where $(\Sigma, n) \judge_o l$).
+\end{lemma}
+
+\begin{proof}
+  We proceed by structural induction on $s$.
+
+  \begin{itemize}
+  \item[$v := e$] There are no \textbf{while} loops in this statement,
+    so it follows from lemma~\ref{lem:stmt}.
+  \item[$v \leftarrow d$] Analogous to $v := e$.
+  \item[\textbf{skip}] Analogous to $v := e$.
+  \item[$s_1 ; s_2$] 
+    We must have
+    $(n, H_s, s_1) \to_s^* (n', H_s'', \mathbf{skip})$,
+    so by induction
+    $(\Sigma, H_c, s_1) \to_c^* (\Sigma'', H_c'', \mathbf{skip})$,
+    with the usual relation between $\Sigma''$ and $n'$, and between
+    $H_s''$ and $H_c''$.
+    But then again by induction
+    $(n', H_s'', s_2) \to_s^* (m, H_s', \mathbf{skip})$
+    implies
+    $(\Sigma'', H_c'', s_2) \to_c^* (\Sigma', H_c', \mathbf{skip})$.
+    Thus,
+    $(\Sigma, H_c, s_1;s_2) \to_c^* (\Sigma', H_c', \mathbf{skip})$,
+    and this case is established.
+  \item[$\mathbf{if}\:c\:s_1\:s_2$]
+    If $(n, H_s, \mathbf{if}\:c\:s_1\:s_2) \to^* (n', H_s', \mathbf{skip})$,
+    we must have $(n, H_s, s_1) \to^* (n_t, H_{st}', \mathbf{skip})$
+    and $(n, H_s, s_2) \to^* (n_f, H_{sf}', \mathbf{skip})$.  Then,
+    analogously to the argument in lemma~\ref{lem:stmt}, this case can
+    be established.
+  \item[$\mathbf{while}\:c\:s$]
+    There are two inference rules concerning the symbolic semantics of
+    \textbf{while} loops, so we must prove that both are sound.
+
+    First consider the rule \textsc{While0}. If it applies, we must
+    have $(\Sigma, x) \judge_o \mathbf{false}$
+    for $(H_s, c) \judge_s \{ x \}$,
+    and thus (by lemma~\ref{lem:cond})
+    $(H_c, c) \judge_c \mathbf{false}$.
+    Then
+    $(\Sigma, H_c, \mathbf{while}\:c\:s) \to^* (\Sigma, H_c, \mathbf{skip})$.
+    But by assumption,
+    $(n, H_s, \mathbf{while}\:c\:s) \to (n, H_s, \mathbf{skip})$,
+    so the inductive statement holds.
+
+    Second, consider the rule \textsc{While} in the symbolic
+    semantics.  It is identical to the corresponding rule for
+    \textbf{while}, so by induction this case is established.
+  \end{itemize}
+
+  These are all the cases for $S$, so the lemma is proven.
+  
+\end{proof}
+
+Finally, we can prove our Theorem~\ref{thm:main}.
+
+\begin{theorem}
+Let $(0, H_0, p) \judge_s \{ x \}$, where $x$ is a finite program.
+Then $(\Sigma, H_0, p) \judge_c b$ if and only if $(\Sigma, x) \judge_o b$.
+\end{theorem}
+
+\begin{proof}
+  First, note that $H_c = H_s = H_0$, so that
+  $(\Sigma, H_s(v)) \judge_o H_c(v)$ for all $v$
+  (by the rule for constants).
+
+  Let the program $p$ be $s\:;;\:\passert\:c$.
+  If $(0, H_0, p) \judge_s \{ x \}$, then
+  $(0, H_0, s) \to_s^* (n, H_s, \mathbf{skip})$.
+  Then by lemma~\ref{lem:whil},
+  $(\Sigma, H_0, s) \to_s^* (\Sigma', H_c, \mathbf{skip}$,
+  with the expected relation between $H_c$ and $H_s$.
+  But then due to this relation,
+  if $(H_s, c) \judge_s \{ y \}$,
+  $(H_c, c) \judge_c b$ if and only if $(\Sigma, y) \judge_o b$
+  (the lemma to prove this would be a straightforward induction over $y$).
+
+  Thus, $(\Sigma, H_0, p) \judge_c b$ if
+  and only if $(\Sigma, x) \judge_o b$,
+  and our theorem is proven.
+\end{proof}
+
+While complex, this theorem shows that the distribution extraction
+performed by \tool is sound.

@@ -1,0 +1,146 @@
+\newcount\draft\draft=0
+\documentclass{sigplanconf}
+\usepackage{listings}
+\usepackage{relsize}
+\usepackage{hyperref}
+\usepackage{xxx}
+\usepackage{amsmath}
+\usepackage{xspace}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage{mathpartir,amsmath,amsthm}
+\usepackage{amssymb}
+\usepackage{csquotes}
+\usepackage{tikz}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{textpos}
+\usepackage{flushend}
+
+\input{results/perfdata}
+
+\lstset{%
+    language=Java,
+    emph={@Approx, @Precise, @Top, @Context, endorse, @Approximable, assert,
+    passert},
+    emphstyle=\bfseries,
+    columns=fullflexible,
+    basicstyle=\sffamily\small,
+    aboveskip=1mm plus 1mm minus 1mm,
+    belowskip=1mm plus 1mm minus 1mm,
+    mathescape=true,
+}
+
+\hypersetup{%
+    colorlinks=false,
+    hidelinks
+}
+
+% Tolerate quotes like "this" instead of like ``this''.
+\MakeOuterQuote{"}
+
+% Math macros for probability stuff.
+\newcommand{\prob}[1]{\ensuremath{\Pr\!\left[#1\right]}}
+\newcommand{\expc}[1]{\ensuremath{\mathrm{E}\!\left[#1\right]}}
+\newcommand{\varc}[1]{\ensuremath{\mathrm{Var}\!\left[#1\right]}}
+\newcommand{\code}[1]{\lstinline[language=Python]{#1}}
+
+\providecommand{\unct}[1]{\ensuremath{\mathit{Uncertain}\langle \mathit{#1} \rangle}\xspace}
+
+% Text macros.
+\newcommand{\lil}{\lstinline}
+\newcommand{\passert}{\textsf{passert}\xspace}
+\newcommand{\passerts}{\textsf{passert}s\xspace}
+\newcommand{\Passert}{\textsf{Passert}\xspace}
+\newcommand{\Passerts}{\textsf{Passert}s\xspace}
+\newcommand{\tool}{\textsc{Mayhap}\xspace} % feel free to come up with a better name!
+\newcommand{\mayhap}{\textsc{Mayhap}\xspace} % feel free to come up with a better name!
+\newcommand{\lang}{\textsc{Prob}\xspace} % feel free to come up with a better name!
+\newcommand{\corelang}{\textsc{ProbCore}\xspace} % me too!
+\newcommand{\bench}[1]{\textsf{#1}}
+                                
+
+% For the semantics.
+\newcommand{\defeq}{\equiv}
+\newcommand{\judge}{\Downarrow}
+\newcommand{\alt}{\:|\:}
+\newtheorem{theorem}{Theorem}
+
+\usepackage{comment}
+
+\newcommand{\fix}[2]{{\bf #1 asks:~\emph{#2}}}
+
+% Show Mercurial revision number.
+\ifnum\draft=1
+  \InputIfFileExists{revision}{}{\newcommand{\Revision}{?}}
+  \usepackage{drafthead}
+\fi
+
+\begin{document}
+
+\title{Expressing and Verifying Probabilistic Assertions}
+\authorinfo{Adrian Sampson ~~ Pavel Panchekha}{University of Washington}{}
+\authorinfo{Todd Mytkowicz ~~ Kathryn S. McKinley}{Microsoft Research}{}
+\authorinfo{Dan Grossman ~~ Luis Ceze}{University of Washington}{}
+
+% sigplanconf stuff
+\conferenceinfo{PLDI '14}{June 9--11 2014, Edinburgh, United Kingdom}
+\copyrightyear{2014}
+\copyrightdata{978-1-4503-2784-8/14/06}
+\doi{2594291.2594294}
+\titlebanner{}
+\preprintfooter{}
+
+\maketitle
+
+\input{abstract}
+
+% \category{F.1.2}{Computation by Abstract Devices}{Modes of Computation---Probabilistic computation}
+\category{G.3}{Probability and Statistics}{Statistical computing}
+\category{D.2.5}{Software Engineering}{Testing and Debugging---Symbolic execution}
+%
+% AEC "Artifact Evaluated" badge.
+\begin{tikzpicture}[remember picture,overlay]
+    \node [shift={(-0.9in,-0.9in)}]  at (current page.north east) {
+        \includegraphics[scale=0.1]{aec-badge-pldi.pdf}
+    };
+\end{tikzpicture}
+%
+\terms
+Languages, Reliability
+
+\keywords
+Probabilistic programming,
+approximate computing,
+data obfuscation,
+differential privacy,
+sensors,
+symbolic execution
+
+\input{introduction}
+\input{model}
+\input{analysis}
+
+\section{Distribution Extraction Formalism}
+\label{sec:semantics}
+\def\expandedversion{0}
+\input{semantics}
+
+\input{verifying}
+\input{eval}
+\input{related}
+\input{conclusion}
+
+\acks
+
+We would like to thank our anonymous reviewers for their invaluable comments.
+Our thanks also to Tom Bergan, Colin Gordon, and James Bornholt for feedback
+on earlier versions of this paper.
+This work was supported in part by C-FAR, one of six centers of STARnet, a
+Semiconductor Research Corporation program sponsored by MARCO and DARPA.
+It was also supported by the Qualcomm Innovation Fellowship and the Google PhD
+Fellowship.
+
+\bibliographystyle{abbrvnat}
+\bibliography{passert}
+\end{document}

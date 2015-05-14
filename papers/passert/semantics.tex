@@ -1,0 +1,450 @@
+\newcommand{\ifexpanded}[2]{\if\expandedversion1 #1 \else #2 \fi}
+\ifexpanded{\includecomment{expandedonly}}{\excludecomment{expandedonly}}
+\ifexpanded{\excludecomment{mainonly}}{\includecomment{mainonly}}
+
+\newenvironment{semantics}{
+\begin{figure}[p]
+}{
+\end{figure}
+}
+
+This section formalizes a simple probabilistic imperative
+language, \corelang,
+and \tool's distribution
+extraction process. % outlined in Section~\ref{sec:distex}. 
+We describe \corelang's 
+syntax, a \emph{concrete semantics} for nondeterministic
+run-time execution, and a \emph{symbolic semantics} for
+distribution extraction. Executing a \corelang program under the
+symbolic semantics produces a Bayesian network for a \passert statement. We
+prove this extracted distribution is equivalent to the original program under
+the concrete semantics, demonstrating the soundness of \tool's core analysis.
+
+\subsection{Core Language}
+
+\begin{figure}
+    \begin{align*}
+        P &\defeq S\:;;\:\mathbf{passert}\:C \\
+        C &\defeq E < E \alt E = E \alt C \wedge C \alt C \vee C \alt \neg C \\
+        E &\defeq E + E \alt E * E \alt E \div E \alt R \alt V \\
+        S &\defeq V := E \alt V \leftarrow D \alt S\:;\:S \alt \mathbf{skip} \alt
+        \mathbf{if}\:C\:S\:S \alt \mathbf{while}\:C\:S \\
+        R &\in \mathbb{R}, 
+        ~V \in \mathrm{Variables}, 
+        ~D \in \mathrm{Distributions} \\
+    \end{align*}
+    \vspace{-5ex}
+    \caption{Syntax of \corelang.}
+    \label{fig:syntax}
+\end{figure}
+
+\corelang is an imperative language with assignment, conditionals,
+and loops. Programs use probabilistic behavior by sampling from a
+distribution and storing the result, written $v \leftarrow D$.
+Without loss of generality, a program is a sequence of statements followed by a
+single \passert, since we may verify a \passert at any program point
+by examining the program prefix leading up to the \passert.
+
+Figure~\ref{fig:syntax} defines \corelang's syntax for programs denoted
+$P$, which consist of conditionals $C$, expressions $E$, and
+statements $S$.
+\begin{mainonly}
+For example, we write the
+location obfuscator from earlier as:
+%
+\begin{lstlisting}
+  locationX $\gets$ Longitude; locationY $\gets$ Latitude;
+  noiseX $\gets$ Gauss[0, 1]; noiseY $\gets$ Gauss[0, 1];
+  newX := locationX + noiseX; newY = locationY + noiseY;
+  dSquared := ((locationX - newX) * (locationY - newY))
+    + ((locationY - newY) * (locationY - newY));;
+  passert dSquared < 100
+\end{lstlisting}
+%
+We draw the \code{Longitude} and \code{Latitude} inputs from opaque
+distributions and noise from \code{Gauss[0, 1]}.
+The entirety of \code{Gauss[0, 1]} is an opaque label; \code{0} and \code{1} are not
+expressions in our simple language.
+\end{mainonly}
+
+\subsection{Concrete Semantics}
+
+The concrete semantics for \corelang reflect a straightforward
+execution in which each sampling statement $V \leftarrow D$ draws a
+new value.  To represent distributions and sampling, we define
+distributions as functions from a sufficiently large set of
+\emph{draws} $\mathcal{S}$. The draws are similar to the seed of a
+pseudorandom number generator: a sequence $\Sigma$ of draws dictates
+the probabilistic behavior of \corelang programs.
+
+We define a large-step judgment $(H, e) \judge_c v$ for expressions
+and conditions and a small-step semantics $(\Sigma, H, s) \to_c
+(\Sigma', H', s')$ for statements. In the small-step semantics, the
+heap $H$ consists of the variable-value bindings (queried with $H(v)$)
+and $\Sigma$ is the sequence of draws (destructed with
+$\sigma:\Sigma'$).  The result of executing a program is a Boolean
+declaring whether or not the condition in the \passert was satisfied
+at the end of this particular execution.
+
+The rules for most expressions and statements are standard.  The rules
+for addition and assignment are representative:
+%
+\begin{mathpar}
+  \inferrule[plus]{(H, e_1) \judge_c v_1 \\ (H, e_2) \judge_c v_2}{(H, e_1 +
+    e_2) \judge_c v_1 + v_2} \and
+  \inferrule[assign]{(H, e) \judge_c x}{(\Sigma, H, v := e) \to_c (\Sigma, (v \mapsto
+    x):H, \mathbf{skip})}
+\end{mathpar}
+%
+\ifexpanded{Figure~\ref{sem:concrete} gives the full set of rules for the
+concrete semantics.}{The full semantics appear in this paper's auxiliary
+material~\cite{tr}, but we
+highlight the rule for sample statements here.}
+The rule for the sampling statement, $V \leftarrow D$, % where $v$ is a variable
+% and $d$ is a distribution,
+consumes a draw $\sigma$ from the head of the
+sequence $\Sigma$.
+It uses the draw to compute the sample, $d(\sigma)$.
+%
+\[
+  \inferrule[sample]{\Sigma = \sigma:\Sigma'}
+            {(\Sigma, H, v \leftarrow d) \to_c (\Sigma',(v \mapsto d(\sigma)):H,
+                \mathbf{skip})}
+\]
+
+
+\begin{expandedonly}
+\begin{figure}[p]
+\begin{mathpar}
+  \inferrule[plus]{(H, e_1) \judge_c v_1 \\ (H, e_2) \judge_c v_2}{(H, e_1 +
+    e_2) \judge_c v_1 + v_2} \and
+  \inferrule[mult]{(H, e_1) \judge_c v_1 \\ (H, e_2) \judge_c v_2}{(H, e_1 *
+    e_2) \judge_c v_1 v_2} \and
+  \inferrule[divd]{(H, e_1) \judge_c v_1 \\ (H, e_2) \judge_c v_2}{(H, e_1
+    \div e_2) \judge_c v_1 / v_2} \and
+  \inferrule[real]{ }{(H, r) \judge_c r} \and
+  \inferrule[varb]{ }{(H, v) \judge_c H(v)} \and
+
+  \inferrule[lt]{(H, e_1) \judge_c v_1 \\ (H, e_2) \judge_c v_2}{(H, e_1 <
+    e_2) \judge_c v_1 < v_2} \and
+  \inferrule[eq]{(H, e_1) \judge_c v_1 \\ (H, e_2) \judge_c v_2}{(H, e_1 =
+    e_2) \judge_c v_1 = v_2} \and
+  \inferrule[and]{(H, c_1) \judge_c b_1 \\ (H, c_2) \judge_c b_2}{(H, c_1
+    \wedge c_2) \judge_c b_1 \wedge b_2} \and
+  \inferrule[or]{(H, c_1) \judge_c b_1 \\ (H, c_2) \judge_c b_2}{(H, c_1
+    \vee c_2) \judge_c b_1 \vee b_2} \and
+  \inferrule[neg]{(H, c) \judge_c b}{(H, \neg c) \judge_c \neg b} \and
+
+  \inferrule[assign]{(H, e) \judge_c x}{(\Sigma, H, v := e) \to_c (\Sigma, (v \mapsto
+    x):H, \mathbf{skip})} \and
+  \inferrule[sample]{\Sigma = \sigma:\Sigma'}
+            {(\Sigma, H, v \leftarrow d) \to_c (\Sigma',(v \mapsto d(\sigma)):H,
+                \mathbf{skip})}
+  \inferrule[progn]{(\Sigma, H, s_1) \to_c (\Sigma', H', s_1')}{(\Sigma, H, s_1;s_2)
+    \to_c (\Sigma', H', s_1';s_2)} \and
+  \inferrule[prog1]{ }{(\Sigma, H, \mathbf{skip};s_2) \to_c (\Sigma, H, s_2)} \and
+  \inferrule[when]{(H, c) \judge_c \mathbf{true}}{(\Sigma, H,
+    \mathbf{if}\:c\:s_1\:s_2) \to_c (\Sigma, H, s_1)} \and
+  \inferrule[unless]{(H, c) \judge_c \mathbf{false}}{(\Sigma, H,
+    \mathbf{if}\:c\:s_1\:s_2) \to_c (\Sigma, H, s_2)} \and
+  \inferrule[while]{ }{(\Sigma, H, \mathbf{while}\:c\:s) \to_c (\Sigma, H,
+    \mathbf{if}\:c\:(s ; \mathbf{while}\:c\:s)\:\mathbf{skip})}
+
+\inferrule[passert]{(\Sigma, H_0, s) \to_c^*
+  (\Sigma', H', \mathbf{skip}) \\ (H', c) \judge_c b}
+          {(\Sigma, H_0, s\:;;\:\passert\:c) \judge_c b}
+\end{mathpar}
+\caption{The concrete semantics.  We use a big-step operational
+  semantics for conditions and expressions, and a small-step
+  operational semantics for statements and programs.  Both use a heap
+  $H$, which stores variable-value bindings. The small-step
+  operational semantics uses a stream $\Sigma$ of draws.}
+\label{sem:concrete}
+\end{figure}
+\end{expandedonly}
+
+\noindent
+The result of an execution under the concrete semantics is the result
+of the \passert condition after evaluating the program body.  We use
+the standard definition of
+$\to_c^*$ as the reflexive, transitive closure of the
+small step judgment:
+%
+\begin{mathpar}
+\inferrule[passert]{(\Sigma, H_0, s) \to_c^*
+  (\Sigma', H', \mathbf{skip}) \\ (H', c) \judge_c b}
+          {(\Sigma, H_0, s\:;;\:\passert\:c) \judge_c b}
+\end{mathpar}
+
+\subsection{Symbolic Semantics}
+
+While the concrete semantics above describe \corelang program execution, the
+symbolic semantics in this section describe \tool's distribution extraction.  Values
+in the symbolic semantics are expression trees that represent Bayesian
+networks. The result of a symbolic execution is the expression tree
+corresponding to the \passert condition, as opposed to a Boolean.
+
+The language for expression trees includes conditions denoted $C_o$, real-valued
+expressions $E_o$, constants, and distributions:
+%
+\begin{align*}
+  C_o &\defeq E_o < E_o \alt E_o = E_o \alt C_o \wedge C_o \alt C_o \vee C_o \alt \neg C_o \\
+  E_o &\defeq E_o + E_o \alt E_o * E_o \alt E_o \div E_o \alt R 
+         \alt \langle D, E_o \rangle \alt \mathbf{if}\:C_o\:E_o\:E_o \\
+  R &\in \mathbb{R},
+  ~ D\in \mathrm{Distributions}
+\end{align*}
+%
+Instead of the stream of draws $\Sigma$ used in the concrete
+semantics, the symbolic semantics tracks a stream offset and the
+distribution $D$ for every sample. Different branches
+of an \textbf{if} statement can sample a different number of times, so
+the stream offset may depend on a conditional; thus, the stream offset
+in $\langle d, n \rangle$ is an expression in $E_o$ and not a simple
+natural number. The symbolic semantics does not evaluate
+distributions, so the draws themselves are not required.  Expression
+trees do not contain variables because
+distribution extraction eliminates them.
+
+The symbolic semantics again has big-step rules $\judge_s$ for
+expressions and conditions and small-step rules $\to_s$ for
+statements. Instead of real numbers, however, expressions evaluate to
+expression trees in $E_o$ and the heap $H$ maps variables to
+expression trees.  For example, the rules for addition and assignment
+are:
+%
+\begin{mathpar}
+  \inferrule[plus]{(H, e_1) \judge_s \{ x_1 \} \\ (H, e_2) \judge_s \{ x_2 \}}{(H, e_1 +
+    e_2) \judge_s \{x_1 + x_2\}} \and
+  \inferrule[assign]{(H, e) \judge_s \{ x \}}{(n, H, v := e) \to_s (n, (v \mapsto
+    \{ x \}):H, \mathbf{skip})}
+\end{mathpar}
+%
+The syntax $\{ x \}$ represents an expression in $E_o$, with the brackets
+intended to
+suggest quotation or suspended evaluation.
+\ifexpanded{Figure~\ref{sem:symbolic} lists the full set of rules.}{}
+
+\begin{expandedonly}
+\begin{figure}[p]
+\begin{mathpar}
+  \inferrule[plus]{(H, e_1) \judge_s x_1 \\ (H, e_2) \judge_s x_2}{(H, e_1 +
+    e_2) \judge_s \{x_1 + x_2\}} \and
+  \inferrule[mult]{(H, e_1) \judge_s x_1 \\ (H, e_2) \judge_s x_2}{(H, e_1 *
+    e_2) \judge_s \{ x_1 *  x_2 \}} \and
+  \inferrule[divd]{(H, e_1) \judge_s x_1 \\ (H, e_2) \judge_s x_2}{(H, e_1
+    \div e_2) \judge_s \{ x_1 \div x_2 \}} \and
+  \inferrule[real]{ }{(H, r) \judge_s \{ r \}} \and
+  \inferrule[varb]{ }{(H, v) \judge_s H(v)} \and
+
+  \inferrule[lt]{(H, e_1) \judge_s x_1 \\ (H, e_2) \judge_s x_2}{(H, e_1 <
+    e_2) \judge_s \{ x_1 < x_2 \}} \and
+  \inferrule[eq]{(H, e_1) \judge_s x_1 \\ (H, e_2) \judge_s x_2}{(H, e_1 =
+    e_2) \judge_s \{ x_1 = x_2 \}} \and
+  \inferrule[and]{(H, c_1) \judge_s x_1 \\ (H, c_2) \judge_s x_2}{(H, c_1
+    \wedge c_2) \judge_s \{ x_1 \wedge x_2 \}} \and
+  \inferrule[or]{(H, c_1) \judge_s x_1 \\ (H, c_2) \judge_s x_2}{(H, c_1
+    \vee c_2) \judge_s \{ x_1 \vee x_2 \}} \and
+  \inferrule[neg]{(H, c) \judge_s x}{(H, \neg c) \judge_s \{ \neg x \}} \and
+
+  \inferrule[assign]{(H, e) \judge_s \{ x \}}{(n, H, v := e) \to_s (n, (v \mapsto
+    \{ x \}):H, \mathbf{skip})} \and
+  \inferrule[sample]{ }{(\{ n \}, H, v \leftarrow d) \to_s (\{ n + 1 \}, (v \mapsto
+    \{ \langle d, n \rangle \}):H, \mathbf{skip})}
+  \inferrule[progn]{(n, H, s_1) \to_s (n', H', s_1')}{(n, H, s_1;s_2)
+    \to_s (n', H', s_1'\:;\:s_2)} \and
+  \inferrule[prog1]{ }{(n, H, \mathbf{skip};s_2) \to_s (n, H, s_2)} \and
+  \inferrule[if]{(H, c) \judge_s \{ x \} \\ (n, H, b_t) \to_s^* (m_t, H_t,
+    \mathbf{skip}) \\ (n, H, b_f) \to_s^* (m_f, H_f, \mathbf{skip})}
+            {(n, H, \mathbf{if}\:c\:b_t\:b_f) \to_s
+              (\{\mathbf{if}\:x\:m_t\:m_f\})\mathtt{merge}(H_t, H_f, \{ x \}), \mathbf{skip})}
+    \and
+  \inferrule[while]{ }{(n, H, \mathbf{while}\:c\:s) \to (n, H,
+    \mathbf{if}\:c\:(\mathbf{while}\:c\:s))}
+    \and
+  \inferrule[while0]{(H, c) \judge_s \{ x \} \\
+    \forall \Sigma, (\Sigma, \{ x \}) \judge_o \mathbf{false}}
+    {(n, H, \mathbf{while}\:c\:s) \to (n, H, \mathbf{skip})}
+
+  \inferrule[passert]{(0, H_0, s) \to_s^* (n, H', \mathbf{skip}) \\
+    (H', c) \judge_s \{ x \}}
+    {(H_0, s\:;;\:\passert\:c) \judge_s \{ x \}}
+
+  \inferrule{H_t(v) = a \\ H_f(v) = b \\ a \ne b}
+    {\mathtt{merge}(H_t, H_f, \{x\})(v) = \{\mathbf{if}\:x\:a\:b\}} \and
+  \inferrule{H_t(v) = a \\ H_f(v) = b \\ a = b}
+    {\mathtt{merge}(H_t, H_f, \{x\})(v) = a}
+\end{mathpar}
+\caption{The symbolic semantics produce
+  an expression tree.  We use a big-step style for conditions
+  and expressions, and small-step style for statements.  Each big step
+  has the form $(H, e) \judge_s \{ s_e \}$ or $(H, c) \judge_s \{ s_c
+  \}$, where $e \in E$, $c \in C$, and $s_e \in E_o$, and $s_c \in
+  C_o$.  $H$ maps variables to expressions in $E_o$.}
+\label{sem:symbolic}
+\end{figure}
+\end{expandedonly}
+
+The rule for samples produces an expression tree that captures the
+distribution and the current stream offset:
+%
+\[
+  \inferrule[sample]{ }{(n, H, v \leftarrow d) \to_s (n + 1, (v \mapsto
+    \{ \langle d, n \rangle \}):H, \mathbf{skip})}
+\]
+%
+Each sample statement increments the stream offset, uniquely
+identifying a sample expression tree. This enumeration is crucial.
+For example, enumerating samples distinguishes the statement $x
+\leftarrow d; \; y := x + x$ from a similar program using two samples:
+$x_1 \leftarrow d; \; x_2 \leftarrow d; \; y := x_1 + x_2$. \ifexpanded{}{This
+approach to numbering samples resembles \emph{naming} in Wingate et
+al.~\cite{wingate-lightweight}.}
+
+The symbolic semantics must consider both sides of an \textbf{if} statement.
+% Since the branches may set different variables to different values, 
+For each \textbf{if} statement, we need to merge updates from
+both branches and form
+conditional expression trees for conflicting updates.
+We
+introduce a function \texttt{merge}, which takes two heaps resulting
+from two branches of an \textbf{if} along with the condition and produces a
+new combined heap.
+Each variable that does not match across the two input heaps becomes an
+$\{\mathbf{if}\:c\:a\:b\}$ expression tree in the output heap.
+The definition of \texttt{merge} is straightforward and its post-conditions are:
+%
+\begin{mathpar}
+\inferrule{H_t(v) = a \\ H_f(v) = b \\ a \ne b}
+          {\mathtt{merge}(H_t, H_f, \{x\})(v) = \{\mathbf{if}\:x\:a\:b\}}
+          \and
+\inferrule{H_t(v) = a \\ H_f(v) = b \\ a = b}
+          {\mathtt{merge}(H_t, H_f, \{x\})(v) = a}
+\end{mathpar}
+%
+Using the \texttt{merge} function, we write the rule for \textbf{if}
+statements:
+%
+\begin{mathpar}
+  \inferrule[if]{(H, c) \judge_s \{ x \} \\ (H, b_t) \to_s^* (H_t,
+    \mathbf{skip}) \\ (H, b_f) \to_s^* (H_f, \mathbf{skip})}
+            {(n, H, \mathbf{if}\:c\;b_t\:b_f) \to_s (n, \mathtt{merge}(H_t,
+              H_f, \{ x \}), \mathbf{skip})}
+\end{mathpar}
+
+Our symbolic semantics assumes terminating \textbf{while} loops.  Symbolic execution
+of potentially-unbounded loops is a well-known problem and, accordingly,
+our formalism only handles loops with non-probabilistic conditions.
+A simple but insufficient rule for \textbf{while} is:
+%
+\[
+\inferrule[while]{ }{(n, H, \mathbf{while}\:c\:s) \to (n, H,
+  \mathbf{if}\:c\:(\mathbf{while}\:c\:s))}
+\]
+%
+This rule generates infinite expression trees and prevents the
+analysis from terminating.
+We would like our analysis to exit a loop if it can prove that the
+loop condition is false---specifically, when the condition does not depend on any
+probability distributions.
+To capture this property, we add the following rule:
+%
+\[
+\inferrule[while0]{(H, c) \judge_s \{ x \} \\
+                   \forall \Sigma, (\Sigma, \{ x \}) \judge_o \mathbf{false}}
+                  {(n, H, \mathbf{while}\:c\:s) \to (n, H, \mathbf{skip})}
+\]
+%
+Here, the judgment $(\Sigma, \{x\}) \judge_o v$ denotes evaluation of the
+expression tree $\{x\}$ under the draw sequence $\Sigma$.
+This rule applies when \tool proves that an expression tree evaluates to
+\textbf{false} independent of the random draws.
+\ifexpanded{}{In our implementation, \tool proves simple cases, when an
+expression tree contains no samples, and uses black-box sampling
+otherwise. Section~\ref{sec:loops} describes a more precise analysis
+that bounds path probabilities, but we leave its formalization to
+future work.}
+
+We can now define the symbolic evaluation of programs:
+%
+\[
+\inferrule[passert]{(0, H_0, s) \to_s^* (n, H', \mathbf{skip}) \\
+  (H', c) \judge_s \{ x \}}
+          {(H_0, s\:;;\:\passert\:c) \judge_s \{ x \}}
+\]
+%
+To evaluate the resulting expression tree requires a sequence of draws
+$\Sigma$ but no heap.
+\ifexpanded{Figure~\ref{sem:simple} shows the full set of rules. As an
+example,}{The full set of rules are in the auxiliary material~\cite{tr};}
+the rules for addition and sampling are representative:
+%
+\begin{mathpar}
+\inferrule[plus]{(\Sigma, e_1) \judge_o v_1 \\ (\Sigma, e_2) \judge_o v_2}
+          {(\Sigma, e_1 + e_2) \judge_o v_1 + v_2} \and
+\inferrule[sample]{ }{(\Sigma, \langle d, k \rangle) \judge_o d(\sigma_k)}
+\end{mathpar}
+
+\begin{expandedonly}
+\begin{figure}[p]
+\begin{mathpar}
+\inferrule{(\Sigma, e_1) \judge_o v_1 \\ (\Sigma, e_2) \judge_o v_2}
+          {(\Sigma, e_1 + e_2) \judge_o v_1 + v_2} \and
+\inferrule{(\Sigma, e_1) \judge_o v_1 \\ (\Sigma, e_2) \judge_o v_2}
+          {(\Sigma, e_1 * e_2) \judge_o v_1 * v_2} \and
+\inferrule{(\Sigma, e_1) \judge_o v_1 \\ (\Sigma, e_2) \judge_o v_2}
+          {(\Sigma, e_1 \div e_2) \judge_o v_1 \div v_2} \and
+\inferrule{ }{(\Sigma, r) \judge_o r} \and
+\inferrule{ (\Sigma, n) \judge_o k }
+          {(\Sigma, \langle d, n \rangle) \judge_o d(\sigma_k)} \and
+\inferrule{(\Sigma, e_1) \judge_o v_1 \\ (\Sigma, e_2) \judge_o v_2}
+          {(\Sigma, e_1 < e_2) \judge_o v_1 < v_2} \and
+\inferrule{(\Sigma, e_1) \judge_o v_1 \\ (\Sigma, e_2) \judge_o v_2}
+          {(\Sigma, e_1 = e_2) \judge_o v_1 = v_2} \and
+\inferrule{(\Sigma, c_1) \judge_o b_1 \\ (\Sigma, c_2) \judge_o b_2}
+          {(\Sigma, c_1 \wedge c_2) \judge_o b_1 \wedge b_2} \and
+\inferrule{(\Sigma, c_1) \judge_o b_1 \\ (\Sigma, c_2) \judge_o b_2}
+          {(\Sigma, c_1 \vee c_2) \judge_o b_1 \vee b_2} \and
+\inferrule{(\Sigma, c) \judge_o b}{(\Sigma, \neg c) \judge_o \neg b} \and
+\inferrule{(\Sigma, c) \judge_o \mathbf{true} \\ (\Sigma, e_1) \judge_o v}
+          {(\Sigma, \mathbf{if}\:c\:e_1\:e_2) \judge_o v} \and
+\inferrule{(\Sigma, c) \judge_o \mathbf{false} \\ (\Sigma, e_2) \judge_o v}
+          {(\Sigma, \mathbf{if}\:c\:e_1\:e_2) \judge_o v}
+\end{mathpar}
+\caption{The semantics for our simple expression language.  $\Sigma$
+  is a stream of draws, and $\sigma_k$ is the $k$-th element of
+  $\Sigma$.}
+\label{sem:simple}
+\end{figure}
+\end{expandedonly}
+
+\begin{mainonly}
+
+The purpose of this formalism is to show that using \tool's distribution
+extraction and sampling the result is equivalent to sampling the original
+program.
+We state this as a theorem for finite expression trees.
+
+\begin{theorem}
+Let $(0, H, p) \judge_s \{ x \}$, where $x$ is a finite program.
+Then $(\Sigma, H_0, p) \judge_c b$ if and only if $(\Sigma, x) \judge_o b$.
+\end{theorem}
+
+\noindent In other words, for any draw sequence $\Sigma$, a program and its
+extracted distribution evaluate to the same output. Sampling the two
+distributions---executing them many times with different values for
+$\Sigma$---yields the same probability.
+Intuitively, the theorem is true because the symbolic semantics correspond to 
+lazy evaluation and the output semantics $\judge_e$ correspond to
+forcing of the resulting symbolic expressions.
+\ifexpanded{}{Formally, the proof of this theorem proceeds by a
+structural induction. Full details are in this paper's auxiliary
+material~\cite{tr}.}
+
+Future work can prove optimizations correct using the expression
+tree representation.
+Since we have proven equivalence with the original program representation,
+such correctness proofs can avoid dealing with variables and control flow,
+which are eliminated during distribution extraction.
+
+\end{mainonly}
