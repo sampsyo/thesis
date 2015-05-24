@@ -1,13 +1,14 @@
-Computer systems spend time, energy, and complexity on providing error-free
-program execution. But while accuracy is clearly critical for some tasks,
+Computer systems spend time, energy, and complexity to provide error-free
+program execution. But
 perfect precision is wasted on many kinds of programs. For applications from
 domains like graphics, vision, machine learning, and games, perfect precision
-is infeasible or even unattainable. Approximate computing techniques exploit
-these programs' error resilience to make them more efficient.
+is infeasible or even unattainable. \emph{Approximate computing} techniques exploit
+these programs' resilience to make them more efficient.
 
-But relaxing correctness risks making computers harder to program. In my work,
-I have explored ways to give programmers the tools to efficiently harness
-approximate computation while easily composing reliable software. I have
-explored disciplined approximate programming in the context of programming
-languages, CPU and accelerator architectures, storage systems, compilers, and
+Approximate systems hold potential, but they also pose new
+risks.
+To safely and efficiently exploit accuracy--efficiency trade-offs, we need
+new abstractions that coordinate every layer of the system stack:
+programming languages,
+CPU and accelerator architectures, storage systems, compilers, and
 property checking.
