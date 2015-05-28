@@ -1,82 +1,19 @@
-\newcount\cameraready\cameraready=0
-\documentclass[10pt,nocopyrightspace,preprint]{sigplanconf}
-\usepackage{url}
-\usepackage{graphicx}
-\usepackage{listings}
-\usepackage{booktabs}
-\usepackage{etoolbox}
-\usepackage[colorlinks=false,hidelinks]{hyperref}
-\usepackage{subcaption}
-
-\InputIfFileExists{revision}{}{\newcommand{\Revision}{?}}
-
 % Code listings.
 \renewcommand{\ttdefault}{pcr}
-\lstset{%
-    language=Java,
-    emph={@Approx, @Precise, @Dyn, endorse, checked_endorse, check, assert},
-    emphstyle=\bfseries,
-    columns=fullflexible,
-    basicstyle=\sffamily\small,
-    aboveskip=1mm plus 1mm minus 1mm,
-    belowskip=1mm plus 1mm minus 1mm,
-    mathescape=true,
-}
-\newcommand{\code}{\lstinline[emphstyle={},keywordstyle={}]}
+% \lstset{%
+%     language=Java,
+%     emph={@Approx, @Precise, @Dyn, endorse, checked_endorse, check, assert},
+%     emphstyle=\bfseries,
+%     columns=fullflexible,
+%     basicstyle=\sffamily\small,
+%     aboveskip=1mm plus 1mm minus 1mm,
+%     belowskip=1mm plus 1mm minus 1mm,
+%     mathescape=true,
+% }
+\renewcommand{\code}{\lstinline[emphstyle={},keywordstyle={}]}
 
 % Macros for the semantics, language, etc.
 \input{semantics/common}
-
-\begin{document}
-
-\preprintfooter{OOPSLA submission}
-
-\title{Probability Type Inference \\ for Flexible Approximate Programming}
-
-% Double-blind.
-\authorinfo{}{}{}
-
-% \authorinfo
-%     {Brett Boston \and Adrian Sampson \and Dan Grossman \and Luis Ceze}
-%     {University of Washington}
-%     {\{bboston7,asampson,djg,luisceze\}@cs.washington.edu}
-
-\maketitle
-
-\begin{abstract}
-    In approximate computing, programs gain efficiency by allowing occasional
-    errors.
-    Controlling the probabilistic effects of this approximation remains a key
-    challenge for programmers.
-    We propose a new approach where programmers use a type system to
-    communicate high-level constraints on the degree of approximation.
-    A combination of type inference, code specialization, and optional dynamic
-    tracking makes the system expressive and convenient.
-    %
-    The \emph{core type system} captures the probability that each operation exhibits
-    an error and bounds the probability that each expression deviates from its
-    correct value.
-    Solver-aided \emph{type inference} lets the programmer specify the correctness
-    probability on only some variables---program outputs, for example---and
-    automatically fills in other types to meet these
-    specifications.
-    An \emph{optional dynamic type} helps cope with complex run-time behavior where
-    static approaches are insufficient.
-    Together, these features interact to yield a high degree of programmer
-    control while offering a strong soundness guarantee.
-
-    We use existing approximate-computing benchmarks to show how our language,
-    \lang, maintains a low annotation burden.
-    Our constraint-based approach can encode hardware limitations, such as
-    finite degrees of reliability, so
-    we also use \lang as a testbed to examine implications on approximate hardware
-    design.
-    We find that multi-level architectures can
-    offer advantages over simpler two-level machines and
-    that
-    solver-aided optimization improves efficiency on both two- and
-    multi-level architectures.
-\end{abstract}
 
 \section{Introduction}
 
@@ -381,7 +318,7 @@ $q$.
 \paragraph{Approximate operations.}
 \lang provides primitive arithmetic operations parameterized by a correctness
 probability.
-For example, the expression \code{x +$_{0.9}$ y} produces the sum of \code{x}
+For example, the expression \lstinline!x +$_{0.9}$ y! produces the sum of \code{x}
 and \code{y} at least 90\% of the time but may return garbage otherwise.
 These operators encapsulate approximate arithmetic instructions implemented in
 approximate hardware architectures, such as Truffle~\cite{truffle} and
@@ -392,11 +329,11 @@ The annotation on an operator in \lang is a lower bound on the
 correctness probability for the instruction that implements it.
 For example, if the hardware provides an approximate add instruction
 with a correctness probability of 0.99, then it suffices to implement
-\code{+$_{0.9}$} in \lang.
+\lstinline!+$_{0.9}$! in \lang.
 Similarly, a reliable add instruction suffices to implement an approximate
 addition operator with any probability (although it saves no energy).
 
-The correctness probability for an operation \code{x +$_{0.9}$ y} is at least
+The correctness probability for an operation \lstinline!x +$_{0.9}$ y! is at least
 the product of the probabilities that \code{x} is correct, \code{y} is
 correct, and the addition behaves correctly (i.e., 0.9).
 To see this, let
@@ -665,7 +602,7 @@ Every dynamically tracked value has an associated \emph{dynamic correctness
 probability field} that is managed transparently by the compiler.
 This dynamic tracking follows the typing rules analogous to those for static
 checking.
-For example, an expression \code{x +$_{0.9}$ y} where both operands have type
+For example, an expression \lstinline!x +$_{0.9}$ y! where both operands have type
 \code{@Dyn float} produces a new \code{@Dyn float}; at run time, the
 bookkeeping code computes the dynamic correctness as the product of \code{x}'s
 dynamic probability value, \code{y}'s probability, and the operator's
@@ -968,7 +905,7 @@ constraints for hardware research.
     \dynops{#1-dyn}
 }
 
-\begin{table*}
+\begin{table}
     \centering
     \begin{tabular}{l l r r r r r r r}
         \toprule
@@ -999,7 +936,7 @@ constraints for hardware research.
     tracked (both approximate and reliable operations can be dynamically
     tracked).}
     \label{table:bench}
-\end{table*}
+\end{table}
 
 
 \subsection{Implementation}
@@ -1228,7 +1165,7 @@ cheaper rounding strategy.
 
 \paragraph{Probability granularity.}
 
-\begin{figure*}
+\begin{figure}
     \hspace{-3ex}
     \input{plots/levelbreakdown}
     \caption{Operator probability breakdowns. Each bar shows a hardware
@@ -1238,7 +1175,7 @@ cheaper rounding strategy.
     Bars marked $\star$ used
     the cheaper rounding strategy instead of solving to determine levels.}
     \label{fig:levels}
-\end{figure*}
+\end{figure}
 
 More hardware probability levels can enable greater efficiency gains by
 closely matching applications' probability requirements.
@@ -1547,18 +1484,6 @@ Combined with code specialization and dynamic tracking, \lang gives
 programmers flexible control over the efficiency--accuracy trade-offs offered
 by approximate hardware.
 
-\ifnum\cameraready=1
-\acks
-This work was supported in part by C-FAR, one of the six SRC STARnet Centers,
-sponsored by MARCO and DARPA, by NSF grant \#1216611, by a Qualcomm Innovation
-Fellowship, and by gifts from Microsoft.
-\fi
-
-\bibliographystyle{abbrvnat}
-\bibliography{approx-within}
-
-\clearpage
-\appendix
 \section{Full Semantics and Proof}
 \label{app:semantics}
 
@@ -1570,5 +1495,3 @@ We prove a \emph{soundness} theorem that embodies the probability type
 system's fundamental accuracy guarantee.
 
 \input{semantics/semantics}
-
-\end{document}

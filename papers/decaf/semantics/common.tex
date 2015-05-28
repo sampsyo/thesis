@@ -1,20 +1,7 @@
-\usepackage{amsfonts}
-\usepackage{amsmath}
-\usepackage{mathpartir}
-\usepackage{xspace}
-\usepackage{amsthm}
-\usepackage{color}
-\usepackage{chngcntr}
-
-\newcommand{\TODO}[1]{\textcolor{red}{\textsf{\textbf{#1}}}}
-
 % Code-like type that works in math mode (as well as text mode).
 \newcommand{\mcode}[1]{\text{\normalfont{\sffamily\small{#1}}}}
 
 % Semantics-y macros.
-\newcommand{\defeq}{::=}
-\newcommand{\judge}{\Downarrow}
-\newcommand{\alt}{\:|\:}
 \newcommand{\skips}{\mathbf{skip}}
 %\newcommand{\prarrow}[1]{\xrightarrow{#1}}
 %\newcommand{\rarrow}{\prarrow{1.0}}
@@ -24,16 +11,11 @@
 \newcommand{\cjudge}{\pjudge{1.0}}
 \newcommand{\csemi}{\mcode{;}} % Code semicolon
 
-% amsthm
-\newtheorem{theorem}{Theorem}
-\newtheorem{definition}{Definition}
-\newtheorem{lemma}{Lemma}
-
 % Reset the theorem counters so we repeat numbers when restating the same
 % definitions/theorems in the main body vs. the appendix.
-\counterwithin*{theorem}{section}
-\counterwithin*{definition}{section}
-\counterwithin*{lemma}{section}
+% \counterwithin*{theorem}{section}
+% \counterwithin*{definition}{section}
+% \counterwithin*{lemma}{section}
 
 % Qualifier shorthand.
 \newcommand{\Approx}{\text{\normalfont{\sffamily\small{@Approx}}}}
@@ -41,11 +23,6 @@
 \newcommand{\Dyn}{\text{\normalfont{\sffamily\small{@Dyn}}}}
 \newcommand{\ApproxN}[1]{\Approx(#1)}
 
-% Math macros for probability stuff.
-\newcommand{\prob}[1]{\ensuremath{\Pr\!\left[#1\right]}}
-\newcommand{\expc}[1]{\ensuremath{\mathrm{E}\!\left[#1\right]}}
-\newcommand{\varc}[1]{\ensuremath{\mathrm{Var}\!\left[#1\right]}}
-
 % Describing the project.
-\newcommand{\lang}{DECAF\xspace}
-\newcommand{\bench}[1]{\textsf{#1}}
+\renewcommand{\lang}{DECAF\xspace}
+\renewcommand{\bench}[1]{\textsf{#1}}
