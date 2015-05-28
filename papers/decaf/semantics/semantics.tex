@@ -1,0 +1,715 @@
+\newcommand{\relinput}[1]{
+    \IfFileExists{./#1.tex}{\input{#1}}{\input{semantics/#1}}
+}
+
+\subsection{Syntax}
+
+We formalize a core of \lang without inference.
+The syntax for statements, expressions, and types is:
+%
+\relinput{syntax}
+%
+For the purpose of the static and dynamic semantics, we also define values $V$, heaps
+$H$, dynamic probability maps $D$, true probability maps $S$, and static
+contexts $\Gamma$:
+%
+\begin{align*}
+    V &\defeq
+        c \alt
+        \Box \\
+    H &\defeq
+        \cdot \alt
+        H, v \mapsto V \\
+    D &\defeq
+        \cdot \alt
+        D, v \mapsto p \\
+    S &\defeq
+        \cdot \alt
+        S, v \mapsto p \\
+    \Gamma &\defeq
+        \cdot \alt
+        \Gamma, v \mapsto T
+\end{align*}
+%
+We define $H(v)$, $D(v)$, $S(v)$, and $\Gamma(v)$ to denote variable lookup in
+these maps.
+
+
+\subsection{Typing}
+
+The type system defines the static semantics for the core language. We first
+give typing judgments first for expressions and then for statements.
+
+\subsubsection{Operator Typing}
+
+We introduce a helper ``function'' that determines the unqualified result type
+of a binary arithmetic operator.
+
+\vspace{1ex}\noindent
+$\boxed{\text{optype}(\tau_1, \tau_2) = \tau_3}$
+%
+\begin{mathpar}
+    \text{optype}(\tau,\tau) = \tau
+
+    \text{optype}(\mcode{int},\mcode{float}) =
+           \mcode{float}
+
+    \text{optype}(\mcode{float},\mcode{int}) =
+           \mcode{float}
+\end{mathpar}
+%
+Now we can give the types of the binary operator expressions themselves.
+There are two cases: one for statically-typed operators and one for
+dynamic tracking.
+The operands may not mix static and dynamic qualifiers (recall that the
+compiler inserts \mcode{track} casts to introduce dynamic tracking when
+necessary).
+
+\vspace{1ex}\noindent
+$\boxed{\Gamma \vdash e : T}$
+%
+\begin{mathpar}
+    \inferrule[op-static-types]
+    {\Gamma \vdash e_1 : \ApproxN{p_1} \> \tau_1 \\
+    \Gamma \vdash e_2 : \ApproxN{p_2} \> \tau_2 \\
+    \tau_3 = \text{optype}(\tau_1, \tau_2) \\
+    p' = p_1 \cdot p_2 \cdot p_\text{op}}
+    {\Gamma \vdash e_1 \oplus_{p_\text{op}} e_2 : \ApproxN{p'} \> \tau_3}
+
+    \inferrule[op-dyn-types]
+    {\Gamma \vdash e_1 : \Dyn \> \tau_1 \\
+    \Gamma \vdash e_2 : \Dyn \> \tau_2 \\
+    \tau_3 = \text{optype}(\tau_1, \tau_2)}
+    {\Gamma \vdash e_1 \oplus_p e_2 : \Dyn \> \tau_3}
+\end{mathpar}
+%
+In the static case, the output probability is the product of the probabilities
+for the left-hand operand, right-hand operand, and the operator itself.
+Section~\ref{sec:types} gives the probabilistic intuition behind this rule.
+
+\subsubsection{Other Expressions}
+
+The rules for constants and variables are straightforward. Literals are given
+the precise ($p = 1.0$) type.
+%
+\begin{mathpar}
+    \inferrule[const-int-types]
+    {c \text{ is an integer}}
+    {\Gamma \vdash c : \ApproxN{1.0} \> \mcode{int}}
+
+    \inferrule[const-float-types]
+    {c \text{ is not an integer}}
+    {\Gamma \vdash c : \ApproxN{1.0} \> \mcode{float}}
+
+    \inferrule[var-types]
+    {T = \Gamma(v)}
+    {\Gamma \vdash v : T}
+\end{mathpar}
+
+Endorsements, both checked and unchecked, produce the explicitly requested type.
+(Note that \mcode{check} is sound but \mcode{endorse} is potentially unsound:
+our main soundness theorem, at the end of this appendix, will exclude the
+latter from the language.)
+Similarly, \mcode{track} casts produce a dynamically-tracked type given a
+statically-tracked counterpart.
+%
+\begin{mathpar}
+    \inferrule[endorse-types]
+    {\Gamma \vdash e : q \> \tau}
+    {\Gamma \vdash \mcode{endorse}(p,e) : \ApproxN{p} \> \tau}
+
+    \inferrule[check-types]
+    {\Gamma \vdash e : \Dyn \> \tau}
+    {\Gamma \vdash \mcode{check}(p,e) : \ApproxN{p} \> \tau}
+
+    \inferrule[track-types]
+    {\Gamma \vdash e : \ApproxN{p'} \> \tau \\
+    p \le p'}
+    {\Gamma \vdash \mcode{track}(p, e) : \Dyn \> \tau}
+\end{mathpar}
+
+
+\subsubsection{Qualifiers and Subtyping}
+
+A simple subtyping relation, introduced in Section~\ref{sec:types}, makes high-probability types subtypes of their
+low-probability counterparts.
+
+\vspace{1ex}\noindent
+$\boxed{T_1 \prec T_2}$
+\begin{mathpar}
+    \inferrule[subtyping]
+    {p \geq p'}
+    {\ApproxN{p} \> \tau
+     \prec \ApproxN{p'} \> \tau}
+\end{mathpar}
+%
+Subtyping uses a standard subsumption rule.
+%
+\begin{mathpar}
+    \inferrule[subsumption]
+    {T_1 \prec T_2 \\ \Gamma \vdash e : T_1}
+    {\Gamma \vdash e : T_2}
+\end{mathpar}
+
+
+\subsubsection{Statement Typing}
+
+Our typing judgment for statements builds up the context $\Gamma$.
+
+\vspace{1ex}\noindent
+$\boxed{\Gamma_1 \vdash s : \Gamma_2}$
+\begin{mathpar}
+    \inferrule[skip-types]
+    { }
+    {\Gamma \vdash \mcode{skip} : \Gamma}
+
+    \inferrule[seq-types]
+    {\Gamma_1 \vdash s_1 : \Gamma_2 \\
+    \Gamma_2 \vdash s_2 : \Gamma_3}
+    {\Gamma_1 \vdash s_1 ; s_2 : \Gamma_3}
+
+    \inferrule[decl-types]
+    {\Gamma \vdash e : T \\
+    v \notin \Gamma}
+    {\Gamma \vdash T \> v := e
+    : \Gamma, v : T}
+
+    \inferrule[mutate-types]
+    {\Gamma \vdash e : T \\
+    \Gamma(v) = T}
+    {\Gamma \vdash v := e
+    : \Gamma}
+
+    \inferrule[if-types]
+    {\Gamma \vdash e : \ApproxN{1.0} \> \tau \\
+    \Gamma \vdash s_1 : \Gamma_1 \\
+    \Gamma \vdash s_2 : \Gamma_2}
+    {\Gamma \vdash \mathbf{if}\:e\:s_1\:s_2 : \Gamma}
+
+    \inferrule[while-types]
+    {\Gamma \vdash e : \ApproxN{1.0} \> \tau \\
+    \Gamma \vdash s : \Gamma'}
+    {\Gamma \vdash \mathbf{while}\:e\:s : \Gamma}
+\end{mathpar}
+%
+The conditions in \mcode{if} and \mcode{while} statements are required to have
+the precise type ($p = 1.0$).
+
+
+\subsection{Operational Semantics}
+
+We use a large-step operational semantics for expressions and small-step
+semantics for statements.
+Both are nondeterministic: values produced by approximate operators can
+produce either an error value $\Box$ or a concrete number.
+
+\subsubsection{Expression Semantics}
+
+There are two judgments for expressions: one for statically typed
+expressions and one where dynamic tracking is used.
+The former, $H ; D ; S ;  e \pjudge{p} V$, indicates that the expression
+$e$ produces a value $V$, which is either a
+constant $c$ or the error value $\Box$, and $p$ is the
+probability that $V \ne \Box$.
+The latter judgment, $H ; D ; S ; e \pjudge{p} V, p_d$, models
+dynamically-tracked expression evaluation. In addition to a value $V$, it also produces a computed
+probability value $p_d$ reflecting the compiler's conservative bound on
+the reliability of $e$'s value.
+That is, $p$ is the ``true'' probability that $V \ne \Box$ whereas
+$p_d$ is the dynamically computed conservative bound for $p$.
+
+In these judgments, $H$ is the heap mapping variables to values and $D$ is the {dynamic
+probability map for \mcode{@Dyn}-typed variables maintained by the compiler.
+The $S$ probability map is used for our type soundness proof: it maintains the
+actual probability that a variable is correct.
+
+\paragraph{Constants}
+Literals are always tracked statically.
+\begin{mathpar}
+    \inferrule[const]
+    { }
+    {H ; D ; S ; c \cjudge c}
+\end{mathpar}
+
+\paragraph{Variables}
+Variable lookup is dynamically tracked when the variable is present in the
+tracking map $D$.
+The probability $S(v)$ is the chance that the variable does not hold $\Box$.
+\begin{mathpar}
+    \inferrule[var]
+    {v \not\in D}
+    {H ; D ; S ; v \pjudge{S(v)} H(v)}
+
+    \inferrule[var-dyn]
+    {v \in D}
+    {H ; D ; S ; v \pjudge{S(v)} H(v), D(v)}
+\end{mathpar}
+
+\paragraph{Endorsements}
+Unchecked (unsound) endorsements only apply to statically-tracked values and
+do not affect the correctness probability.
+\begin{mathpar}
+    \inferrule[endorse]
+    {H ; D ; S ; e \pjudge{p} V}
+    {H ; D ; S ; \mcode{endorse}(p_e,e) \pjudge{p} V}
+\end{mathpar}
+
+\paragraph{Checked Endorsements}
+Checked endorsements apply to dynamically-tracked values and produce
+statically-tracked values.
+The tracked probability must meet or exceed the check's required probability;
+otherwise, evaluation gets stuck.
+(Our implementation throws an exception.)
+\begin{mathpar}
+    \inferrule[check]
+    {H ; D ; S ; e \pjudge{p} V, p_1 \\
+    p_1 \geq p_2}
+    {H ; D ; S ; \mcode{check}(p_2,e) \pjudge{p} V}
+\end{mathpar}
+
+\paragraph{Tracking}
+The static-to-dynamic cast expression allows statically-typed values to be
+combined with dynamically-tracked ones.
+The tracked probability field for the value is initialized to match the
+explicit probability in the expression.
+%
+\begin{mathpar}
+    \inferrule[track]
+    {H ; D ; S ; e \pjudge{p} V}
+    {H ; D ; S ; \mcode{track}(p_d, e) \pjudge{p} V, p_d}
+\end{mathpar}
+
+\paragraph{Operators}
+Binary operators can be either statically tracked or dynamically tracked.
+In each case, either operand can be the error value or a constant.
+When either operand is $\Box$, the result is $\Box$.
+When both operands are non-errors, the operator itself can
+(nondeterministically) produce either $\Box$ or a correct result.
+The correctness probability, however, is the same for all three rules:
+intuitively, the probability itself is deterministic even though the semantics
+overall are nondeterministic.
+
+In these rules, $c_1 \oplus c_2$ without a probability subscript denotes the appropriate binary
+operation on integer or floating-point values.
+The statically-tracked cases are:
+\begin{mathpar}
+    \inferrule[op]
+    {H ; D ; S ;  e_1 \pjudge{p_1} c_1 \\
+    H ; D ; S ; e_2 \pjudge{p_2} c_2 \\
+    p = p_1 \cdot p_2 \cdot p_\text{op}}
+    {H ; D ; S ; e_1 \oplus_{p_\text{op}} e_2 \pjudge{p} c_1 \oplus c_2}
+
+    \inferrule[op-operator-incorrect]
+    {H ; D ; S ; e_1 \pjudge{p_1} c_1 \\
+    H ; D ; S ; e_2 \pjudge{p_2} c_2 \\
+    p = p_1 \cdot p_2 \cdot p_\text{op}}
+    {H ; D ; S ; e_1 \oplus_{p_\text{op}} e_2 \pjudge{p} \Box}
+
+    \inferrule[op-operands-incorrect]
+    {H ; D ; S ; e_1 \pjudge{p_1} \Box \text{ or }
+    H ; D ; S ; e_2 \pjudge{p_2} \Box \\
+    p = p_1 \cdot p_2 \cdot p_\text{op}}
+    {H ; D ; S ; e_1 \oplus_{p_\text{op}} e_2 \pjudge{p} \Box}
+\end{mathpar}
+
+The dynamic-tracking rules are similar, with the additional propagation of the
+conservative probability field.
+%
+\begin{mathpar}
+    \inferrule[op-dyn]
+    {H ; D ; S ; e_1 \pjudge{p_1} c_1, p_{d1} \\
+    H ; D ; S ; e_2 \pjudge{p_2} c_2, p_{d2} \\
+    p = p_1 \cdot p_2 \cdot p_\text{op}}
+    {H ; D ; S ; e_1 \oplus_{p_\text{op}} e_2 \pjudge{p} c_1 \oplus c_2, \;
+    p_{d1} \cdot p_{d2} \cdot p_\text{op}}
+
+    \inferrule[op-dyn-operator-incorrect]
+    {H ; D ; S ; e_1 \pjudge{p_1} c_1, p_{d1} \\
+    H ; D ; S ; e_2 \pjudge{p_2} c_2, p_{d2} \\
+    p = p_1 \cdot p_2 \cdot p_\text{op}}
+    {H ; D ; S ; e_1 \oplus_{p_\text{op}} e_2 \pjudge{p} \Box, \;
+    p_{d1} \cdot p_{d2} \cdot p_\text{op}}
+
+    \inferrule[op-dyn-operands-incorrect]
+    {H ; D ; S; e_1 \pjudge{p_1} \Box, p_{d1} \text{ or }
+    H ; D ; S ; e_2 \pjudge{p_2} \Box, p_{d2} \\
+    p = p_1 \cdot p_2 \cdot p_\text{op}}
+    {H ; D ; S ; e_1 \oplus_{p_\text{op}} e_2 \pjudge{p} \Box, \;
+    p_{d1} \cdot p_{d2} \cdot p_\text{op}}
+\end{mathpar}
+
+\subsubsection{Statement Semantics}
+
+The small-step judgment for statements is
+$H ; D ; S ; s \prarrow{p} H' ; D' ; S' ; s'$.
+
+\paragraph{Assignment}
+The rules for assignment (initializing a fresh variable) take advantage of nondeterminism in the evaluation of
+expressions to nondeterministically update the heap with either a constant or
+the error value, $\Box$.
+
+\vspace{1ex}\noindent
+$\boxed{H ; D ; s \prarrow{p} H' ; D' ; s'}$
+\begin{mathpar}
+    \inferrule[assign]
+    {H ; D ; S ; e \pjudge{p} V}
+    {H ; D ; S ; \ApproxN{p'} \> \tau \> v := e
+    \prarrow{p} \\\\
+    H, v \mapsto V ; D ; S, v \mapsto p ; \skips}
+
+    \inferrule[assign-dyn]
+    {H ; D ; S ; e \pjudge{p} V, p_d}
+    {H ; D ; S ; \Dyn \> \tau \> v := e
+    \prarrow{p} \\\\
+    H, v \mapsto V ; D, v \mapsto p_d ; S, v \mapsto p ; \skips}
+\end{mathpar}
+
+Mutation works like assignment, but existing variables are overwritten
+in the heap.
+\begin{mathpar}
+    \inferrule[mutate]
+    {H ; D ; S ; e \pjudge{p} V}
+    {H ; D ; S ; v := e
+    \prarrow{p}
+    H, v \mapsto V ; D ; S, v \mapsto p ; \skips}
+
+    \inferrule[mutate-dyn]
+    {H ; D ; e \pjudge{p} V, p_d}
+    {H ; D ; v := e
+    \prarrow{p}
+    H, v \mapsto V ; D, v \mapsto p_d ; S, v \mapsto p ; \skips}
+\end{mathpar}
+
+\paragraph{Sequencing}
+Sequencing is standard and deterministic.
+\begin{mathpar}
+    \inferrule[seq-skip]
+    { }
+    {H ; D ; S ; \skips\csemi s \rarrow H ; D ; S ; s}
+
+    \inferrule[seq]
+    {H ; D ; S ; s_1 \prarrow{p} H' ; D' ; S' ; s_1'}
+    {H ; D ; S ; s_1\csemi s_2 \prarrow{p} H' ; D' ; S' ; s_1'\csemi s_2}
+\end{mathpar}
+
+\paragraph{If and While}
+The type system requires conditions in \mcode{if} and \mcode{while} control
+flow decisions to be deterministic ($p = 1.0$).
+\begin{mathpar}
+    \inferrule[if-true]
+    {H ; D ; S ; e \cjudge c \\
+    c \neq 0}
+    {H ; D ; S ; \mathbf{if}\:e\:s_1\:s_2 \rarrow H ; D ; S ; s_1}
+
+    \inferrule[if-false]
+    {H ; D ; S ; e \cjudge c \\
+    c = 0}
+    {H ; D ; S ; \mathbf{if}\:e\:s_1\:s_2 \rarrow H ; D ; S ; s_2}
+
+    \inferrule[while]
+    { }
+    {H ; D ; S ; \mathbf{while}\:e\:s \rarrow
+    H ; D ; S ; \mathbf{if}\:e\:(s\csemi \mathbf{while}\:e\:s)\: \skips}
+\end{mathpar}
+
+\subsection{Theorems}
+
+The purpose of the formalism is to express a soundness theorem that shows that
+\lang's probability types act as lower bounds on programs' run-time
+probabilities.
+We also sketch the proof of a theorem stating that the bookkeeping probability map, $S$,
+is eraseable: it is used only for the purpose of our soundness theorem and
+does not affect the heap.
+
+\subsubsection{Soundness}
+
+The soundness theorem for the language states that the probability types are
+lower bounds on the run-time correctness probabilities.
+Specifically, both the static types \ApproxN{p} and the dynamically tracked
+probabilities in $D$ are lower bounds for the corresponding probabilities in
+$S$.
+
+To state the soundness theorem, we first define well-formed dynamic states.
+We write
+$\vdash D, S : \Gamma$
+to denote that the dynamic probability field map $D$
+and the actual probability map $S$
+are \emph{well-formed} in the static context $\Gamma$.
+
+\relinput{wellformed}
+
+We can now state and prove the soundness theorem. We first give the main
+theorem and then two
+preservation lemmas, one for expressions and one for statements.
+
+\relinput{soundness-thm}
+
+\begin{proof}
+Induct on the number of small steps, $n$.
+When $n = 0$, both conditions hold trivially since $v \notin \cdot$ for all
+$v$.
+
+For the inductive case, we assume that
+$\cdot ; \cdot ; \cdot ; s \rarrow^n
+H_1 ; D_1; S_1; s_1$
+and
+$H_1 ; D_1 ; S_1 ; s_1 \rarrow
+H_2 ; D_2 ; S_2 ; s_2$
+and that
+$\vdash D_1, S_1 : \Gamma$.
+We need to show that
+$\vdash D_2, S_2 : \Gamma$ also.
+The Statement Preservation lemma, below, applies and meets this goal.
+\end{proof}
+
+The first lemma is a preservation property for expressions. We will use this
+lemma to prove a corresponding preservation lemma for statements, which in turn applies to
+prove the main theorem.
+
+\begin{lemma}[Expression Preservation]
+For all expressions $e$ with no \mcode{endorse} expressions
+where $\Gamma \vdash e : T$
+and where $\vdash D, S : \Gamma$,
+\begin{itemize}
+\item
+If $T = \ApproxN{p} \> \tau$,
+and $H ; D ; S ; e \pjudge{p'} V$,
+then $p \le p'$.
+\item
+If $T = \Dyn \> \tau$,
+and $H ; D ; S ; e \pjudge{p'} V, p$,
+then $p \le p'$.
+\end{itemize}
+\end{lemma}
+
+\begin{proof}
+Induct on the typing judgment for expressions, $\Gamma \vdash e : T$.
+
+\paragraph{Case \textsc{op-static-types}}
+Here, $e = e_1 \oplus_{p_{op}} e_2$
+and $T = \ApproxN{p} \> \tau$.
+We also have types for the operands:
+$\Gamma \vdash e_1 : \ApproxN{p_1} \> \tau_1$
+and
+$\Gamma \vdash e_2 : \ApproxN{p_2} \> \tau_2$.
+
+By inversion on $H ; D ; S ; e \pjudge{p'} V$
+(in any of the cases \textsc{op}, \textsc{op-operator-incorrect}, or
+\textsc{op-operands-incorrect}),
+$p' = p_1' \cdot p_2' \cdot p_\text{op}$
+where $H ; D ; S ; e_1 \pjudge{p_1'} V_1$
+and $H ; D ; S ; e_2 \pjudge{p_2'} V_2$.
+
+By applying the induction hypothesis to $e_1$ and $e_2$, we have
+$p_1 \le p_1'$
+and
+$p_2 \le p_2'$.
+Therefore,
+$p_1 \cdot p_2 \cdot p_\text{op}
+\le
+p_1' \cdot p_2' \cdot p_\text{op}$
+and, by substitution,
+$p \le p'$.
+
+\paragraph{Case \textsc{op-dyn-types}}
+The case for dynamically-tracked expressions is similar.
+Here, $e = e_1 \oplus_{p_{op}} e_2$ and $T = \Dyn \> \tau$,
+and the operand types are
+$\Gamma \vdash e_1 : \Dyn \> \tau_1$ and
+$\Gamma \vdash e_2 : \Dyn \> \tau_2$.
+
+By inversion on $H ; D ; S ; e \pjudge{p'} V, p$ (in any of the cases
+\textsc{op-dyn, op-dyn-operator-incorrect}, or
+\textsc{op-dyn-operands-incorrect}), $p' = p'_1 \cdot p'_2 \cdot p_\text{op}$,
+$p = p_{d1} \cdot p_{d2} \cdot p_\text{op}$
+where $H ; D ; S ; e_1 \pjudge{p'_1} V_1, p_{d1}$ and
+$H ; D ; S ; e_2 \pjudge{p'_2} V_2, p_{d2}$.
+
+By applying the induction hypothesis to $e_1$ and $e_2$, we have
+$p_{d1} \le p'_1$ and $p_{d2} \le p'_2$.
+Therefore,
+$p_{d1} \cdot p_{d2} \cdot p_\text{op} \le p'_1 \cdot p'_2 \cdot p_\text{op}$
+and, by substitution, $p \le p'$.
+
+\paragraph{Case \textsc{const-int-types} and \textsc{const-float-types}}
+Here,
+$\Gamma \vdash e : \ApproxN{p} \> \tau$
+where
+$\tau \in \{\text{int, float}\}$
+and
+$p = 1.0$.
+
+By inversion on $H ; D ; S ; e \pjudge{p'} V$ we get $p' = 1.0$.
+
+Because $1.0 \le 1.0$, we have $p \le p'$.
+
+\paragraph{Case \textsc{var-types}}
+Here, $e = v$, $\Gamma \vdash v : T$.
+Destructing $T$ yields two subcases.
+    \begin{itemize}
+    \item Case $T = \ApproxN{p} \> \tau$:
+    By inversion on $H ; D ; S ; e \pjudge{p'} V$ we have $p' = S(V)$.
+
+    The definition of well-formedness gives us $p \le S(V)$.
+
+    By substitution, $p \le p'$.
+
+    \item Case $T = \Dyn \> \tau$:
+    By inversion on $H ; D ; S ; e \pjudge{p'} V, p$, we have $p' = S(V)$ and
+    $p = D(V)$.
+
+    Well-formedness gives us $D(V) \le S(V)$.
+
+    By substitution, $p \le p'$.
+    \end{itemize}
+
+\paragraph{Case \textsc{endorse-types}}
+The expression
+$e$ may not contain \mcode{endorse} expressions so the claim hold vacuously.
+
+\paragraph{Case \textsc{check-types}}
+Here, $e = \mcode{check}(p, e_c)$.
+
+By inversion on $H ; D ; S ; e \pjudge{p'} V$, we have
+$H ; D ; S ; e_c \pjudge{p'} V, p''$, and
+$p \le p''$.
+
+By applying the induction hypothesis to
+$H ; D ; S ; e_c \pjudge{p'} V, p''$, we get $p'' \le p'$.
+
+By transitivity of inequalities, $p \le p'$.
+
+\paragraph{Case \textsc{track-types}}
+Here, $e = \mcode{track}(p_t, e_t)$,
+$\Gamma \vdash e_t : \ApproxN{p''}$,
+and $p \le p''$.
+
+By inversion on
+$H ; D ; S ; e \pjudge{p'} V, p$, we get
+$H ; D ; S ; e_t \pjudge{p'} V$.
+
+By applying the induction hypothesis to
+$H ; D ; S ; e_t \pjudge{p'} V$, we get $p'' \le p'$.
+
+By transitivity of inequalities, $p \le p'$.
+
+\paragraph{Case \textsc{subsumption}}
+The case where
+$T = \ApproxN{p} \> \tau$
+applies.
+There is one rule for subtyping, so we have
+$\Gamma \vdash e : \ApproxN{p_s} \> \tau$
+where
+$p_s \ge p$.
+By induction,
+$p_s \le p'$,
+so
+$p \le p'$.
+\end{proof}
+
+Finally, we use this preservation lemma for expressions to prove a
+preservation lemma for statements, completing the main soundness proof.
+
+\begin{lemma}[Statement Preservation]
+For all programs $s$ with no \mcode{endorse} expressions,
+if $\Gamma \vdash s : \Gamma'$,
+and $\vdash D , S : \Gamma$,
+and $H ; D ; S \rarrow H' ; D' ; S'$,
+then
+$\vdash D' , S' : \Gamma'$.
+\end{lemma}
+
+\begin{proof}
+We induct on the derivation of the statement typing judgment,
+$\Gamma \vdash s : \Gamma'$.
+
+\paragraph{Cases \textsc{skip-types}, \textsc{if-types}, and
+\textsc{while-types}}
+    In these cases, $\Gamma = \Gamma'$,
+    $D = D'$,
+    and $S = S'$,
+    so preservation holds trivially.
+
+\paragraph{Case \textsc{seq-types}}
+    Here, $s = s_1 ; s_2$ and the typing judgments for the two component
+    statements are
+    $\Gamma \vdash s_1 : \Gamma_2$
+    and
+    $\Gamma_2 \vdash s_2 : \Gamma'$.
+    If $s_1 = \skips$, then the case is trivial.
+    Otherwise, by inversion on the small step,
+    $H ; D ; S ; s_1 \rarrow
+    H' ; D' ; S' ; s_1'$
+    and, by the induction hypothesis,
+    $\vdash D_1', S_1' : \Gamma$.
+
+\paragraph{Case \textsc{decl-types}}
+    The statement $s$ is $T v := e$
+    where $\Gamma \vdash e : T$
+    and $\Gamma' = \Gamma, v : T$.
+    We consider two cases: either $T = \ApproxN{p} \> \tau$
+    or $T = \Dyn \> \tau$.
+    In either case, the expression preservation lemma applies.
+
+    In the first case,
+    $H ; D ; S ; e \pjudge{p'} V$ where $p \le p'$ via expression preservation
+    and, by inversion,
+    $S' = S, v \mapsto p$ and $D' = D$.
+    Since $S'(v) = p \le p'$,
+    the well-formedness property $\vdash D, S : \Gamma'$ continues to hold.
+
+    In the second case
+    $H ; D ; S ; e \pjudge{p'} V, p_d$ where $p_d \le p'$.
+    By inversion,
+    $S' = S, v \mapsto p$ and $D' = D, v \mapsto p_d$.
+    Since $D'(v) = p_d \le p'$,
+    we again have $\vdash D, S : \Gamma'$.
+
+\paragraph{Case \textsc{mutate-types}}
+    The case where $s$ is $v := e$ proceeds similarly to the above case for
+    declarations.
+\end{proof}
+
+
+\subsubsection{Erasure of Probability Bookkeeping}
+
+We state (and sketch a proof for) an \emph{erasure} property that
+shows that the ``true'' probabilities in our semantics, called $S$, do not
+affect execution.
+This property emphasizes that $S$ is bookkeeping for the purpose of stating
+our soundness result---it corresponds to no run-time data.
+Intuitively, the theorem states that the steps taken in our dynamic semantics
+are insensitive to $S$: that $S$ has no effect on which $H'$, $D'$, or $s'$
+can be produced.
+
+In this statement, $\mathrm{Dom}(S)$ denotes the set of variables in the mapping
+$S$.
+
+\begin{theorem}[Bookkeeping Erasure]
+If
+$H ; D ; S_1 ; s
+\rarrow^n
+H' ; D' ; S_1' ; s'$,
+then for any probability map $S_2$
+for which $\mathrm{Dom}(S_1) = \mathrm{Dom}(S_2)$,
+there exists another map $S_2'$ such that
+$H ; D ; S_2 ; s
+\rarrow^n
+H' ; D' ; S_2' ; s'$.
+\end{theorem}
+
+\noindent\textit{Proof sketch.}
+The intuition for the erasure property is that no rule in the semantics uses
+$S(v)$ for anything other than producing a probability in the $\pjudge{p}$
+judgment,
+and that those probabilities are only ever stored back into $S$.
+
+The proof proceeds by inducting on the number of steps, $n$.
+The base case ($n=0$) is trivial; for the inductive case, the goal is to show
+that a single step preserves $H'$, $D'$, and $s'$ when the left-hand
+probability map $S$ is replaced.
+Two lemmas show that replacing $S$ with $S'$ in the expression judgments leads
+to the same result value $V$ and, in the dynamically-tracked case, the same
+tracking probability $p_d$.
+Finally, structural induction on the small-step statement judgment shows that,
+in every rule, the expression probability only affects $S$ itself.

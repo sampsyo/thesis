@@ -1,0 +1,28 @@
+\begin{align*}
+    s &\defeq
+        T \> v := e \alt
+        v := e \alt
+        s\:\csemi\:s \alt
+        \mathbf{if}\:e\:s\:s \alt
+        \mathbf{while}\:e\:s \alt
+        \mathbf{skip} \\
+    e &\defeq
+        c \alt
+        v \alt
+        e \oplus_p e \alt
+        \mcode{endorse}(p, e) \alt
+        \mcode{check}(p, e) \alt
+        \mcode{track}(p, e) \\
+    \oplus &\defeq
+        + \alt - \alt \times \alt \div \\
+    T &\defeq
+        q \> \tau \\
+    q &\defeq
+        \ApproxN{p} \alt
+        \Dyn \\
+    \tau &\defeq
+        \mcode{int} \alt \mcode{float} \\
+    v &\in \mathrm{variables},
+        ~c \in \mathrm{constants},
+        ~p \in [0.0, 1.0]
+\end{align*}

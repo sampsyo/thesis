@@ -1,0 +1,140 @@
+% GNUPLOT: LaTeX picture with Postscript
+\begingroup
+\sffamily \footnotesize
+  \makeatletter
+  \providecommand\color[2][]{%
+    \GenericError{(gnuplot) \space\space\space\@spaces}{%
+      Package color not loaded in conjunction with
+      terminal option `colourtext'%
+    }{See the gnuplot documentation for explanation.%
+    }{Either use 'blacktext' in gnuplot or load the package
+      color.sty in LaTeX.}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\includegraphics[2][]{%
+    \GenericError{(gnuplot) \space\space\space\@spaces}{%
+      Package graphicx or graphics not loaded%
+    }{See the gnuplot documentation for explanation.%
+    }{The gnuplot epslatex terminal needs graphicx.sty or graphics.sty.}%
+    \renewcommand\includegraphics[2][]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \@ifundefined{ifGPcolor}{%
+    \newif\ifGPcolor
+    \GPcolorfalse
+  }{}%
+  \@ifundefined{ifGPblacktext}{%
+    \newif\ifGPblacktext
+    \GPblacktexttrue
+  }{}%
+  % define a \g@addto@macro without @ in the name:
+  \let\gplgaddtomacro\g@addto@macro
+  % define empty templates for all commands taking text:
+  \gdef\gplbacktext{}%
+  \gdef\gplfronttext{}%
+  \makeatother
+  \ifGPblacktext
+    % no textcolor at all
+    \def\colorrgb#1{}%
+    \def\colorgray#1{}%
+  \else
+    % gray or color?
+    \ifGPcolor
+      \def\colorrgb#1{\color[rgb]{#1}}%
+      \def\colorgray#1{\color[gray]{#1}}%
+      \expandafter\def\csname LTw\endcsname{\color{white}}%
+      \expandafter\def\csname LTb\endcsname{\color{black}}%
+      \expandafter\def\csname LTa\endcsname{\color{black}}%
+      \expandafter\def\csname LT0\endcsname{\color[rgb]{1,0,0}}%
+      \expandafter\def\csname LT1\endcsname{\color[rgb]{0,1,0}}%
+      \expandafter\def\csname LT2\endcsname{\color[rgb]{0,0,1}}%
+      \expandafter\def\csname LT3\endcsname{\color[rgb]{1,0,1}}%
+      \expandafter\def\csname LT4\endcsname{\color[rgb]{0,1,1}}%
+      \expandafter\def\csname LT5\endcsname{\color[rgb]{1,1,0}}%
+      \expandafter\def\csname LT6\endcsname{\color[rgb]{0,0,0}}%
+      \expandafter\def\csname LT7\endcsname{\color[rgb]{1,0.3,0}}%
+      \expandafter\def\csname LT8\endcsname{\color[rgb]{0.5,0.5,0.5}}%
+    \else
+      % gray
+      \def\colorrgb#1{\color{black}}%
+      \def\colorgray#1{\color[gray]{#1}}%
+      \expandafter\def\csname LTw\endcsname{\color{white}}%
+      \expandafter\def\csname LTb\endcsname{\color{black}}%
+      \expandafter\def\csname LTa\endcsname{\color{black}}%
+      \expandafter\def\csname LT0\endcsname{\color{black}}%
+      \expandafter\def\csname LT1\endcsname{\color{black}}%
+      \expandafter\def\csname LT2\endcsname{\color{black}}%
+      \expandafter\def\csname LT3\endcsname{\color{black}}%
+      \expandafter\def\csname LT4\endcsname{\color{black}}%
+      \expandafter\def\csname LT5\endcsname{\color{black}}%
+      \expandafter\def\csname LT6\endcsname{\color{black}}%
+      \expandafter\def\csname LT7\endcsname{\color{black}}%
+      \expandafter\def\csname LT8\endcsname{\color{black}}%
+    \fi
+  \fi
+  \setlength{\unitlength}{0.0500bp}%
+  \begin{picture}(4320.00,2590.00)%
+    \gplgaddtomacro\gplbacktext{%
+      \csname LTb\endcsname%
+      \put(-132,1726){\makebox(0,0)[r]{\strut{}}}%
+      \put(-132,2147){\makebox(0,0)[r]{\strut{}}}%
+      \put(-132,2567){\makebox(0,0)[r]{\strut{}}}%
+      \put(-97,2146){\rotatebox{-270}{\makebox(0,0){\strut{}rounded}}}%
+    }%
+    \gplgaddtomacro\gplfronttext{%
+    }%
+    \gplgaddtomacro\gplbacktext{%
+      \csname LTb\endcsname%
+      \put(1308,1726){\makebox(0,0)[r]{\strut{}}}%
+      \put(1308,2147){\makebox(0,0)[r]{\strut{}}}%
+      \put(1308,2567){\makebox(0,0)[r]{\strut{}}}%
+    }%
+    \gplgaddtomacro\gplfronttext{%
+    }%
+    \gplgaddtomacro\gplbacktext{%
+      \csname LTb\endcsname%
+      \put(2748,1726){\makebox(0,0)[r]{\strut{}}}%
+      \put(2748,2147){\makebox(0,0)[r]{\strut{}}}%
+      \put(2748,2567){\makebox(0,0)[r]{\strut{}}}%
+    }%
+    \gplgaddtomacro\gplfronttext{%
+    }%
+    \gplgaddtomacro\gplbacktext{%
+      \csname LTb\endcsname%
+      \put(-132,863){\makebox(0,0)[r]{\strut{}}}%
+      \put(-132,1295){\makebox(0,0)[r]{\strut{}}}%
+      \put(-132,1726){\makebox(0,0)[r]{\strut{}}}%
+      \put(480,731){\rotatebox{-45}{\makebox(0,0)[l]{\strut{}0.99}}}%
+      \put(959,731){\rotatebox{-45}{\makebox(0,0)[l]{\strut{}1.0}}}%
+      \put(-97,1294){\rotatebox{-270}{\makebox(0,0){\strut{}solved}}}%
+    }%
+    \gplgaddtomacro\gplfronttext{%
+    }%
+    \gplgaddtomacro\gplbacktext{%
+      \csname LTb\endcsname%
+      \put(1308,863){\makebox(0,0)[r]{\strut{}}}%
+      \put(1308,1295){\makebox(0,0)[r]{\strut{}}}%
+      \put(1308,1726){\makebox(0,0)[r]{\strut{}}}%
+      \put(1800,731){\rotatebox{-45}{\makebox(0,0)[l]{\strut{}0.99}}}%
+      \put(2160,731){\rotatebox{-45}{\makebox(0,0)[l]{\strut{}0.999}}}%
+      \put(2519,731){\rotatebox{-45}{\makebox(0,0)[l]{\strut{}1.0}}}%
+    }%
+    \gplgaddtomacro\gplfronttext{%
+    }%
+    \gplgaddtomacro\gplbacktext{%
+      \csname LTb\endcsname%
+      \put(2748,863){\makebox(0,0)[r]{\strut{}}}%
+      \put(2748,1295){\makebox(0,0)[r]{\strut{}}}%
+      \put(2748,1726){\makebox(0,0)[r]{\strut{}}}%
+      \put(3168,731){\rotatebox{-45}{\makebox(0,0)[l]{\strut{}0.99}}}%
+      \put(3456,731){\rotatebox{-45}{\makebox(0,0)[l]{\strut{}0.999}}}%
+      \put(3743,731){\rotatebox{-45}{\makebox(0,0)[l]{\strut{}0.9999}}}%
+      \put(4031,731){\rotatebox{-45}{\makebox(0,0)[l]{\strut{}1.0}}}%
+    }%
+    \gplgaddtomacro\gplfronttext{%
+    }%
+    \gplbacktext
+    \put(0,0){\includegraphics{plots/spark-mc}}%
+    \gplfronttext
+  \end{picture}%
+\endgroup

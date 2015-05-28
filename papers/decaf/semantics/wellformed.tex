@@ -1,0 +1,13 @@
+\begin{definition}[Well-Formed]
+$\vdash D, S : \Gamma$
+iff
+for all $v \in \Gamma$,
+\begin{itemize}
+\item
+If $\Gamma(v) = \ApproxN{p} \> \tau$,
+then $p \le S(v)$ or $v \notin S$.
+\item
+If $\Gamma(v) = \Dyn \> \tau$,
+then $D(v) \le S(v)$ or $v \notin S$.
+\end{itemize}
+\end{definition}

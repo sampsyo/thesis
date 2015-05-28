@@ -1,0 +1,2 @@
+\edef\timing#1{%
+\ifstrequal{#1}{fft}{2 sec}{\ifstrequal{#1}{imagefill}{14 min}{\ifstrequal{#1}{lu}{1 min}{\ifstrequal{#1}{mc}{2 min}{\ifstrequal{#1}{simpleRaytracer}{1 min}{\ifstrequal{#1}{smm}{1 min}{\ifstrequal{#1}{sor}{19 min}{\ifstrequal{#1}{zxing}{16 min}{\errmessage{unknown key for timing: #1}}}}}}}}}}
