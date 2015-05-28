@@ -406,11 +406,11 @@ behaves correctly.
 Then the joint probability for a binary operation's correctness is:
 %
 \begin{align*}
-    \prob{\text{\code{x} $\oplus_p$ \code{y}}}
-    &= \prob{\text{\code{x}}, \text{\code{y}}, \oplus_p} \\
-    &= \prob{\text{\code{x}}} \cdot
-        \prob{\text{\code{y}} \;|\; \text{\code{x}}} \cdot
-        \prob{\oplus_p \;|\; \text{\code{x}}, \text{\code{y}}}
+    \prob{\text{\lstinline!x! $\oplus_p$ \lstinline!y!}}
+    &= \prob{\text{\lstinline!x!}, \text{\lstinline!y!}, \oplus_p} \\
+    &= \prob{\text{\lstinline!x!}} \cdot
+        \prob{\text{\lstinline!y!} \;|\; \text{\lstinline!x!}} \cdot
+        \prob{\oplus_p \;|\; \text{\lstinline!x!}, \text{\lstinline!y!}}
 \end{align*}
 %
 The operator's correctness is independent of its inputs, so $\prob{\oplus_p
