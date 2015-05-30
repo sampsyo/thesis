@@ -1,0 +1,127 @@
+\section{Introduction}\label{sec:intro}
+
+% Energy is an increasingly important consideration for system designers;
+% conserving energy enables longer battery life and lower chip temperatures.
+%
+Recent work on \emph{approximate computing} has exploited the fact that 
+many applications, particularly those whose outputs are meant for human
+interpretation, can enable more efficient execution at the cost of slightly
+inaccurate outputs. 3-D rendering, search, and machine learning
+are examples of the many tasks that tolerate inaccuracy.
+
+Research over the past few years has proposed a variety of software and hardware 
+approaches to approximate computing, including:
+%
+producing multiple versions of a program with varying accuracy and choosing
+between them at run
+time~\cite{green, dynamicknobs};
+%
+periodically skipping loop iterations~\cite{perforation, qosprof};
+%
+removing synchronization to reduce contention~\cite{dubstep, quickstep, races-ibm};
+%
+adjusting floating-point precision~\cite{precimonious};
+%
+using special low-power hardware
+structures that produce wrong results probabilistically~\cite{truffle, flikker};
+%
+and training hardware neural networks to mimic the behavior of costly
+functions~\cite{npu, anpu}.
+
+These proposals share an important distinction
+from traditional program optimizations:
+they have subtle and broad-ranging effects on safety, reliability, and output
+quality.
+Some work relies on programmers for manual reasoning to control
+these
+effects~\cite{npu, flikker, races-ibm, perforation},
+while other work proposes automated transformation based on code
+patterns or exhaustive search~\cite{green, paraprox, sage}.
+Manual code editing can be tedious and error-prone, especially since
+important safety invariants are at stake.
+Conversely, full automation eliminates a crucial element of
+visibility and control.
+Programmers must trust the automated system; they have no recourse when
+opportunities are missed or invariants are broken.
+
+We propose \sysname
+\ifnum\cameraready=1
+(an Approximate C Compiler for Energy and Performance Trade-offs),
+\else
+(a Scalable-Precision Optimizing Compiler Kit),
+\fi
+a framework for approximation that balances automation with programmer
+guidance.
+\sysname is \emph{controlled} because it preserves programmer intention
+expressed via code annotations.
+A static analysis rules out
+unintended side effects. The programmer participates in a feedback loop with
+the analysis to enable more approximation
+opportunities.
+\sysname is \emph{practical} because it facilitates a range
+of approximation techniques that work on currently available hardware.
+Just as a traditional compiler framework provides common tools to support
+optimizations,
+\sysname's building blocks help implement automatic
+approximate transformations based on programmer guidance and dynamic feedback.
+
+\sysname's architecture combines static and dynamic components.
+The frontend, built atop LLVM~\cite{llvm}, extends the syntax of C and C++ to
+incorporate an \lil{APPROX} keyword that programmers use to annotate types as
+in other work~\cite{enerj}.
+\sysname's central analysis, \emph{\precisepurity}, identifies coarse-grained
+regions of code that can
+affect only approximate values.
+Coarse region selection is crucial for safe approximation strategies:
+client optimizations use the results to
+transform code and offload to accelerators while preserving static safety
+properties.
+After compilation, an autotuning component measures program executions
+and uses heuristics to identify program variants that maximize performance and output quality.
+To incorporate application insight, \sysname furnishes programmers with feedback
+to guide them toward better annotations.
+
+
+\paragraph{Contributions.}
+\sysname is an end-to-end framework that makes existing proposals for approximate
+program transformations practical and disciplined.
+Its contributions are:
+\begin{itemize}
+\item A programming model for program relaxation that combines lightweight
+annotations with compiler analysis feedback
+to guide programmers toward effective relaxations;
+
+\item An autotuning system that efficiently searches for a program's
+best approximation parameters;
+
+\item A core analysis library that identifies code that can be safely relaxed
+or offloaded to an approximate accelerator;
+
+\item A prototype implementation demonstrating both pure-software optimizations
+and hardware acceleration using an off-the-shelf FPGA part.
+\end{itemize}
+
+\noindent
+We evaluate \sysname across three platforms:
+a standard Intel-based server;
+a mobile SoC with an on-chip FPGA, which we use as an approximate accelerator;
+and an ultra-low-power, energy-harvesting embedded microcontroller where
+performance is critical to applications' viability.
+The experiments demonstrate average speedups of \result{speedup-x86-mean},
+\result{speedup-zynq-mean}, and \result{speedup-msp430-mean} on the
+three platforms, respectively,
+with quality loss under 10\%.
+
+We also report qualitatively on the programming experience.
+Novice C++ programmers were able to apply \sysname to
+legacy software to obtain new speedups.
+\sysname's combination of static analysis and dynamic measurement alleviates
+much of the manual labor from the process of applying
+approximation without sacrificing transparency or control.
+
+The \sysname framework is open source and ready for use as research
+infrastructure.
+It provides the necessary language and compiler support to prototype and
+evaluate new strategies for approximation,
+reducing the need to reinvent these components for each new research
+evaluation.

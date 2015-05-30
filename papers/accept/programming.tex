@@ -1,0 +1,169 @@
+\section{Annotation and Programmer Feedback}
+\label{sec:annotation-feedback}
+
+This section describes \sysname's annotations and feedback,
+which helps programmers balance safety with approximation.
+Rather than proving theoretical accuracy guarantees for restricted programming
+models as in other work~\cite{sasa-sas11, zhu-popl12, passert},
+\sysname's workflow extends mainstream development practices: it combines
+lightweight safety guarantees, programmer insight, and testing to apply
+approximation to general code.
+
+\subsection{Annotation Language}
+\label{sec:language}
+
+The programmer uses annotations to communicate to the compiler which parts of
+a program are safe targets for program relaxation.
+\sysname adapts the type system of EnerJ, a language for approximate computing
+that was originally developed for bounding the effects of unreliable hardware
+components~\cite{enerj}.
+As in EnerJ, all types in \sysname are qualified as either \emph{approximate} or
+\emph{precise}, with precise being the default.
+
+\paragraph{Information flow and endorsement.}
+\sysname's type system uses a standard information-flow
+approach to prevent approximate data from affecting precise data.
+%
+Precise types are strict subtypes of their approximate counterparts, so
+variables annotated as approximate cannot be assigned to precise ones without
+explicit programmer intervention.  (The opposite direction, wherein precise data
+affects approximate data, is permitted.)
+%
+\sysname's type system is directly derived from EnerJ's~\cite{enerj}, for which
+its authors prove a noninterference property ensuring that precise data stays
+precise.  The same noninterference guarantee applies to \sysname's
+type-qualifier extension for type-safe subsets of C and C++.
+Undefined behavior in C and C++ remains undefined in \sysname:
+programs that violate type safety can also violate \sysname's guarantees.
+
+Strict information flow can be too constraining.
+For example, a program may need to
+compute an approximate value, where relaxations can apply, but then check the
+resulting output for integrity while treating it as precise:
+%
+\begin{lstlisting}
+APPROX int a = expensiveCall();
+cheapChecksumPrecise(a); // illegal
+\end{lstlisting}
+%
+To permit this pattern, \sysname provides an \emph{endorsement} expression
+that acts as a cast from an approximate type to its precise equivalent.
+The above program fails to typecheck, but using \lil{ENDORSE(a)} as the argument
+is legal:
+\begin{lstlisting}
+APPROX int a = expensiveCall();
+cheapChecksumPrecise(ENDORSE(a));
+\end{lstlisting}
+Endorsements give programmers explicit control over information flow
+when dealing with approximate values.
+
+\paragraph{Pointer types.}
+For basic, non-reference types, \sysname's dialect of C allows unidirectional
+information flow: precise values can be assigned into approximate variables
+but not vice-versa. For pointers and references, however,
+even precise-to-approximate flow is unsound since
+it creates aliases for the same data that disagree on its type.
+Pointer types are therefore invariant in the referent type.
+The language does not permit approximate pointers---i.e., addresses must be
+precise.
+
+\paragraph{Implicit flow.}
+Control flow provides an avenue for approximate data to affect precise data
+without a direct assignment. For example, \lil{if (a) p = 5;} allows the
+variable \lil{a} to affect the value of \lil{p}.
+Like EnerJ, \sysname prohibits approximate values from being used in
+conditions---specifically, in \lil{if}, \lil{for}, \lil{do}, \lil{while}, and
+\lil{switch} statements and in the ternary conditional-expression operator.
+Programmers can use endorsements to explicitly circumvent this restriction.
+
+\paragraph{Escape hatches.}
+\sysname decides whether program relaxations are safe based on the
+\emph{effects} of the statements involved. Section~\ref{sec:relaxations} goes
+into more detail, but at a high level, code can be relaxed if its externally
+visible effects are approximate.  For example, if \lil{a} is a pointer to
+an \lil{APPROX int}, then the statement \lil{*a = 5;} has an approximate effect
+on the heap.
+Escape hatches from this sound reasoning are critical in a practical
+system that must handle legacy code.
+To enable or disable specific optimizations, the programmer can
+override the compiler's decision about a statement's effects using two
+annotations. The \annpermit annotation forces a statement to
+be considered approximate
+and \annforbid forces it to be precise, forbidding
+any relaxations involving it.
+
+These two annotations represent escape hatches from \sysname's normal
+reasoning and thus violate the safety guarantees it normally provides.
+%
+Qualitatively, when annotating programs, we use these
+annotations much less frequently than the primary annotations
+\lil{APPROX} and \lil{ENDORSE}. We find \annpermit to be
+useful when experimentally exploring program behavior before annotating and in
+system programming involving memory-mapped registers.  Conversely,
+\annforbid is useful for marking parts of the program involved in
+introspection. Section~\ref{sec:casestudy} gives more detail on these
+experiences.
+
+\subsection{Programmer Feedback}
+\label{sec:feedback}
+
+\sysname takes inspiration from parallelizing compilers that use a development
+feedback loop to help guide the programmer toward parallelization
+opportunities~\cite{canal, deditor}.
+It provides
+feedback through an \term{analysis log} that describes the relaxations that it
+attempted to apply. For example, for \sysname's synchronization-elision
+relaxation, the log lists every lexically scoped lock acquire/release pair in
+the program. For each relaxation opportunity, it reports whether the relaxation
+is safe---whether it involves only approximate data---and, if it is
+not, identifies the statements that prevent the relaxation from applying.
+We call these statements with
+externally visible precise effects \emph{blockers}.
+
+\sysname reports blockers for each failed
+relaxation-opportunity site. For example, during the annotation of one program
+in our evaluation, \sysname examined this loop:
+%
+\begin{lstlisting}[numbers=left,firstnumber=650,numbersep=-1pt,numberstyle=\sffamily]
+  double myhiz = 0;
+  for (long kk=k1; kk<k2; kk++) {
+    myhiz += dist(points->p[kk], points->p[0],
+      ptDimension) * points->p[kk].weight;
+  }
+\end{lstlisting}
+%
+The store to the precise (by default) variable \lil{myhiz}
+prevents the loop from being approximable. The analysis log reports:
+%
+\begin{lstlisting}
+loop at streamcluster.cpp:651
+blockers: 1
+ * streamcluster.cpp:652: store to myhiz
+\end{lstlisting}
+%
+Examining that loop in context, we found that \lil{myhiz} was a weight
+accumulator that had little impact on the algorithm, so we changed its type from
+\lil{double} to \lil{APPROX double}. On its next execution, \sysname logged the
+following message about the same loop, highlighting a new relaxation
+opportunity:
+%
+\begin{lstlisting}
+loop at streamcluster.cpp:651
+can perforate loop
+\end{lstlisting}
+%
+The feedback loop between the programmer's annotations and the compiler's
+analysis log strikes a balance with respect to programmer involvement: it helps
+identify new relaxation opportunities while leaving the programmer in control.
+%
+Consider the alternatives on either end of the programmer-effort spectrum:
+On one extreme, suppose that a programmer wishes to speed up a loop by manually
+skipping iterations.  The programmer can easily misunderstand the loop's side
+effects if it indirectly makes system calls or touches shared data.
+%
+On the other extreme, unconstrained automatic transformations are even more
+error prone: a tool that removes locks can easily create subtle concurrency
+bugs.
+%
+Combining programmer feedback with compiler assistance balances the
+advantages of these approaches.

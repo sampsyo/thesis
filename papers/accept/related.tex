@@ -1,0 +1,75 @@
+\section{Related Work}
+\label{sec:related}
+
+\sysname builds on a body of prior work on approximate
+computing. Three main research directions are most
+relevant to \sysname: static safety analyses for approximate programs,
+program relaxations, and quality-aware autotuners.
+
+One group of proposals seeks to statically analyze approximate programs to
+prove properties even in the face of unreliable hardware or program
+transformations.
+Carbin \etal propose a general proof system for relating baseline executions
+to relaxed executions~\cite{carbin-pldi}
+and an integrity property checker for loop perforation~\cite{carbin-pepm}.
+Rely~\cite{rely} and Chisel~\cite{chisel} analyze and tune the chance that a
+nondeterministic computation goes wrong.
+EnerJ~\cite{enerj} provides a simple noninterference guarantee that we adapt
+in this work.
+Other recent
+work~\cite{sasa-sas11, zhu-popl12} uses probabilistic reasoning to prove
+conservative accuracy guarantees for relaxations of restricted programming
+patterns.
+We instead focus on bringing approximation to general programs and rely on
+programmer involvement and dynamic testing to build confidence in an
+approximation's suitability.
+\sysname's safety guarantees need to be both general and lightweight,
+requiring minimal programmer overhead, to be practical. The information-flow
+types adapted from EnerJ permit straightforward automated compiler
+reasoning and are not constrained to specific code patterns.
+%
+EnerJ itself, however, is limited to a specific style of approximation, where
+individual variables and instructions introduce error on hypothetical future
+hardware.
+\sysname expands the scope to today's computers using compiler analysis and
+programmer feedback to enable coarser-grained optimizations.
+
+\sysname complements specific software approximation strategies,
+such as loop perforation~\cite{perforation},
+alternate-implementation selection~\cite{petabricks, green, taco-soc}, parameter
+selection~\cite{dynamicknobs}, synchronization relaxation~\cite{quickstep,
+dubstep, races-ibm, rinard-hotpar}, and pattern
+substitution~\cite{paraprox}. This work contributes a
+unifying framework to make relaxations controlled and
+automatic.
+
+\sysname's autotuning component resembles other prior work on dynamic
+measurement of approximation strategies, including off-line tools such as
+PetaBricks~\cite{ansel-autotuning, petabricks} and on-line methods
+such as Green~\cite{green}, ApproxIt~\cite{approxit}, and SAGE~\cite{sage}.
+Misailovic
+\etal's quality-of-service profiler~\cite{qosprof} evaluates the results of
+candidate loop perforations by assessing their performance and quality impacts
+for reporting to the programmer.
+Precimonious~\cite{precimonious} tunes variables' floating-point widths to
+adjust overall precision.
+%
+\sysname generalizes these autotuning
+techniques: it applies to a variety of safety-constrained
+relaxations and guides the process using a practical search
+heuristic.
+
+The type-qualifier overlay system we develop for Clang and LLVM is modeled
+after work on practical pluggable types for Java~\cite{jsr308, papi}.
+%
+Another notable predecessor is Cqual~\cite{cqual}, which provided a similar mechanism
+in GCC for finding bugs (e.g., format-string
+vulnerabilities~\cite{shankar:typequal}).
+\sysname's implementation of type qualifiers adds integration with the rest of
+the compiler toolchain via IR metadata, which enables program analysis beyond
+type checking and type-based optimization.
+
+Our neural accelerator design builds on recent work on using hardware neural
+networks as accelerators~\cite{npu, anpu, temam-isca13}.
+To our knowledge, this is the first work
+to demonstrate safe, automated, compiler-based offloading to the neural network.

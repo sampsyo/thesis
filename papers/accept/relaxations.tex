@@ -1,0 +1,253 @@
+\section{Analysis and Relaxations}
+\label{sec:relaxations}
+
+\sysname takes an annotated program and applies a set of program transformations
+to code that affects only data marked approximate.  We call these
+transformations \term{relaxations} because they trade correctness for
+performance.
+%
+To determine relaxation opportunities from type annotations, \sysname uses
+an analysis called \emph{\precisepurity}.
+%
+This section describes \sysname's implementations of several program relaxations
+drawn from the literature and how
+\precisepurity analysis makes them safe.
+%
+As a framework for approximation, \sysname is extensible to
+relaxations beyond those we describe here.
+
+\iffalse % too wordy, no new information in this para (dan)
+In contrast to traditional compiler optimizations,
+\emph{program relaxations} are allowed to change the behavior of the input
+program to improve performance. A broad array of previous research has
+explored many different kinds of program relaxations~\cite{perforation,
+quickstep, dubstep, races-ibm, green}. In this paper, we seek to bring
+programmer-directed \emph{safety guarantees} to these relaxation techniques.
+Specifically, we implement a compiler analysis that determines whether
+a code region has precise effects.
+Individual program-relaxation strategies use this analysis to allow only those
+transformations that have exclusively approximate externally visible effects.
+These constraints uphold \sysname's noninterference guarantee, which states that
+it must avoid perturbing precise data while optimizing the approximate part of
+the program.
+\fi
+
+\subsection{\Precisepurity Analysis}
+\label{sec:precise-purity}
+
+\sysname provides a core program analysis that client optimizations use to
+ensure safety.
+This analysis must reconcile a fundamental difference between the language's
+safety guarantees and the transformation mechanisms:
+the programmer specifies safety in terms of fine-grained annotations on
+individual data elements, but program relaxations affect coarse-grained regions
+of code such as loop bodies or entire functions.
+Rather than resort to opaque and error-prone code-centric annotation,
+\sysname bridges this gap by analyzing the side effects of coarse-grained code
+regions.
+
+\sysname's analysis library determines whether it is safe to approximate a
+region of code.
+Specifically, the \precisepurity analysis checks,
+for a region of interest (e.g., a loop body), whether its side
+effects are exclusively approximate or may include precise data---in other
+words, whether it is \emph{pure with respect to precise data}.
+%
+\Precisepurity is the key criterion for whether a relaxation can
+apply.  In
+\sysname, every relaxation strategy consults the \precisepurity
+analysis and only optimizes
+\precisepure code.
+%
+A region is \precisepure if it:
+\begin{itemize}
+\item contains no stores to precise
+variables that may be read outside the region;
+\item does not call any functions that are not \precisepure; and
+\item does not include an unbalanced synchronization statement (locking without
+unlocking or vice versa).
+\end{itemize}
+The analysis begins with the conservative
+assumption that the region is not \precisepure and asserts otherwise only if it
+can prove \precisepurity.
+%
+For example, this code:
+%
+\begin{lstlisting}
+int p = ...;
+APPROX int a = p * 2;
+\end{lstlisting}
+%
+is \precisepure if and only if the variable \lil{p} is never read outside this
+code region. External code may, however, read the variable \lil{a} since it is
+marked as approximate.
+%
+Together with the information-flow type system, the \precisepurity restriction
+ensures that code transformations only influence approximate data.
+Since only the approximate value \lil{a} escapes the \precisepure block above,
+dependent code must also be marked as \lil{APPROX} to obey the typing rules:
+any code that treats \lil{a} as precise is a type error.
+Optimizations that only affect \precisepure code uphold \sysname's
+contract with the programmer: that approximation must only affect variables
+explicitly marked as approximate.
+
+We implement the core \precisepurity analysis
+conservatively using SSA definition--use chains and a simple pointer-escape
+analysis.  Section~\ref{sec:impl} gives more implementation details.
+
+\iffalse  % Seems out of place to me now. -ALDS
+Each program-relaxation strategy uses the shared \precisepurity analysis to
+identify \emph{relaxation-opportunity sites:} places where the transformation
+can apply. When \sysname finds an opportunity site, it registers the site along
+with any relevant parameters in its catalog of such sites. The autotuner then
+uses this catalog to enable a subset of relaxation opportunities and set their
+parameters.  Section~\ref{sec:autotuner} describes the autotuning process in more detail.
+\fi
+
+\subsection{Target Region Selection}
+\label{subsec:regions}
+
+\begin{algorithm}[tb]
+  \DontPrintSemicolon
+  \SetArgSty{textrm}
+  \KwIn{function $f$}
+  \KwOut{set of \precisepure regions $R$ in $f$}
+
+  \ForEach{basic block $B$ in $f$} {
+    \ForEach{block $B'$ strictly post-dominated by $B$} {
+      \If{$B'$ dominates $B$}{
+        $region \gets \text{formRegionBetween}(B', B)$ \;
+        \label{line:regionSel:dfs}
+        \If{$region$ is \precisepure} {
+          $R \gets R \cup \{region\}$\;
+        }
+      }
+    }
+  }
+\caption{Candidate region selection.}
+\label{alg:regionSel}
+\end{algorithm}
+
+Accelerator-style program transformations work best when they target larger
+regions of code.
+To help optimizations identify profitable targets,
+\sysname can enumerate a
+function's replaceable approximate code regions.
+%
+A \term{candidate region} is a set of instructions that is \precisepure, forms
+control flow with a single entry and a single exit, and has identifiable live-ins
+and live-outs.
+%
+Client optimizations, such as the neural acceleration described in
+\secref{sec:npu}, can enumerate the candidate regions in a program to attempt
+optimization.  \Precisepurity analysis enables region selection by proving
+that chunks of code are cleanly separable from the rest of the program.
+
+Region selection meets the needs of accelerators that do not access memory
+directly and therefore require statically identifiable inputs and outputs;
+patterns such as dynamic array updates cannot be offloaded.  The same analysis
+can be adapted to superoptimizers and synthesizers that need to operate on
+delimited subcomputations.
+%
+For example, an accuracy-aware superoptimizer such as
+STOKE~\cite{stokefp} could use \sysname's region selection to search for
+tractable optimization targets in a large program.
+Each fragment could be optimized independently
+and spliced back into the program.
+
+Algorithm~\ref{alg:regionSel} shows how \sysname enumerates candidate regions.
+The algorithm uses dominance and post-dominance sets to
+identify pairs of basic blocks $B_1$ and $B_2$
+where $B_1$ dominates $B_2$ and $B_2$ post-dominates $B_1$.
+The portion of the control-flow graph between these pairs represent all the
+single-entry, single-exit portions of a function.
+For a function with $n$ blocks, the enumeration needs $n^2$ \precisepurity
+checks in the worst case---but typically fewer because the LLVM compiler
+infrastructure pre-computes the dominator and post-dominator trees.
+
+
+\subsection{Safe Approximate Relaxations}
+
+To demonstrate \sysname's flexibility as a framework, we implement three
+approximation strategies from the literature using \precisepurity analysis.
+
+\subsubsection{Loop Perforation}
+Sidiroglou \etal propose \emph{loop perforation},
+which exploits the fact that many programs tolerate some skipping of loop
+iterations without significant quality degradation~\cite{perforation}.
+A perforated loop includes a parameter, the \term{perforation factor}, that
+governs how often an iteration can be skipped at run time.
+
+\sysname considers a loop safe to perforate if its body is
+\precisepure and free of early exits (i.e., \lil{break}
+statements), which can cause nontermination if skipped.
+To perforate a loop, \sysname inserts a counter and code to increment and
+check it in each loop iteration.
+To minimize the overhead of loop perforation, \sysname
+requires the perforation factor $p$ to be a power of two to enable bitwise tests
+against the counter.  The loop body executes once every $p$ iterations.
+
+\subsubsection{Synchronization Elision}
+In parallel programs, inter-thread synchronization constructs---locks,
+barriers, semaphores, etc.---are necessary for program predictability but
+threaten scalability.
+Recent research has proposed
+to strategically reduce
+synchronization in approximate programs~\cite{rinard-hotpar, quickstep, dubstep, races-ibm}.
+Even though removing synchronization can add data races and other
+nondeterminism to previously race-free or deterministic programs, this recent
+work has observed that the ``incorrectness'' is often benign:
+the resulting lost updates and atomicity violations can
+sometimes only slightly change the program's output.
+
+\sysname can elide calls to locks (mutexes) and
+barriers from the pthreads library.
+To permit the elision of a lock
+acquire--release pair, \sysname requires that the critical section---the code
+between the acquire and release---be \precisepure.
+To elide
+\lil{pthread_barrier_wait()} synchronization, \sysname looks for pairs of calls
+whose intervening code is \precisepure, in such cases removing the \emph{first}
+call (the second call remains to delimit the end of the region).
+
+\subsubsection{Neural Acceleration}
+\label{sec:npu}
+
+Recent work has shown how to accelerate approximate programs with hardware
+neural networks~\cite{benchnn, temam-isca, temam-isca13}.
+\textit{Neural acceleration} uses profiled inputs and outputs from a region of
+code to train a neural network that mimics the code.
+The original code is then replaced with an invocation of an
+efficient hardware accelerator implementation, the Neural Processing Unit
+(NPU)~\cite{npu, anpu, snnap}.
+But the technique has thus far required manual identification of candidate
+code regions and insertion of offloading instructions.
+\sysname automates the process.
+
+\sysname implements an automatic neural acceleration transform
+that uses an existing configurable neural-network implementation
+for an on-chip field-programmable gate array (FPGA)~\cite{snnap}.
+\sysname uses approximate region selection (\Sref{subsec:regions}) to
+identify acceleration targets, then trains a neural network on
+execution logs for each region.
+It then generates code to offload executions of the identified region to the
+accelerator.
+The offload code hides invocation latency by constructing batched invocations
+that exploit the high-bandwidth interface between the CPU and FPGA.
+We target a commercially available FPGA-augmented system on a chip (SoC) and
+do not require specialized neural hardware.
+
+\subsubsection{Other Client Relaxations}
+The three optimizations above demonstrate \sysname's breadth as a
+framework for realizing ideas from approximate-computing research.
+Though we omit details for space, we have also prototyped
+two other optimizations using \sysname:
+an approximate alias analysis that unlocks secondary compiler optimizations such as
+loop-invariant code motion and vectorization for approximate data, and
+approximate strength reduction that aggressively replaces expensive arithmetic
+operations with cheaper shifts and masks that are not exactly equivalent.
+Other optimizations from the literature are also amenable to \sysname's
+architecture, including approximate parallelization~\cite{quickstep},
+float-to-fixed conversion~\cite{torftf},
+bit-width reduction~\cite{bitwidthred, precimonious}, GPU pattern replacement~\cite{paraprox},
+and alternate-algorithm selection~\cite{green, petabricks}.

@@ -1,0 +1,70 @@
+\section{Overview}
+
+% The primary goal of \sysname is to enable safe, practical, and intuitive
+% approximation for general-purpose programs on commodity hardware.  Like previous
+% approximation systems~\cite{enerj, relax, flikker}, \sysname involves the programmer in
+% application-dependent decisions about where approximation can apply: the
+% programmer provides annotations, \sysname highlights opportunities where it can apply program relaxations to improve performance, and possibly offers suggestions to the programmer on code changes that would enable more approximation opportunities. 
+
+To safely and efficiently harness the potential of approximate programs,
+\sysname combines three main techniques: (1) a programmer--compiler
+feedback loop consisting of source code annotations and an analysis log; (2) a
+compiler analysis library
+that enables a range of automatic program relaxations; and (3) an autotuning
+system that uses dynamic measurements of candidate program relaxations to find
+the best balances between efficiency and quality. The final output is a set of
+Pareto-optimal versions of the input program that reflect its
+efficiency--quality trade-off space.
+
+Figure~\ref{fig:overview} illustrates
+how these components make up \sysname's workflow.
+Two feedback loops control the impact of
+potentially destructive program relaxations: a \emph{static} feedback loop
+providing
+conservative guarantees
+and a complementary \emph{dynamic} feedback loop that measures real
+program behavior to choose the best optimizations.
+%
+A key hypothesis of this paper is that neither static nor dynamic constraints
+are sufficient, since dynamic measurements cannot offer guarantees and static
+constraints do not capture the full complexity of relationships among
+relaxations, performance, and output quality. Together, however, the two
+feedback loops make \sysname's optimizations both controlled and practical.
+%
+%\sysname's workflow comprises three main components:
+
+\paragraph{Safety constraints and feedback.}
+Because program relaxations can have outsize effects on program behavior,
+programmers need \emph{visibility} into---and \emph{control} over---the
+transformations the compiler applies.
+%
+To give the programmer fine-grained control over relaxations, \sysname extends
+an existing lightweight annotation system for approximate computing based on
+type qualifiers~\cite{enerj}.
+%
+\sysname gives programmers visibility into the relaxation process via feedback
+that identifies which transformations can be applied and which annotations are
+constraining it.  Through annotation and feedback, the programmer iterates
+toward an annotation set that unlocks new performance benefits while relying on
+an assurance that critical computations are unaffected.
+
+\paragraph{Automatic program transformations.}
+Based on programmer annotations, \sysname's compiler passes apply
+transformations that involve only approximate data.
+To this end,
+\sysname provides a common analysis library that identifies code regions
+that can be safely transformed.
+We bring \sysname's safety analysis, programmer feedback, and automatic site
+identification to existing work
+on approximate program transformations~\cite{perforation, races-ibm,
+rinard-hotpar, quickstep, dubstep, npu, anpu}.
+
+\paragraph{Autotuning.}
+While a set of annotations may permit many different safe program relaxations,
+not all of them are beneficial.
+A practical system must help programmers choose from
+among many candidate relaxations for a given program to strike an
+optimal balance between performance and quality.
+\sysname's autotuner heuristically explores the space of possible relaxed
+programs to identify Pareto-optimal variants.
+

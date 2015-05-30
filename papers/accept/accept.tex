@@ -1,0 +1,132 @@
+\newcount\draft\draft=0 % set to 0 for submission or publication
+\newcount\cameraready\cameraready=0
+
+\documentclass[10pt,nocopyrightspace,preprint]{sigplanconf}
+
+\ifnum\draft=1
+  \input{revision}
+  \usepackage{drafthead}
+\fi
+\usepackage{xxx}
+
+\usepackage[colorlinks=false,hidelinks]{hyperref}
+
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.pdf,.jpg,.png}
+\graphicspath{{./figs/}}
+
+\usepackage{listings}
+\lstset{
+    language=C,
+    emph={APPROX, PRECISE, ENDORSE},
+    emphstyle=\bfseries,
+    basicstyle=\ttfamily\small,
+    basewidth=0.53em,
+    aboveskip=1mm plus 1mm minus 1mm,
+    belowskip=1mm plus 1mm minus 1mm,
+    mathescape=true,
+    xleftmargin=\parindent,
+}
+\newcommand{\lil}{\lstinline}
+
+\usepackage{xspace}
+\usepackage{booktabs}
+\usepackage[update,prepend]{epstopdf}
+\usepackage{amsmath}
+\usepackage{mathptmx}
+\usepackage{microtype}
+\usepackage{subcaption}
+\usepackage[algoruled,linesnumbered,noline]{algorithm2e}
+% \usepackage{cite}
+
+
+\ifnum\cameraready=1
+\newcommand{\sysname}{\textsc{Accept}\xspace}
+\else
+\newcommand{\sysname}{\textsc{Spock}\xspace}
+\fi
+\newcommand{\secref}[1]{Section~\ref{#1}}
+\newcommand{\Sref}[1]{\S\ref{#1}}
+\newcommand{\plursecref}[1]{\mbox{Sections~{#1}}}
+\newcommand{\figref}[1]{Figure~\ref{#1}}
+\newcommand{\tabref}[1]{Table~\ref{#1}}
+\newcommand{\etal}{et~al.\@\xspace}
+\newcommand{\term}[1]{\emph{#1}}
+\newcommand{\bench}[1]{\textsf{#1}}
+\ifnum\cameraready=1
+\newcommand{\annpermit}{\lil{ACCEPT_PERMIT}\xspace}
+\newcommand{\annforbid}{\lil{ACCEPT_FORBID}\xspace}
+\else
+\newcommand{\annpermit}{\lil{SPOCK_PERMIT}\xspace}
+\newcommand{\annforbid}{\lil{SPOCK_FORBID}\xspace}
+\fi
+
+% Shifting terminology.
+\newcommand{\precisepure}{approximatable\xspace}
+\newcommand{\precisepurity}{approximatability\xspace}
+\newcommand{\Precisepurity}{Approximatability\xspace}
+
+% Generated results values.
+\usepackage{etoolbox}
+\input{results/results}
+
+\hyphenation{analy-ses analy-sis proto-type}
+
+\begin{document}
+
+\title{\sysname:
+A Programmer-Guided Compiler Framework \\ for Practical
+Approximate Computing}
+
+\authorinfo{}{}{}
+\ifnum\cameraready=1
+\authorinfo{Adrian Sampson \and Andr\'e Baixo \and Benjamin Ransford \and
+Thierry Moreau \\ Joshua Yip \and Luis Ceze \and Mark Oskin}
+           {University of Washington}
+           {}
+\fi % \cameraready=1
+
+\maketitle
+
+\input{abstract}
+
+% \ifnum\cameraready=1
+% \category{CR-number}{subcategory}{third-level}
+% \terms term1, term2
+% \keywords keyword1, keyword2
+% \fi % \cameraready=1
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.9\textwidth]{figs/overview.pdf}
+\caption{Overview of the \sysname compiler workflow.}
+\label{fig:overview}
+\end{figure*}
+
+\input{intro}
+
+\input{overview}
+
+\input{programming}
+
+\input{relaxations}
+
+\input{autotuner}
+
+\input{impl}
+
+\input{eval}
+
+\input{related}
+
+\input{conclusion}
+
+\ifnum\cameraready=1
+\section*{Acknowledgments}
+\input{acks}
+\fi
+
+\bibliographystyle{abbrvnat}
+\bibliography{accept}
+
+\end{document}

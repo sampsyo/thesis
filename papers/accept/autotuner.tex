@@ -1,0 +1,106 @@
+\section{Autotuning Search}
+\label{sec:autotuner}
+
+The autotuner is a test harness in which \sysname explores the space of possible
+program relaxations through empirical feedback.  We call
+a particular selection of relaxations and associated parameters (e.g., loop
+perforation with factor $p$) a \emph{relaxation configuration}.  The
+autotuner heuristically generates relaxation configurations and identifies the
+ones that best balance performance and output quality.
+%
+The programmer also provides multiple inputs to the program.  \sysname validates
+relaxation configurations by running them on fresh inputs to avoid overfitting.
+
+Because the definition of quality is application dependent, \sysname relies on
+programmer-provided \emph{quality metrics} that measure output
+accuracy, as in previous work~\cite{enerj, truffle, qosprof, carbin-pldi, green,
+npu}.
+The quality metric is another program that (1) reads the outputs
+from two different executions of the program being transformed and (2) produces
+an error score between 0.0 (outputs are identical) and 1.0 (outputs are
+completely different), where the definitions of ``identical'' and ``different''
+are application dependent.
+
+A na\"ive method of exploring the space of relaxation configurations is to
+enumerate all possible configurations.
+But the space of possible relaxation configurations is exponential in the number
+of relaxation opportunities and therefore infeasible to even enumerate, let
+alone evaluate empirically.
+We instead use a heuristic that prioritizes a limited number of
+executions that are likely to meet a minimum output quality.
+
+\sysname's heuristic configuration search consists of two steps: it vets each
+relaxation opportunity individually and then composes relaxations to create
+composites.
+
+\paragraph{Vetting individual relaxations.}
+In the first step, the autotuner separately evaluates each
+relaxation opportunity \sysname's analysis identified. Even with \sysname's
+static constraints, it is
+possible for some relaxations to lead to unacceptably degraded output or
+zero performance benefit.
+When the programmer uses escape hatches such as \lil{ENDORSE}
+incorrectly, approximation can affect control flow or even pointers and
+hence lead to crashes.
+\sysname vets each
+relaxation opportunity to disqualify unviable or unprofitable ones.
+
+For each relaxation opportunity, the autotuner executes the program
+with only that relaxation enabled.
+If the output error is above a threshold, the running time averaged over
+several executions is slower than the baseline,
+or the program crashes, the relaxation is discarded.
+Then, among the surviving relaxations, the autotuner increases the
+aggressiveness of any optimizations that have parameters.
+(In our prototype, only loop perforation has a variable
+parameter: the perforation factor $p$.)
+The autotuner records the range of parameters for which each opportunity site
+is ``good''---when its error is below a threshold and it offers
+speedup over the original program---along with the running time and
+quality score.
+These parameters are used in the next step to create composite configurations.
+
+\paragraph{Composite configurations.}
+
+After evaluating each relaxation opportunity site individually, \sysname's
+autotuner composes multiple relaxations to produce the best overall
+program configurations. For a program of even moderate size, it is infeasible to
+try every possible combination of component relaxations.
+\sysname heuristically predicts which combinations will yield the
+best performance for a given quality constraint and validates only the best
+predictions experimentally.
+
+To formulate a heuristic, \sysname
+hypothesizes that
+relaxations compose linearly. That is, we assume that two program relaxations
+that yield output error rates $e_1$ and $e_2$, when applied simultaneously,
+result in an error of $e_1 + e_2$ (and that performance
+will compose similarly).
+Different relaxations can in practice compose unpredictably,
+but this simplifying assumption is a tractable approximation that \sysname
+later validates with real executions.
+
+The configuration-search problem
+is equivalent to
+the 0/1 Knapsack Problem.
+In the
+Knapsack formulation, each configuration's output error is its \emph{weight}
+and its performance benefit $1 - \frac{1}{\text{speedup}}$ is its
+\emph{value}. The goal is to find the configuration that provides
+the most total value subject to a maximum weight capacity.
+
+The Knapsack Problem is NP-complete and intractable
+even for programs with only a few dozen potential relaxations.
+Instead, \sysname uses a well-known approximation algorithm~\cite{knapsack}
+to sort the configurations by
+their value-to-weight ratio and greedily selects configurations in rank order
+up to an error budget.
+To account for our simplifying assumptions, we use a range of error budgets to
+produce multiple candidate composites.
+The
+algorithm is dominated by the sorting step, so its running time is
+$O(n \log n)$ in the number of vetted relaxation-opportunity sites (and
+negligible in practice).
+%
+Like other candidate configurations, the composites are executed
+repeatedly to measure their true output quality and speedup.
