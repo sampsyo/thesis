@@ -9,7 +9,7 @@
     \codecount{#1-endorse}
 }
 
-\begin{table*}
+\begin{table}
 \centering
 \begin{tabular}{l l l r r r}
 \toprule
@@ -84,7 +84,7 @@ Classification rate &
 \caption{The approximate applications used in our evaluation. The
 final two columns show source code annotation counts.}
 \label{table:apps}
-\end{table*}
+\end{table}
 
 We evaluated \sysname's effectiveness at helping programmers
 to tune programs.
@@ -191,7 +191,7 @@ averaged the running times.
 \subsection{Results}
 \label{sec:results}
 
-\begin{figure*}[t]
+\begin{figure}[t]
 \begin{subfigure}[b]{2.35in}
 \input{plots/speedup-all.tex}\vspace{1.5ex}
 \caption{Main results (all optimizations)}
@@ -215,9 +215,9 @@ averaged the running times.
 \caption{Speedup for each application, including all
 optimizations (a) and each optimization in isolation (b--d).}
 \label{fig:performance}
-\end{figure*}
+\end{figure}
 
-\begin{table*}
+\begin{table}
 \centering
 \begin{tabular}{l r r r r r r}
 \toprule
@@ -228,7 +228,7 @@ Application & Sites & Composites & Total & Optimal & Error & Speedup \\
 \end{tabular}
 \caption{Tuning statistics and resulting optimal configurations for each benchmark.}
 \label{table:stats}
-\end{table*}
+\end{table}
 
 Figure~\ref{fig:speedup-all} plots the speedup (versus precise execution) of the
 best-performing relaxed versions that \sysname found for each application with

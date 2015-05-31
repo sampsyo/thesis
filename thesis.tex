@@ -32,6 +32,9 @@
 \usepackage{amsfonts}
 \usepackage{color}
 \usepackage{chngcntr}
+\usepackage[update,prepend]{epstopdf}
+\usepackage{mathptmx}
+\usepackage[algoruled,linesnumbered,noline]{algorithm2e}
 
 % Thesis metadata.
 \input{metadata}
@@ -96,6 +99,10 @@
 \newtheorem{corollary}[definition]{Corollary}
 \newcommand\proofcase[1]{\vspace{4mm plus 1mm minus 1mm}\noindent\textbf{#1}}
 \def\qed{\unskip\kern 10pt{\unitlength1pt\linethickness{.4pt}\framebox(6,6){}}}
+
+\newcommand{\bench}[1]{\textsf{#1}}
+
+\hyphenation{analy-ses analy-sis proto-type}
 
 
 \begin{document}
@@ -251,6 +258,11 @@ Acknowledgments go here.~\cite{sommerville:1992}
 \label{ch:passert}
 \subimport*{papers/passert/}{paper}
 \subimport*{papers/passert/}{appendix}
+
+
+\chapter{ACCEPT}
+\label{ch:accept}
+\subimport*{papers/accept/}{accept}
 
 
 \chapter{DECAF}
