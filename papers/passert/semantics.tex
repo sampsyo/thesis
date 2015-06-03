@@ -1,7 +1,3 @@
-\newcommand{\ifexpanded}[2]{\if\expandedversion1 #1 \else #2 \fi}
-\ifexpanded{\includecomment{expandedonly}}{\excludecomment{expandedonly}}
-\ifexpanded{\excludecomment{mainonly}}{\includecomment{mainonly}}
-
 \newenvironment{semantics}{
 \begin{figure}[p]
 }{
@@ -48,7 +44,6 @@ by examining the program prefix leading up to the \passert.
 Figure~\ref{fig:syntax} defines \corelang's syntax for programs denoted
 $P$, which consist of conditionals $C$, expressions $E$, and
 statements $S$.
-\begin{mainonly}
 For example, we write the
 location obfuscator from earlier as:
 %
@@ -65,7 +60,6 @@ We draw the \code{Longitude} and \code{Latitude} inputs from opaque
 distributions and noise from \code{Gauss[0, 1]}.
 The entirety of \code{Gauss[0, 1]} is an opaque label; \code{0} and \code{1} are not
 expressions in our simple language.
-\end{mainonly}
 
 \subsection{Concrete Semantics}
 
@@ -96,10 +90,8 @@ for addition and assignment are representative:
     x):H, \mathbf{skip})}
 \end{mathpar}
 %
-\ifexpanded{Figure~\ref{sem:concrete} gives the full set of rules for the
-concrete semantics.}{The full semantics appear in this paper's auxiliary
-material~\cite{tr}, but we
-highlight the rule for sample statements here.}
+Figure~\ref{sem:concrete} gives the full set of rules for the
+concrete semantics.
 The rule for the sampling statement, $V \leftarrow D$, % where $v$ is a variable
 % and $d$ is a distribution,
 consumes a draw $\sigma$ from the head of the
@@ -113,7 +105,6 @@ It uses the draw to compute the sample, $d(\sigma)$.
 \]
 
 
-\begin{expandedonly}
 \begin{figure}[p]
 \begin{mathpar}
   \inferrule[plus]{(H, e_1) \judge_c v_1 \\ (H, e_2) \judge_c v_2}{(H, e_1 +
@@ -161,7 +152,6 @@ It uses the draw to compute the sample, $d(\sigma)$.
   operational semantics uses a stream $\Sigma$ of draws.}
 \label{sem:concrete}
 \end{figure}
-\end{expandedonly}
 
 \noindent
 The result of an execution under the concrete semantics is the result
@@ -223,9 +213,8 @@ are:
 The syntax $\{ x \}$ represents an expression in $E_o$, with the brackets
 intended to
 suggest quotation or suspended evaluation.
-\ifexpanded{Figure~\ref{sem:symbolic} lists the full set of rules.}{}
+Figure~\ref{sem:symbolic} lists the full set of rules.
 
-\begin{expandedonly}
 \begin{figure}[p]
 \begin{mathpar}
   \inferrule[plus]{(H, e_1) \judge_s x_1 \\ (H, e_2) \judge_s x_2}{(H, e_1 +
@@ -283,7 +272,6 @@ suggest quotation or suspended evaluation.
   C_o$.  $H$ maps variables to expressions in $E_o$.}
 \label{sem:symbolic}
 \end{figure}
-\end{expandedonly}
 
 The rule for samples produces an expression tree that captures the
 distribution and the current stream offset:
@@ -297,9 +285,9 @@ Each sample statement increments the stream offset, uniquely
 identifying a sample expression tree. This enumeration is crucial.
 For example, enumerating samples distinguishes the statement $x
 \leftarrow d; \; y := x + x$ from a similar program using two samples:
-$x_1 \leftarrow d; \; x_2 \leftarrow d; \; y := x_1 + x_2$. \ifexpanded{}{This
+$x_1 \leftarrow d; \; x_2 \leftarrow d; \; y := x_1 + x_2$. This
 approach to numbering samples resembles \emph{naming} in Wingate et
-al.~\cite{wingate-lightweight}.}
+al.~\cite{wingate-lightweight}.
 
 The symbolic semantics must consider both sides of an \textbf{if} statement.
 % Since the branches may set different variables to different values, 
@@ -359,11 +347,11 @@ Here, the judgment $(\Sigma, \{x\}) \judge_o v$ denotes evaluation of the
 expression tree $\{x\}$ under the draw sequence $\Sigma$.
 This rule applies when \tool proves that an expression tree evaluates to
 \textbf{false} independent of the random draws.
-\ifexpanded{}{In our implementation, \tool proves simple cases, when an
+In our implementation, \tool proves simple cases, when an
 expression tree contains no samples, and uses black-box sampling
 otherwise. Section~\ref{sec:loops} describes a more precise analysis
 that bounds path probabilities, but we leave its formalization to
-future work.}
+future work.
 
 We can now define the symbolic evaluation of programs:
 %
@@ -375,8 +363,8 @@ We can now define the symbolic evaluation of programs:
 %
 To evaluate the resulting expression tree requires a sequence of draws
 $\Sigma$ but no heap.
-\ifexpanded{Figure~\ref{sem:simple} shows the full set of rules. As an
-example,}{The full set of rules are in the auxiliary material~\cite{tr};}
+Figure~\ref{sem:simple} shows the full set of rules. As an
+example,
 the rules for addition and sampling are representative:
 %
 \begin{mathpar}
@@ -385,7 +373,6 @@ the rules for addition and sampling are representative:
 \inferrule[sample]{ }{(\Sigma, \langle d, k \rangle) \judge_o d(\sigma_k)}
 \end{mathpar}
 
-\begin{expandedonly}
 \begin{figure}[p]
 \begin{mathpar}
 \inferrule{(\Sigma, e_1) \judge_o v_1 \\ (\Sigma, e_2) \judge_o v_2}
@@ -416,35 +403,3 @@ the rules for addition and sampling are representative:
   $\Sigma$.}
 \label{sem:simple}
 \end{figure}
-\end{expandedonly}
-
-\begin{mainonly}
-
-The purpose of this formalism is to show that using \tool's distribution
-extraction and sampling the result is equivalent to sampling the original
-program.
-We state this as a theorem for finite expression trees.
-
-\begin{theorem}
-Let $(0, H, p) \judge_s \{ x \}$, where $x$ is a finite program.
-Then $(\Sigma, H_0, p) \judge_c b$ if and only if $(\Sigma, x) \judge_o b$.
-\end{theorem}
-
-\noindent In other words, for any draw sequence $\Sigma$, a program and its
-extracted distribution evaluate to the same output. Sampling the two
-distributions---executing them many times with different values for
-$\Sigma$---yields the same probability.
-Intuitively, the theorem is true because the symbolic semantics correspond to 
-lazy evaluation and the output semantics $\judge_e$ correspond to
-forcing of the resulting symbolic expressions.
-\ifexpanded{}{Formally, the proof of this theorem proceeds by a
-structural induction. Full details are in this paper's auxiliary
-material~\cite{tr}.}
-
-Future work can prove optimizations correct using the expression
-tree representation.
-Since we have proven equivalence with the original program representation,
-such correctness proofs can avoid dealing with variables and control flow,
-which are eliminated during distribution extraction.
-
-\end{mainonly}
