@@ -112,9 +112,10 @@ AUXFILES += revision.aux
 endif
 
 # to generate aux but not pdf from pdflatex, use -draftmode
+DRAFTFLAG := -draftmode
 .INTERMEDIATE: $(AUXFILES)
 %.aux: %.tex $(REVDEPS) $(INCLUDEDTEX)
-	$(PDFLATEX) -draftmode $* $(ERRFILTER)
+	$(PDFLATEX) $(DRAFTFLAG) $* $(ERRFILTER)
 
 # introduce BibTeX dependency if we found a \bibliography
 ifneq ($(strip $(BIBFILES)),)
