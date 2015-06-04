@@ -1,4 +1,3 @@
-\section{Full Semantics and Proof}
 \label{app:semantics}
 
 This appendix expands on the formalism overview in
@@ -8,7 +7,7 @@ core \lang language.
 We prove a \emph{soundness} theorem that embodies the probability type
 system's fundamental accuracy guarantee.
 
-\subsection{Syntax}
+\section{Syntax}
 
 We formalize a core of \lang without inference.
 The syntax for statements, expressions, and types is:
@@ -41,12 +40,12 @@ We define $H(v)$, $D(v)$, $S(v)$, and $\Gamma(v)$ to denote variable lookup in
 these maps.
 
 
-\subsection{Typing}
+\section{Typing}
 
 The type system defines the static semantics for the core language. We first
 give typing judgments first for expressions and then for statements.
 
-\subsubsection{Operator Typing}
+\subsection{Operator Typing}
 
 We introduce a helper ``function'' that determines the unqualified result type
 of a binary arithmetic operator.
@@ -93,7 +92,7 @@ In the static case, the output probability is the product of the probabilities
 for the left-hand operand, right-hand operand, and the operator itself.
 Section~\ref{sec:types} gives the probabilistic intuition behind this rule.
 
-\subsubsection{Other Expressions}
+\subsection{Other Expressions}
 
 The rules for constants and variables are straightforward. Literals are given
 the precise ($p = 1.0$) type.
@@ -135,7 +134,7 @@ statically-tracked counterpart.
 \end{mathpar}
 
 
-\subsubsection{Qualifiers and Subtyping}
+\subsection{Qualifiers and Subtyping}
 
 A simple subtyping relation, introduced in Section~\ref{sec:types}, makes high-probability types subtypes of their
 low-probability counterparts.
@@ -158,7 +157,7 @@ Subtyping uses a standard subsumption rule.
 \end{mathpar}
 
 
-\subsubsection{Statement Typing}
+\subsection{Statement Typing}
 
 Our typing judgment for statements builds up the context $\Gamma$.
 
@@ -202,14 +201,14 @@ The conditions in \mcode{if} and \mcode{while} statements are required to have
 the precise type ($p = 1.0$).
 
 
-\subsection{Operational Semantics}
+\section{Operational Semantics}
 
 We use a large-step operational semantics for expressions and small-step
 semantics for statements.
 Both are nondeterministic: values produced by approximate operators can
 produce either an error value $\Box$ or a concrete number.
 
-\subsubsection{Expression Semantics}
+\subsection{Expression Semantics}
 
 There are two judgments for expressions: one for statically typed
 expressions and one where dynamic tracking is used.
@@ -344,7 +343,7 @@ conservative probability field.
     p_{d1} \cdot p_{d2} \cdot p_\text{op}}
 \end{mathpar}
 
-\subsubsection{Statement Semantics}
+\subsection{Statement Semantics}
 
 The small-step judgment for statements is
 $H ; D ; S ; s \prarrow{p} H' ; D' ; S' ; s'$.
@@ -418,7 +417,7 @@ flow decisions to be deterministic ($p = 1.0$).
     H ; D ; S ; \mathbf{if}\:e\:(s\csemi \mathbf{while}\:e\:s)\: \skips}
 \end{mathpar}
 
-\subsection{Theorems}
+\section{Theorems}
 
 The purpose of the formalism is to express a soundness theorem that shows that
 \lang's probability types act as lower bounds on programs' run-time
@@ -427,7 +426,7 @@ We also sketch the proof of a theorem stating that the bookkeeping probability m
 is eraseable: it is used only for the purpose of our soundness theorem and
 does not affect the heap.
 
-\subsubsection{Soundness}
+\subsection{Soundness}
 
 The soundness theorem for the language states that the probability types are
 lower bounds on the run-time correctness probabilities.
@@ -677,7 +676,7 @@ $\Gamma \vdash s : \Gamma'$.
 \end{proof}
 
 
-\subsubsection{Erasure of Probability Bookkeeping}
+\subsection{Erasure of Probability Bookkeeping}
 
 We state (and sketch a proof for) an \emph{erasure} property that
 shows that the ``true'' probabilities in our semantics, called $S$, do not
