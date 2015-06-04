@@ -72,7 +72,10 @@ based on control-flow divergence. For example, consider this simple
 program:
 %
 \begin{lstlisting}
-  if a:  b = c   else:  b = d
+  if a:
+    b = c
+  else:
+    b = d
 \end{lstlisting}
 %
 in which $a$ is probabilistic. Even if both $c$
@@ -92,11 +95,9 @@ write the unconditional distribution $\prob{B}$ as:
 %
 \begin{align*}
     \prob{B} &= \sum_a \prob{B\;|\; A = a} \prob{A = a} \\
-           &= \prob{B \;|\; A = \mathrm{true}} \prob{A = \mathrm{true}} \\
-           & \qquad {}
-            + \prob{B \;|\; A = \mathrm{false}} \prob{A = \mathrm{false}} \\
-           &= \prob{C} \cdot \prob{A=\mathrm{true}} \\
-           & \qquad {}
+           &= \prob{B \;|\; A = \mathrm{true}} \cdot \prob{A = \mathrm{true}}
+            + \prob{B \;|\; A = \mathrm{false}} \cdot \prob{A = \mathrm{false}} \\
+           &= \prob{C} \cdot \prob{A=\mathrm{true}}
             + \prob{D} \cdot (1 - \prob{A=\mathrm{true}})
 \end{align*}
 %
