@@ -16,9 +16,9 @@
 \usepackage{tabularx}
 \usepackage{etoolbox}
 \usepackage{listings}
-\usepackage[eulerchapternumbers,listings,%
+\usepackage[eulerchapternumbers,%
             pdfspacing,%floatperchapter,%linedheaders,%
-            beramono,parts]{classicthesis}
+            parts]{classicthesis}
 \usepackage{tikz}
 \usepackage{import}
 \usepackage{multirow}
@@ -63,6 +63,12 @@
     Extension={.otf},
     Path={crimson/},
 ]{Crimson}
+\setmonofont[
+    UprightFont={*-Regular},
+    BoldFont={*-Bold},
+    Extension={.ttf},
+    Path={inconsolata/}
+]{Inconsolata}
 
 % Version marker.
 % Set "final" option to turn off marker.
