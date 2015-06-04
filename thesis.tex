@@ -18,7 +18,7 @@
 \usepackage{listings}
 \usepackage[eulerchapternumbers,%
             pdfspacing,%floatperchapter,%linedheaders,%
-            parts]{classicthesis}
+            ]{classicthesis}
 \usepackage{tikz}
 \usepackage{import}
 \usepackage{multirow}
@@ -243,9 +243,9 @@ Acknowledgments go here.
 
 \pagenumbering{arabic}
 
-% PART 1
 \cleardoublepage
-\part{Approximate Computing}
+\chapter{Approximate Computing}
+\label{ch:introduction}
 \subimport*{text/}{background}
 
 
@@ -275,6 +275,11 @@ Acknowledgments go here.
 \label{ch:decaf}
 \subimport*{papers/decaf/}{approx-within}
 \subimport*{papers/decaf/semantics/}{semantics}
+
+
+\chapter{Conclusion}
+\label{ch:conclusion}
+\subimport*{text/}{conclusion}
 
 
 % BIB
