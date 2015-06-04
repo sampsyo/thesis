@@ -81,8 +81,8 @@ the value of $a$. We can write the conditional probability distributions $\prob{
 for $b$ conditioned on both possible values for $a$:
 %
 \begin{align*}
-  \Pr[B \;|\; A = \mathrm{true}] &= \Pr[C]\\
-  \Pr[B \;|\; A = \mathrm{false}] &= \Pr[D]
+    \prob{B \;|\; A = \mathrm{true}} &= \prob{C}\\
+    \prob{B \;|\; A = \mathrm{false}} &= \prob{D}
 \end{align*}
 %
 Instead, to simplify the representation of probabilities and to enable more
@@ -91,13 +91,13 @@ produce an unconditional distribution for $b$. Using marginalization, we
 write the unconditional distribution $\prob{B}$ as:
 %
 \begin{align*}
-    \Pr[B] &= \sum_a \Pr[B\;|\; A = a] \prob{A = a} \\
-           &= \Pr[B \;|\; A = \mathrm{true}] \prob{A = \mathrm{true}} \\
+    \prob{B} &= \sum_a \prob{B\;|\; A = a} \prob{A = a} \\
+           &= \prob{B \;|\; A = \mathrm{true}} \prob{A = \mathrm{true}} \\
            & \qquad {}
-            + \Pr[B \;|\; A = \mathrm{false}] \prob{A = \mathrm{false}} \\
-           &= \Pr[C] \cdot \prob{A=\mathrm{true}} \\
+            + \prob{B \;|\; A = \mathrm{false}} \prob{A = \mathrm{false}} \\
+           &= \prob{C} \cdot \prob{A=\mathrm{true}} \\
            & \qquad {}
-            + \Pr[D] \cdot (1 - \prob{A=\mathrm{true}})
+            + \prob{D} \cdot (1 - \prob{A=\mathrm{true}})
 \end{align*}
 %
 This expression computes the distribution for $b$ as a function of the

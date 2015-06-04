@@ -38,11 +38,11 @@ to future work.
 \paragraph{Inequalities Over Known Distributions} \tool uses the
 cumulative distribution function (CDF) for known distributions to
 simplify inequalities.  The CDF for a real-valued random variable $X$ is
-the function $F_X$ such that $F_X(x) = \Pr[X < x]$, which provides a
+the function $F_X$ such that $F_X(x) = \prob{X < x}$, which provides a
 closed-form mechanism to evaluate whether a distribution is less than
 a constant.  For example, if $X \sim U(0,1)$ and the programmer writes
 the inequality $X < 0.9$, we reduce the inequality
-to a Bernoulli because $F_{\mathit{Uniform}}(0.9) = \Pr[X < 0.9] = 0.9$.  
+to a Bernoulli because $F_{\mathit{Uniform}}(0.9) = \prob{X < 0.9} = 0.9$.  
 
 \paragraph{Central Limit Theorem} The sum of a large number of
 independent random variables with
@@ -152,7 +152,7 @@ samples of the \passert and let the empirical expected value,
 $\expc{X} = \overline{X} = X/n$, be an estimate of $p$.\footnote{This
   section uses $\overline{X}$ instead of \expc{X} for notational
   convenience.}  To bound error in its estimate, \tool computes
-$\Pr[\overline{X} \in [p - \epsilon, p + \epsilon]] \ge 1 - \alpha$.
+$\prob{\overline{X} \in \left[p - \epsilon, p + \epsilon\right]} \ge 1 - \alpha$.
 In words, it tests whether there is at most an $\alpha$ chance that \tool's
 estimate of $p$ is wrong. Otherwise, \tool's estimate of $p$ is within
 $\epsilon$ of the truth.  A programmer can control the likelihood of a
@@ -221,8 +221,8 @@ probabilistic property of the program.
     \caption{Hypothesis tests for three different \passert statements.}
     \label{fig:verify}
 \end{figure}
-For example, suppose \tool estimates $\Pr[\overline{X}_i \in [p - \epsilon,
-p + \epsilon]] \ge 1 - \alpha$ for three distinct, hypothetical \passert statements
+For example, suppose \tool estimates $\prob{\overline{X}_i \in \left[p - \epsilon,
+p + \epsilon\right]} \ge 1 - \alpha$ for three distinct, hypothetical \passert statements
 (i.e., $i \in [0,1,2]$). We pictorially show these three estimates in
 Figure~\ref{fig:verify}. Each estimate shows $\overline{X}_i$ as a point
 and lines depict the confidence region of that estimate.  
