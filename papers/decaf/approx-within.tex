@@ -894,7 +894,7 @@ constraints for hardware research.
 \input{results/codecount}
 \input{results/dynops}
 
-\renewcommand{\statcols}[1]{
+\newcommand{\decafstatcols}[1]{
     \timing{#1} &
     \codecount{#1-loc} &
     \codecount{#1-approx} &
@@ -917,14 +917,14 @@ constraints for hardware research.
         \cmidrule[\lightrulewidth](lr){4-7}
         \cmidrule[\lightrulewidth](l){8-9}
 
-        \bench{fft} & Fourier transform & \statcols{fft} \\
-        \bench{imagefill} & Bar code recognition & \statcols{imagefill} \\
-        \bench{lu} & LU decomposition & \statcols{lu} \\
-        \bench{mc} & Monte Carlo approximation & \statcols{mc} \\
-        \bench{raytracer} & 3D image reading & \statcols{simpleRaytracer} \\
-        \bench{smm} & Sparse matrix multiply & \statcols{smm} \\
-        \bench{sor} & Successive over-relaxation & \statcols{sor} \\
-        \bench{zxing} & Bar code recognition & \statcols{zxing} \\
+        \bench{fft} & Fourier transform & \decafstatcols{fft} \\
+        \bench{imagefill} & Bar code recognition & \decafstatcols{imagefill} \\
+        \bench{lu} & LU decomposition & \decafstatcols{lu} \\
+        \bench{mc} & Monte Carlo approximation & \decafstatcols{mc} \\
+        \bench{raytracer} & 3D image reading & \decafstatcols{simpleRaytracer} \\
+        \bench{smm} & Sparse matrix multiply & \decafstatcols{smm} \\
+        \bench{sor} & Successive over-relaxation & \decafstatcols{sor} \\
+        \bench{zxing} & Bar code recognition & \decafstatcols{zxing} \\
 
         \bottomrule
     \end{tabular}
