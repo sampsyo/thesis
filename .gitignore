@@ -8,4 +8,8 @@ thesis.pdf
 *.lot
 *.synctex.gz
 *.toc
+*.thm
+*.xdv
+*-eps-converted-to.pdf
 revision.tex
+metadata.tex

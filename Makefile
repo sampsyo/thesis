@@ -1,7 +1,7 @@
 TARGET := thesis
 include Makefile.include
 PDFLATEX := $(subst pdflatex,xelatex,$(PDFLATEX)) -synctex=1
-EXTRACLEAN := $(TARGET).synctex.gz metadata.tex
+EXTRACLEAN := $(TARGET).synctex.gz metadata.tex $(TARGET).thm $(TARGET).xdv
 DRAFTFLAG := --no-pdf
 
 export TEXINPUTS := .:./fontspec:$(TEXINPUTS)
