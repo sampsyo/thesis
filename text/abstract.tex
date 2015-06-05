@@ -1,14 +1,1 @@
-Computer systems spend time, energy, and complexity to provide error-free
-program execution. But
-perfect precision is wasted on many kinds of programs. For applications from
-domains like graphics, vision, machine learning, and games, perfect precision
-is infeasible or even unattainable. \emph{Approximate computing} techniques exploit
-these programs' resilience to make them more efficient.
-
-Approximate systems hold potential, but they also pose new
-risks.
-To safely and efficiently exploit accuracy--efficiency trade-offs, we need
-new abstractions that coordinate every layer of the system stack:
-programming languages,
-CPU and accelerator architectures, storage systems, compilers, and
-property checking.
+Computers spend time, energy, and complexity to guarantee correct execution. But in many cases, perfect answers are unnecessary or even impossible: small errors can be acceptable in applications such as vision, machine learning, speech recognition, search, graphics, and physical simulation. Approximate computing is the idea that we can make systems radically more efficient by carefully relaxing correctness constraints. We can get the most out of approximate computing using collaboration between software and hardware. On the hardware side, we propose CPU designs, accelerators, and storage systems that can gracefully trade off quality for efficiency. In software, we design type systems, debugging tools, compilers, and a language construct called a probabilistic assertion for controlling approximation's impact. Together, software and hardware for approximate computing can exploit applications' latent resiliency to uncover new opportunities to design better systems.
