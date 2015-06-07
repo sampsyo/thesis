@@ -65,7 +65,7 @@ program is not compromised. In other words, these annotations are either
 way to allow programmers to compose programs from approximate
 and precise components safely. Moreover, we need to guarantee safety statically
 to avoid spending energy
-checking properties at runtime. The key insight in this paper is
+checking properties at runtime. The key insight in this work is
 the application of type-based information-flow tracking~\cite{infflow-survey}
 ideas to address these problems.
 
@@ -79,7 +79,7 @@ ideas to address these problems.
 % approximate parts.
 
 \paragraph{Contributions.}
-This paper proposes a model for approximate programming that is
+This chapter proposes a model for approximate programming that is
 both \emph{safe} and \emph{general}. We use a type system that
 isolates the precise portion of the program from the
 approximate portion. The programmer must explicitly delineate flow
@@ -1180,11 +1180,6 @@ It records memory-footprint and arithmetic-operation statistics
 while simultaneously injecting transient faults to emulate approximate
 execution.
 
-% strategies can be achieved with perfect granularity. For instance, we assume
-% that the SRAM can store an approximate byte adjacent to a precise byte. In a
-% real implementation of approximate hardware, coarser granularities of
-% approximation may necessitate changes to memory layout as described on Section~\ref{enerj:sec:isa}, but this paper does not
-% focus on such an implementation.
 To avoid spurious errors due to approximation, our simulated
 approximate functional units never raise divide-by-zero exceptions. Approximate
 floating-point division by zero returns the NaN value;
@@ -1639,52 +1634,6 @@ Work by Perry et al. also focuses on static verification of fault tolerance
 \cite{perry-pldi,perry-sas}. That work focuses on detection and
 recovery rather than exposing transient faults.
 
-
-% \section{Future Work}
-% \label{enerj:sec:future}
-%
-% While the evaluation in this paper gives a rough picture of the potential
-% energy savings offered by EnerJ and underlying approximate hardware, future
-% evaluation of the EnerJ programming model should perform full-system simulation
-% or experiment with real hardware.
-%
-% Extensions to EnerJ could explore the implications of approximation on standard
-% libraries and system functions such as I/O. EnerJ reuses Java's standard class
-% library in an entirely approximate way; there may be opportunity for energy
-% savings in I/O, storage, and other platform functionality.
-% \TODO{Aren't we using the JDK in an entirely \emph{precise} way?}
-%
-% As mentioned in Section~\ref{enerj:conditionals}, the present version of EnerJ
-% simplifies control flow checking by requiring that all conditions on jumps be
-% precise. This restriction is obviously conservative; more sophisticated
-% implementations of the language could explore specialized control flow
-% structures that permit approximate conditions.
-%
-% Our formalization of EnerJ does not model endorsement, which is
-% designed to break the strict separation of approximate and precise
-% program segments. A more complex formalization might provide weaker
-% guarantees even in the presence of endorsement.
-%
-% EnerJ as presented provides an approximate/precise dichotomy with no bounds on
-% \emph{how} approximate the values may be. While we have shown that even this
-% simple model allows significant energy savings and reasonable safety
-% guarantees, future work may explore a continuum from fully approximate data to
-% fully precise data. More work could also guarantee approximation bounds: each
-% variable could be guaranteed not to vary from its precise value by more than a
-% certain bound as described in \cite{stanleymarbell}.
-%
-% EnerJ's framework for general approximation permits a wide variety of
-% approximation strategies; here, we only explore a few of them. In particular,
-% unsound compiler transformations as advocated in \cite{rinard-onward} may be
-% well-suited to EnerJ programs.
-%
-% The simulation infrastructure used in the evaluation of EnerJ can inject
-% arbitrary errors into storage and computation. As such, by permuting the
-% location and magnitude of simulated faults, the infrastructure could be used to
-% automatically discover the portions of an application that are amenable to
-% approximation. This amounts to a ``quality-of-service profiler'' as proposed in
-% \cite{qosprof} but discovers fault tolerance at a level more granular than
-% loops.
 
 
 \section{Conclusion}

@@ -33,7 +33,7 @@ storage---and exploiting the inherent error tolerance of approximate
 applications---failure-prone and multi-level memories can gain back
 performance, energy, and capacity.
 
-In this paper, we propose techniques that exploit data accuracy trade-offs to
+We propose techniques that exploit data accuracy trade-offs to
 provide \emph{approximate storage}. In essence, we advocate exposing storage
 errors up to the application with the goal of making data storage more
 efficient. We make this safe by: (1) exploiting application-level inherent
@@ -315,7 +315,7 @@ continuous: while the memory quantizes the value to expose digital
 storage externally, the internal value is conceptually
 a real number between 0 and 1.\footnote{At small feature sizes, quantum effects may
 cause values to appear discrete rather than
-continuous. This paper does not consider these effects.}
+continuous. We do not consider these effects here.}
 To implement
 digital storage, the cell has $n$ discrete \emph{levels}, which are
 internal analog-domain values corresponding to
@@ -1435,7 +1435,8 @@ hardware~\cite{flikker,truffle,npu,relax,pcmos,stochasticproc} and software~\cit
 logics~\cite{enerj,relax,carbin_pldi12,rely}. While much of the work on
 approximate computing has focused on computation itself---optimizing algorithms
 or processor logic---some recent work has proposed to lower the refresh rate of
-DRAM~\cite{flikker} or the supply voltage of SRAM~\cite{truffle,hybridsram,sramerrors}. This paper, in contrast, explores techniques that take advantage
+DRAM~\cite{flikker} or the supply voltage of
+SRAM~\cite{truffle,hybridsram,sramerrors}. This work, in contrast, explores techniques that take advantage
 of the unique properties of \emph{non-volatile} solid-state storage
 technologies like PCM and Flash: wear-out and multi-level configurations.
 Unlike prior work on SRAM and DRAM, we evaluate approximate storage for both
@@ -1457,7 +1458,7 @@ by ``underestimating'' the necessary retention time of approximate data.
 Previous work has also proposed adapting the density of SLC and MLC cells in main
 memory~\cite{morphablepcm} and persistent storage~\cite{adams} deployments.
 While these systems trade off density for performance, energy, and endurance,
-data is always stored precisely. This paper proposes MLC
+data is always stored precisely. This work proposes MLC
 configurations that permit storage errors but improve density or access
 efficiency beyond what is possible in precise configurations.
 
@@ -1492,9 +1493,6 @@ technique allows independently.
 Composing approximation with compression on the same data, however, can lead
 to poor results because each bit represents a larger amount of data.
 (Encryption has a similar effect.)
-Although an evaluation of lossy compression techniques is out of this paper's
-scope, a quantitative comparison with approximate storage would be
-illuminating future work.
 
 \section{Conclusion}
 \label{approxstorage:sec:conclusion}
