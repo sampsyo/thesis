@@ -111,7 +111,7 @@ $$ \prob{D < 10~|~L \sim \mathcal{U}, N \sim \mathcal{N}(0,1)} > 0.9 $$
     \vspace*{-1.0ex}
     \caption{\tool's workflow to verify probabilistic
     assertions.}
-    \label{fig:overview}
+    \label{passert:fig:overview}
 \end{figure}
 
 
@@ -135,7 +135,7 @@ trade off between analysis time and verification accuracy.
 We implement this approach in a tool called \tool that takes C and C++
 programs with \passerts as inputs. \tool emits either \emph{true},
 \emph{false}, or \emph{unverifiable} along with a confidence interval
-on the assertion's probability.  Figure~\ref{fig:overview} gives an
+on the assertion's probability.  Figure~\ref{passert:fig:overview} gives an
 overview.  We implement the entire toolchain for \tool in the LLVM
 compiler infrastructure~\cite{llvm}.  First, \tool transforms a
 probabilistic C/C++ program into a Bayesian network that expresses the

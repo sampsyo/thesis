@@ -12,11 +12,11 @@
 % \newcommand{\lil}{\lstinline}
 
 \newcommand{\sysname}{\textsc{Accept}\xspace}
-\newcommand{\secref}[1]{Section~\ref{#1}}
-\newcommand{\Sref}[1]{\S\ref{#1}}
+\newcommand{\secref}[1]{Section~\ref{accept:#1}}
+\newcommand{\Sref}[1]{\S\ref{accept:#1}}
 \newcommand{\plursecref}[1]{\mbox{Sections~{#1}}}
-\newcommand{\figref}[1]{Figure~\ref{#1}}
-\newcommand{\tabref}[1]{Table~\ref{#1}}
+\newcommand{\figref}[1]{Figure~\ref{accept:#1}}
+\newcommand{\tabref}[1]{Table~\ref{accept:#1}}
 \newcommand{\etal}{et~al.\@\xspace}
 \newcommand{\term}[1]{\emph{#1}}
 \newcommand{\annpermit}{\lil{ACCEPT_PERMIT}\xspace}
@@ -34,7 +34,7 @@
 \centering
 \includegraphics[width=0.9\textwidth]{figs/overview.pdf}
 \caption{Overview of the \sysname compiler workflow.}
-\label{fig:overview}
+\label{accept:fig:overview}
 \end{figure}
 
 \input{intro}

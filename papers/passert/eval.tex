@@ -1,5 +1,5 @@
 \section{Implementation}
-\label{sec:implementation}
+\label{passert:sec:implementation}
 
 We implemented \tool using the LLVM compiler infrastructure~\cite{llvm}. \tool
 compiles source programs written in C and C++ to the LLVM intermediate
@@ -93,7 +93,7 @@ operations over point-mass distributions.
         known closed-form distributions (Dist Op), and the Central Limit
         Theorem optimization (CLT).
     }
-    \label{table:apps}
+    \label{passert:table:apps}
 \end{table}
 
 \paragraph{Conditionals}
@@ -128,7 +128,7 @@ under a conditional distribution.
 \paragraph{Bayesian Network Optimizations}
 
 \tool performs statistical optimizations as transformations on the Bayesian
-network representation as outlined in Section~\ref{sec:optim}. The
+network representation as outlined in Section~\ref{passert:sec:optim}. The
 optimizations we implemented fall into three broad categories,
 which we characterize empirically in the next section.
 
@@ -161,7 +161,7 @@ inverse nodes that cancel each other out.
 
 
 \paragraph{Verification via Direct Evaluation or Sampling}
-As described in Section~\ref{sec:verification}, the prior
+As described in Section~\ref{passert:sec:verification}, the prior
 optimizations often produce Bayesian networks that \tool can
 directly evaluate.  In other cases, \tool must sample the
 optimized Bayesian network, in which case \tool generates LLVM bitcode
@@ -173,7 +173,7 @@ it repeatedly to perform statistical verification.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Evaluation}
-\label{sec:evaluation}
+\label{passert:sec:evaluation}
 
 
 This section describes our experience expressing \passerts in a variety of
@@ -184,7 +184,7 @@ probabilistic programs and using \tool to verify them.
 We evaluate \passerts in five probabilistic programs
 from three domains: sensors, differential privacy, and approximate
 computing. 
-Table~\ref{table:apps} summarizes the set of programs and the \passert
+Table~\ref{passert:table:apps} summarizes the set of programs and the \passert
 statements we added to each.
 
 Programs that compute with noisy sensor data, such as GPS,
@@ -258,12 +258,12 @@ optimize a probability distribution and to repeatedly sample the
 result.
 We test all programs with a confidence of $\alpha = 0.05$ and an
 accuracy of $\epsilon = 0.01$, which leads to 74147 samples.
-(Recall from Section~\ref{sec:sample} that the sample count depends only on the
+(Recall from Section~\ref{passert:sec:sample} that the sample count depends only on the
 $\alpha$ and $\epsilon$ parameters and 
  so we sample all programs the
 same number of times.)
-Table~\ref{table:apps} lists the absolute running times and
-Figure~\ref{fig:performance} visualizes the normalized performance.
+Table~\ref{passert:table:apps} lists the absolute running times and
+Figure~\ref{passert:fig:performance} visualizes the normalized performance.
 The timings are averaged over 5 executions collected on a dual-core 2~GHz
 Intel Core 2 Duo with 4~GB of memory.
 On average, \tool verification takes \perfdata{o-normtime-harmmean-sample} as
@@ -281,7 +281,7 @@ long as the strawman checker, for a speedup of
       optimizations and O is \tool with optimizations, divided into
       analysis and execution time. Times are averaged over 5 executions.
       We elide error bars as they are very small.}
-    \label{fig:performance}
+    \label{passert:fig:performance}
 \end{figure}
 
 For most benchmarks, \tool's time is almost exclusively spent on distribution
@@ -300,7 +300,7 @@ samples from identical distributions.
 We evaluated a variant of \tool with optimizations disabled. This
 version simply performs distribution extraction and samples the
 resulting distribution.  The middle bars labeled N in
-Figure~\ref{fig:performance} show the normalized running time of this
+Figure~\ref{passert:fig:performance} show the normalized running time of this
 non-optimizing \tool variant.
 
 The effectiveness of the optimizations varies among the benchmarks. % We

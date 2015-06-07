@@ -1,4 +1,4 @@
-\begin{theorem} \label{thm:main}
+\begin{theorem} \label{passert:thm:main}
 Let $(0, H_0, p) \judge_s \{ x \}$, where $x$ is a finite program.
 Then $(\Sigma, H_0, p) \judge_c b$ if and only if $(\Sigma, x) \judge_o b$.
 \end{theorem}
@@ -12,7 +12,7 @@ The proof of this theorem proceeds by structural induction on $p$.
 First, a few lemmas establish corresponding properties for
 conditionals, expressions, then statements, and finally programs.
 
-\begin{lemma} \label{lem:expr}
+\begin{lemma} \label{passert:lem:expr}
   For $e \in E$, let $(H_s, e) \judge_s \{ x \}$, and suppose that for
   every variable $a$, $(\Sigma, H_s(a)) \judge_e H_c(a)$.  Then $(H_c,
   e) \judge_c v$ if and only if $(\Sigma, x) \judge_o v$.
@@ -51,7 +51,7 @@ is complete.
 
 \end{proof}
 
-\begin{lemma} \label{lem:cond}
+\begin{lemma} \label{passert:lem:cond}
   For $c \in C$, let $(H_s, c) \judge_s \{ x \}$, and suppose that for
   every variable $a$, $(\Sigma, H_s(a)) \judge_e H_c(a)$.  Then $(H_c,
   c) \judge_c b$ if and only if $(\Sigma, x) \judge_o b$.
@@ -64,7 +64,7 @@ individually.
 \begin{itemize}
 \item[$e_1 < e_2$] By the definition of $\judge_s$, $\{ x \} = \{ x_1
   + x_2 \}$.  Let $(H_c, e_1) \judge_c v_1$ and $(H_c, e_2) \judge_c
-  v_2$, so that $b = [v_1 < v_2]$.  By lemma~\ref{lem:expr}, $(\Sigma,
+  v_2$, so that $b = [v_1 < v_2]$.  By lemma~\ref{passert:lem:expr}, $(\Sigma,
   x_1) \judge_o v_1$ and $(\Sigma, x_2) \judge_o v_2$, so $(\Sigma, x)
   \judge_o [v_1 < v_2] = b$.  Thus this case is established.
 \item[$e_1 = e_2$] Analogous to $e_1 < e_2$.
@@ -93,7 +93,7 @@ We now prove a lemma which establishes equivalence for statements that
 do not contain \textbf{while} loops.
 
 \begin{lemma}
-  \label{lem:stmt}
+  \label{passert:lem:stmt}
   Let
   $(n, H_s, s) \to_s (m, H_s', s')$,
   where $s$ contains no \textbf{while} statements.
@@ -148,7 +148,7 @@ do not contain \textbf{while} loops.
     $(\Sigma, H_c, v := e) \to_c (\Sigma, (v \mapsto x):H_c, \mathbf{skip})$.
     Furthermore, suppose $(H_s, e) \judge_s \{ x_s \}$, so that
     $(n, H_s, v := e) \to_s (n, (v \mapsto x_s):H_s, \mathbf{skip})$.
-    By lemma~\ref{lem:expr}, $(\Sigma, x_s) \judge_o x_s$.  But then,
+    By lemma~\ref{passert:lem:expr}, $(\Sigma, x_s) \judge_o x_s$.  But then,
     for all variables $v$, we have
     $(\Sigma, ((v \mapsto x_s):H_s)(v')) \judge_o ((v \mapsto x_c):H_c)(v')$
     for all $v'$.  If we set $\Sigma' = \Sigma$ and $k = 0$, we find
@@ -182,7 +182,7 @@ do not contain \textbf{while} loops.
     $s_1 \to^{*} s_1'$ implies $s_1 ; s_2 \to^{*} s_1' ; s_2$,
     with the expected behavior of the other parameters.)
   \item[$\mathbf{if}\:c\:s_1\:s_2$]
-    First, consider that per lemma~\ref{lem:cond},
+    First, consider that per lemma~\ref{passert:lem:cond},
       we know that if $(H_c, c) \judge_c b$,
       and $(H_s, c) \judge_s \{ x_s \}$,
       then $(\Sigma, x_s) \judge_o b$.
@@ -248,7 +248,7 @@ do not contain \textbf{while} loops.
 We now extend the equivalence to programs that contain while loops.
 We require that the symbolic evaluation terminate.
 
-\begin{lemma} \label{lem:whil}
+\begin{lemma} \label{passert:lem:whil}
     Let $(n, H_s, s) \to_s^{*} (m, H_s', \mathbf{skip})$.
   Further suppose that for all variables $v$,
   $(\Sigma, H_s(v)) \judge_o H_c(v)$.
@@ -265,7 +265,7 @@ We require that the symbolic evaluation terminate.
 
   \begin{itemize}
   \item[$v := e$] There are no \textbf{while} loops in this statement,
-    so it follows from lemma~\ref{lem:stmt}.
+    so it follows from lemma~\ref{passert:lem:stmt}.
   \item[$v \leftarrow d$] Analogous to $v := e$.
   \item[\textbf{skip}] Analogous to $v := e$.
   \item[$s_1 ; s_2$] 
@@ -286,7 +286,7 @@ We require that the symbolic evaluation terminate.
       If $(n, H_s, \mathbf{if}\:c\:s_1\:s_2) \to^{*} (n', H_s', \mathbf{skip})$,
       we must have $(n, H_s, s_1) \to^{*} (n_t, H_{st}', \mathbf{skip})$
       and $(n, H_s, s_2) \to^{*} (n_f, H_{sf}', \mathbf{skip})$.  Then,
-    analogously to the argument in lemma~\ref{lem:stmt}, this case can
+    analogously to the argument in lemma~\ref{passert:lem:stmt}, this case can
     be established.
   \item[$\mathbf{while}\:c\:s$]
     There are two inference rules concerning the symbolic semantics of
@@ -295,7 +295,7 @@ We require that the symbolic evaluation terminate.
     First consider the rule \textsc{While0}. If it applies, we must
     have $(\Sigma, x) \judge_o \mathbf{false}$
     for $(H_s, c) \judge_s \{ x \}$,
-    and thus (by lemma~\ref{lem:cond})
+    and thus (by lemma~\ref{passert:lem:cond})
     $(H_c, c) \judge_c \mathbf{false}$.
     Then
     $(\Sigma, H_c, \mathbf{while}\:c\:s) \to^{*} (\Sigma, H_c, \mathbf{skip})$.
@@ -312,7 +312,7 @@ We require that the symbolic evaluation terminate.
   
 \end{proof}
 
-Finally, we can prove our Theorem~\ref{thm:main}.
+Finally, we can prove our Theorem~\ref{passert:thm:main}.
 
 \begin{theorem}
 Let $(0, H_0, p) \judge_s \{ x \}$, where $x$ is a finite program.
@@ -327,7 +327,7 @@ Then $(\Sigma, H_0, p) \judge_c b$ if and only if $(\Sigma, x) \judge_o b$.
   Let the program $p$ be $s\:;;\:\passert\:c$.
   If $(0, H_0, p) \judge_s \{ x \}$, then
   $(0, H_0, s) \to_s^{*} (n, H_s, \mathbf{skip})$.
-  Then by lemma~\ref{lem:whil},
+  Then by lemma~\ref{passert:lem:whil},
   $(\Sigma, H_0, s) \to_s^{*} (\Sigma', H_c, \mathbf{skip}$,
   with the expected relation between $H_c$ and $H_s$.
   But then due to this relation,

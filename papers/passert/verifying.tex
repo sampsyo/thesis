@@ -1,6 +1,6 @@
 \section{The Rest of Probabilistic Evaluation: Optimization and
   Evaluation}
-\label{sec:mechanisms}
+\label{passert:sec:mechanisms}
 
 To verify a conditional in a \passert, probabilistic evaluation
 extracts a symbolic representation of the conditional, optimizes this
@@ -16,7 +16,7 @@ evaluate the \passert exactly. In the general case, we use sampling
 and hypothesis testing to verify it statistically.
 
 \subsection{Optimizing Bayesian Networks}
-\label{sec:optim}
+\label{passert:sec:optim}
 
 This section enumerates the statistical
 properties that \tool applies to simplify distributions.
@@ -56,7 +56,7 @@ effective on the
 array. \tool reduces this accumulation to a single Gaussian.
 
 \paragraph{Expectation Propagation}
-\label{sec:expectation}
+\label{passert:sec:expectation}
 
 The prior optimizations all approximately preserve a program's semantics: 
 the transformed Bayesian network is approximately equivalent to the original
@@ -116,13 +116,13 @@ inequality \code{x >= 5}.
 
 
 \subsection{Verification}
-\label{sec:verification}
+\label{passert:sec:verification}
 This section describes how we use a simplified Bayesian network to verify
 \passerts using (1) exact (direct) evaluation or (2) sampling and
 statistical hypothesis testing.
 
 \subsubsection{Direct Evaluation}
-\label{sec:exact}
+\label{passert:sec:exact}
 In some cases, simplifications on the probability distribution are
 sufficient to fully evaluate a \passert. For example, \tool simplifies
 the \bench{sobel} application in our evaluation to produce a
@@ -134,7 +134,7 @@ Bernoulli, no sampling is necessary. \tool reports the probability
 from the simplified distribution.
 
 \subsubsection{Statistical Verification via Sampling}
-\label{sec:sample}
+\label{passert:sec:sample}
 
 In the general case, optimizations do not completely collapse a probability
 distribution. Instead, \tool samples the resulting distribution to estimate its
@@ -211,7 +211,7 @@ probabilistic property of the program.
 % true).  Likewise, if $\bar{X} - \epsilon \ge 0.5$ the \passert is
 % \code{false}. %  In those cases where $\bar{X}$ is indistinguishable
 % from 0.5 are unable to verify this probabilistic assertion and thus
-% return "unknown". As we demonstrate in Section~\ref{sec:evaluation},
+% return "unknown". As we demonstrate in Section~\ref{passert:sec:evaluation},
 % with sufficient confidence and accuracy, unknown occurs infrequently
 % in practice.
 \begin{figure}
@@ -219,12 +219,12 @@ probabilistic property of the program.
     \includegraphics[width=\columnwidth]{figs/verification}
     \end{centering}
     \caption{Hypothesis tests for three different \passert statements.}
-    \label{fig:verify}
+    \label{passert:fig:verify}
 \end{figure}
 For example, suppose \tool estimates $\prob{\overline{X}_i \in \left[p - \epsilon,
 p + \epsilon\right]} \ge 1 - \alpha$ for three distinct, hypothetical \passert statements
 (i.e., $i \in [0,1,2]$). We pictorially show these three estimates in
-Figure~\ref{fig:verify}. Each estimate shows $\overline{X}_i$ as a point
+Figure~\ref{passert:fig:verify}. Each estimate shows $\overline{X}_i$ as a point
 and lines depict the confidence region of that estimate.  
 Because the confidence region of $\overline{X}_0$ is below $0.5$, \tool verifies
 this assertion as false (i.e., the \passert rarely holds).  

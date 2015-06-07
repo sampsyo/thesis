@@ -1,5 +1,5 @@
 \section{Programming Model}
-\label{sec:model}
+\label{passert:sec:model}
  
 This section presents an intuitive view of programs as probabilistic
 computations over random variables.
@@ -106,7 +106,7 @@ single node representing a Bernoulli distribution with probability
 % negatives.  In cases where the necessary number of samples to meet the
 % confidence levels is infeasible, the test returns an ``unknown''
 % result, meaning that the \passert is neither proven nor disproven.
-% Section~\ref{sec:sample} describes the hypothesis testing approach in
+% Section~\ref{passert:sec:sample} describes the hypothesis testing approach in
 % more detail.
 
 % Our verification
@@ -122,19 +122,19 @@ The Bayesian network abstraction for probabilistic programs yields two major
 advantages.
 First, it gives a probabilistic semantics to programs and \passert
 statements.
-Section~\ref{sec:semantics} formalizes our probabilistic semantics and proves that
+Section~\ref{passert:sec:semantics} formalizes our probabilistic semantics and proves that
 sampling the Bayesian representation is equivalent to sampling the original
 program.
 Second, we exploit 
 probabilistic algebras and statistical properties of random variables to optimize the
 verification process. In some cases, we verify \passerts without sampling.
-Section~\ref{sec:optim} introduces these 
+Section~\ref{passert:sec:optim} introduces these 
 optimizations.
 % Third, we symbolically represent some loops that perform reductions over
 % random variables as nodes in our Bayesian network, making them amenable to
 % optimizations.  For all other loops, we use sampling to estimate their
 % effect. 
-% Section~\ref{sec:sample} discusses how we sample loops to probabilistically verify  \passerts and bound
+% Section~\ref{passert:sec:sample} discusses how we sample loops to probabilistically verify  \passerts and bound
 % error in that verification.
 % Removing this advantage since it seems unrelated to the Bayesian-network
 % formulation. -ALDS

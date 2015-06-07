@@ -154,26 +154,26 @@ service significantly.
 
 \paragraph{Outline.}
 We first detail the EnerJ language extensions in
-Section~\ref{sec:typesys}. Section~\ref{semantics} formalizes a core of the
+Section~\ref{enerj:sec:typesys}. Section~\ref{enerj:semantics} formalizes a core of the
 language, allowing us to prove a non-interference property. The full
 formalism and proof are
 presented in an accompanying technical report \cite{EnerJ-TR}.
 Next,
-Section~\ref{sec:execution} describes hypothetical hardware for executing
+Section~\ref{enerj:sec:execution} describes hypothetical hardware for executing
 EnerJ programs.
 While other execution substrates are possible,
 this proposed model provides a basis for the evaluation in
-Sections~\ref{sec:impl} and~\ref{sec:res}; there, we assess
+Sections~\ref{enerj:sec:impl} and~\ref{enerj:sec:res}; there, we assess
 EnerJ's expressiveness and potential energy savings.
 The type checker and simulation infrastructure used in our evaluation are
 available at \url{http://sampa.cs.washington.edu/}.
-Section~\ref{sec:rel} presents related work and
-Section~\ref{sec:conc} concludes.
+Section~\ref{enerj:sec:rel} presents related work and
+Section~\ref{enerj:sec:conc} concludes.
 
 
 
 \section{A Type System for Approximate Computation}
-\label{sec:typesys}
+\label{enerj:sec:typesys}
 
 This section describes EnerJ's extensions to Java, which
 are based on a system of type qualifiers. We first describe the
@@ -197,7 +197,7 @@ Java arrays.
 EnerJ implements these language constructs as backwards-compatible
 additions to Java extended with type
 annotations \cite{jsr308}.
-Table~\ref{table:language} summarizes our extensions and their
+Table~\ref{enerj:table:language} summarizes our extensions and their
 concrete syntax. %the
 %language constructs used along with their concrete syntax.
 
@@ -210,36 +210,36 @@ Construct & Purpose & Section \\
 \ilcode{@Approx}, \ilcode{@Precise}, \ilcode{@Top} &
 Type annotations: qualify any type in the program. (Default is
 \ilcode{@Precise}.)&
-\ref{types} \\
+\ref{enerj:types} \\
 
 \ilcode{endorse($e$)} &
 Cast an approximate value to its precise equivalent. &
-\ref{endorsement} \\
+\ref{enerj:endorsement} \\
 
 \ilcode{@Approximable} &
 Class annotation: allow a class to have both precise and approximate
 instances. &
-\ref{objects} \\
+\ref{enerj:objects} \\
 
 \ilcode{@Context} &
 Type annotation: in approximable class definitions, the precision of
 the type depends on the precision of the enclosing object. &
-\ref{context} \\
+\ref{enerj:context} \\
 
 \ilcode{\_APPROX} &
 Method naming convention:
 this implementation of the method may be invoked when the receiver
 has approximate type. &
-\ref{overload}
+\ref{enerj:overload}
 
 \end{tabular}
 \end{centering}
 \caption{Summary of EnerJ's language extensions.}
-\label{table:language}
+\label{enerj:table:language}
 \end{table}
 
 \subsection{Type Annotations}
-\label{types}
+\label{enerj:types}
 
 Every value in the program has an approximate or precise
 type. The programmer annotates types with the
@@ -265,7 +265,7 @@ the assignment \ilcode{a = p;} in the above example.
 
 For Java's reference (class) types, this
 subtyping relationship is unsound. The qualifier of a reference can
-influence the qualifiers of its fields (see Section~\ref{objects}),
+influence the qualifiers of its fields (see Section~\ref{enerj:objects}),
 so subtyping on mutable references is unsound for standard reasons.
 We find that this limitation is not cumbersome in practice.
 
@@ -288,7 +288,7 @@ a separate system could tune the frequency and intensity of errors in
 approximate data.
 
 \subsection{Endorsement}
-\label{endorsement}
+\label{enerj:endorsement}
 Fully isolating approximate and precise parts of a program would
 likely not be very useful. Eventually a program needs to store data,
 transmit it, or present it to the programmer---at which point the program
@@ -297,7 +297,7 @@ examined frequently had a phase of fault-tolerant computation followed
 by a phase of fault-sensitive reduction or output.
 For instance, one application consists of a resilient image
 manipulation phase followed by a critical checksum over
-the result (see Section~\ref{effort}).
+the result (see Section~\ref{enerj:effort}).
 It is essential that data be
 occasionally allowed to break the strict separation enforced by the type
 system. % as described.
@@ -325,7 +325,7 @@ the program.
 
 
 \subsection{Approximate Operations}
-\label{sec:approx}
+\label{enerj:sec:approx}
 
 The type system thus far provides a mechanism for approximating
 \emph{storage}. Clearly, variables with approximate type may be
@@ -391,7 +391,7 @@ is sufficient; endorsements allow the programmer to work around the
 restriction when needed.
 
 \subsection{Objects}
-\label{objects}
+\label{enerj:objects}
 EnerJ's type qualifiers are not limited to primitive types.
 Classes also support approximation.
 Clients of an \emph{approximable} class can create
@@ -403,12 +403,12 @@ class annotation. Such a class exhibits qualifier polymorphism
 may depend on the qualifier of the instance.
 
 Note that precise class types are not subtypes of their approximate
-counterparts, as is the case with primitive types (Section~\ref{types});
+counterparts, as is the case with primitive types (Section~\ref{enerj:types});
 such a subtyping relationship would be fundamentally unsound for the
 standard reasons related to mutable references.
 
 \subsubsection{Contextual Data Types}
-\label{context}
+\label{enerj:context}
 The \ilcode{@Context} qualifier is available
 in definitions of non-static members of approximable classes.
 The meaning of
@@ -438,7 +438,7 @@ must be precise; the argument to \ilcode{a.addToBoth()} may be
 approximate.
 
 \subsubsection{Algorithmic Approximation}
-\label{overload}
+\label{enerj:overload}
 Approximable classes may also specialize method definitions based on their
 qualifier.
 That is, the programmer can write two implementations:
@@ -517,7 +517,7 @@ prevent out-of-bounds errors due to approximation.
 
 
 \section{Formal Semantics}
-\label{semantics}
+\label{enerj:semantics}
 To study the formal semantics of EnerJ, we define the minimal language
 FEnerJ. The language is based on Featherweight Java \cite{IgarashiEA01}
 and adds precision qualifiers and state. The formal language omits
@@ -609,11 +609,11 @@ m        &  \mbox{method identifier} &
 
 \caption{The syntax of the FEnerJ programming language.
 The symbol $\overline{A}$ denotes a sequence of elements $A$.
-\label{fig:syntax}
+\label{enerj:fig:syntax}
 }
 \end{figure}
 
-Figure~\ref{fig:syntax} presents the syntax of FEnerJ.
+Figure~\ref{enerj:fig:syntax} presents the syntax of FEnerJ.
 Programs consist of a sequence of classes, a main class, and a main
 expression. Execution is modeled by instantiating
 the main class and then evaluating the main expression.
@@ -629,7 +629,7 @@ non-approximable class has \ilcode{@Precise} type.
 
 We use \textit{C} to range over class names and \textit{P} for the
 names of primitive types.
-We define the precision qualifiers \textit{q} as discussed in Section~\ref{types},
+We define the precision qualifiers \textit{q} as discussed in Section~\ref{enerj:types},
 but with the additional qualifier \lost{}; this qualifier is used to
 express situations when context information is not expressible
 (i.e., lost).
@@ -640,7 +640,7 @@ Method declarations consist of the return type, method name, a
 sequence of parameter types and identifiers, the method precision, and
 the method body. We use the method precision qualifier to denote
 overloading of the method based on the precision of the receiver as
-introduced in Section~\ref{overload}.
+introduced in Section~\ref{enerj:overload}.
 Variables are either a parameter identifier or the special variable
 \texttt{this}, signifying the current object.
 
@@ -689,7 +689,7 @@ induced by the class declarations.
 Subtyping takes both ordering of precision qualifiers and subclassing
 into account.
 For primitive types, we additionally have that a precise type is a
-subtype of the approximate type as described in Section~\ref{types}.
+subtype of the approximate type as described in Section~\ref{enerj:types}.
 
 
 \paragraph{Context adaptation.}
@@ -874,7 +874,7 @@ language.
 
 
 \section{Execution Model}
-\label{sec:execution}
+\label{enerj:sec:execution}
 
 While an EnerJ program distinguishes abstractly between approximate and
 precise data, it does not define the particular approximation strategies
@@ -886,7 +886,7 @@ Alternatively, a runtime system on top of commodity hardware can also
 offer approximate execution features (e.g., lower floating point
 precision, elision of memory operations, etc.).
 Also, note that algorithmic approximation
-(see Section~\ref{objects}) is independent of the
+(see Section~\ref{enerj:objects}) is independent of the
 execution substrate.
 This section describes our hardware model, the ISA extensions
 used for approximation, and how the extensions enable energy savings.
@@ -894,7 +894,7 @@ used for approximation, and how the extensions enable energy savings.
 % We end with a power model we used in our experiments.
 
 \subsection{Approximation-Aware ISA Extensions}
-\label{sec:isa}
+\label{enerj:sec:isa}
 
 We want to leverage both approximate {\em storage} and
 approximate {\em operations}.  Our hardware model offers approximate
@@ -907,7 +907,7 @@ approximate portions of the data cache. For approximate operations,
 we assume specific instructions for approximate
 integer ALU operations as well as approximate floating point
 operations. Approximate instructions can use special functional units that
-perform approximate operations. Figure~\ref{fig:hwmodel} summarizes
+perform approximate operations. Figure~\ref{enerj:fig:hwmodel} summarizes
 our assumed hardware model.
 
 \begin{figure}[t]
@@ -921,7 +921,7 @@ our assumed hardware model.
         reduction. Floating point functional units also support approximation
         via smaller
         mantissas. Main memory (DRAM) supports approximation by reducing
-        refresh rate.\label{fig:hwmodel}}
+        refresh rate.\label{enerj:fig:hwmodel}}
 \end{figure}
 
 An instruction stream may have a mix of approximate and precise
@@ -988,7 +988,7 @@ lines approximate.
 
 
 \subsection{Hardware Techniques for Saving Energy }
-\label{strategies}
+\label{enerj:strategies}
 
 % http://static.googleusercontent.com/external_content/untrusted_dlcp/research.google.com/en/us/archive/power_provisioning.pdf
 %% Server
@@ -1008,7 +1008,7 @@ There are many strategies for saving energy with approximate
 storage and data operations. This section discusses some of the
 techniques explored in prior research. We assume these techniques in
 our simulations, which we describe later. The techniques are summarized
-in Table~\ref{table:approximations}.
+in Table~\ref{enerj:table:approximations}.
 
 
 \paragraph{Voltage scaling in logic circuits.} Aggressive voltage
@@ -1068,7 +1068,7 @@ rare and depend less on the supply voltage.
 
 \medskip
 \noindent
-Section~\ref{energymodel} describes the model we use to combine these
+Section~\ref{enerj:energymodel} describes the model we use to combine these
 various potential energy savings into an overall CPU/memory system energy
 reduction.
 To put the potential energy savings in perspective, according to
@@ -1095,16 +1095,16 @@ power~\cite{carroll2010}.
 \end{centering}
 \caption{Approximation strategies simulated in our evaluation.
 Numbers marked with * are educated guesses by the authors; the others
-are taken from the sources described in Section~\ref{strategies}. Note that
+are taken from the sources described in Section~\ref{enerj:strategies}. Note that
 all values for the Medium level are taken from the literature.}
-\label{table:approximations}
+\label{enerj:table:approximations}
 \end{table}
 
 
 
 
 \section{Implementation}
-\label{sec:impl}
+\label{enerj:sec:impl}
 
 We implement EnerJ as an extension to the Java
 programming language based on the
@@ -1116,19 +1116,19 @@ which builds on the
 JSR~308\footnote{\url{http://types.cs.washington.edu/jsr308/}}
 extension to Java's annotation facility. JSR~308 permits annotations on
 any explicit type in the program.
-The EnerJ type checker extends the rules from Section~\ref{semantics} to all of
+The EnerJ type checker extends the rules from Section~\ref{enerj:semantics} to all of
 Java, including arrays and generics.
 % WMD removed the following. We implemented more than just the rules
-% in \ref{semantics}.
+% in \ref{enerj:semantics}.
 % We implement a checker that verifies the typing rules described in
-% Section~\ref{semantics} using JSR~308's associated Checker Framework
+% Section~\ref{enerj:semantics} using JSR~308's associated Checker Framework
 % infrastructure.
 % Turning off this footnote for now for anonymity, but we should put it
 % back for the final version. --ALDS
 % \footnote{Checker Framework:
 % http://types.cs.washington.edu/checker-framework/}
 We also implement a simulation infrastructure that emulates an
-approximate computing architecture as described in Section~\ref{sec:execution}.
+approximate computing architecture as described in Section~\ref{enerj:sec:execution}.
 \footnote{The EnerJ type checker and simulator
 are available from
 our website:
@@ -1136,9 +1136,9 @@ our website:
 }
 
 \subsection{Type Checker}
-\label{checker}
+\label{enerj:checker}
 EnerJ provides the type qualifiers listed
-in Table~\ref{table:language}---\ilcode{@Approx}, \ilcode{@Precise},
+in Table~\ref{enerj:table:language}---\ilcode{@Approx}, \ilcode{@Precise},
 \ilcode{@Top}, and \ilcode{@Context}---as JSR~308 type annotations.
 The default type qualifier for unannotated types is \ilcode{@Precise}, meaning
 that any Java program may be compiled as an EnerJ program with no change in
@@ -1171,7 +1171,7 @@ approximates pointers.
 To evaluate our system, we implement a compiler and runtime
 system that executes EnerJ code as if it were running on an
 approximation-aware architecture
-as described in Section~\ref{sec:execution}. We instrument method calls,
+as described in Section~\ref{enerj:sec:execution}. We instrument method calls,
 object creation and destruction, arithmetic operators, and memory
 accesses to collect statistics and inject faults.
 The runtime system is implemented as a Java library and is invoked by the
@@ -1183,7 +1183,7 @@ execution.
 % strategies can be achieved with perfect granularity. For instance, we assume
 % that the SRAM can store an approximate byte adjacent to a precise byte. In a
 % real implementation of approximate hardware, coarser granularities of
-% approximation may necessitate changes to memory layout as described on Section~\ref{sec:isa}, but this paper does not
+% approximation may necessitate changes to memory layout as described on Section~\ref{enerj:sec:isa}, but this paper does not
 % focus on such an implementation.
 To avoid spurious errors due to approximation, our simulated
 approximate functional units never raise divide-by-zero exceptions. Approximate
@@ -1202,7 +1202,7 @@ approximate integer divide-by-zero returns zero.
 
 \subsection{Approximations}
 Our simulator implements the approximation strategies described in
-Section~\ref{strategies}. Table~\ref{table:approximations} summarizes the
+Section~\ref{enerj:strategies}. Table~\ref{enerj:table:approximations} summarizes the
 approximations used, their associated error probabilities, and their
 estimated energy savings.
 
@@ -1220,7 +1220,7 @@ in DRAM; stack data is considered SRAM\@. Future evaluations not constrained by
 the abstraction of the JVM could explore a more nuanced model.
 
 \subsection{Energy Model}
-\label{energymodel}
+\label{enerj:energymodel}
 To summarize the effectiveness of EnerJ's energy-saving properties, we estimate
 the potential overall savings of the processor/memory system when executing
 each benchmark approximately. To do so, we consider a simplified model with
@@ -1261,10 +1261,10 @@ the CPU will be more important \cite{carroll2010}.
 % do something about it.
 
 \section{Results}
-\label{sec:res}
+\label{enerj:sec:res}
 
 We evaluate EnerJ by annotating a variety of existing Java
-programs. Table~\ref{table:applications} describes the applications we
+programs. Table~\ref{enerj:table:applications} describes the applications we
 used; they have been selected to be relevant in both mobile and server
 settings. %, as energy is an important constraint in both
           %environments. %% Already said in intro.
@@ -1281,7 +1281,7 @@ metrics of annotation density. ``Proportion FP''
 indicates the percentage of dynamic arithmetic instructions observed that were
 floating-point (as opposed to integer) operations.
 }
-\label{table:applications}
+\label{enerj:table:applications}
 \end{table}
 
 \paragraph{Applications.} We evaluate the FPU-heavy kernels of the SciMark2 benchmark suite to
@@ -1336,7 +1336,7 @@ A number of similar studies of
 application-level tolerance to transient faults have also taken this
 approach \cite{qosprof, green, dekruijf-selse09, ersa, wong-selse06,
   softcomputing}. The third column in
-Table~\ref{table:applications} shows our metric for each application.
+Table~\ref{enerj:table:applications} shows our metric for each application.
 
 Output error ranges from $0$ (indicating output identical to the
 precise version) to $1$ (indicating completely meaningless output). For
@@ -1359,7 +1359,7 @@ For storage (SRAM and DRAM) measurements, the bars
 show the fraction of byte-seconds used in storing approximate data.
 For functional unit operations, we show the fraction of dynamic operations
 that were executed approximately.}
-\label{fig:approximateness}
+\label{enerj:fig:approximateness}
 \end{figure}
 
 \begin{figure}
@@ -1369,11 +1369,11 @@ that were executed approximately.}
 each benchmark. The bar labeled ``B'' represents the baseline value:
 the energy consumption for the program running without approximation.
 The numbered bars correspond to the Mild, Medium, and Aggressive
-configurations in Table~\ref{table:approximations}.}
-\label{fig:energy}
+configurations in Table~\ref{enerj:table:approximations}.}
+\label{enerj:fig:energy}
 \end{figure}
 
-Figure~\ref{fig:approximateness} divides the execution of each
+Figure~\ref{enerj:fig:approximateness} divides the execution of each
 benchmark into DRAM storage, SRAM storage, integer operations, and FP
 operations and shows what fraction of each was approximated. For
 many of the FP-centric applications we simulated, including the
@@ -1401,7 +1401,7 @@ this is because both applications keep their principal data in local
 variables (i.e., on the stack).
 
 The results depicted assume approximation at the granularity of a
-64-byte cache line. As Section~\ref{sec:isa} discusses, this
+64-byte cache line. As Section~\ref{enerj:sec:isa} discusses, this
 reduces the number of object fields that can be stored
 approximately. The impact of this constraint on our
 results is small, in part because much of the approximate data is
@@ -1427,16 +1427,16 @@ higher proportion of approximate storage.
 
 To give a sense of the energy savings afforded by our proposed
 approximation strategies, we translate the rates of approximation depicted
-above into an estimated energy consumption. Figure~\ref{fig:energy}
+above into an estimated energy consumption. Figure~\ref{enerj:fig:energy}
 shows the estimated energy consumption for each benchmark running on
 approximate hardware relative to fully precise execution.
 The energy calculation is based on the model
-described in Section~\ref{energymodel}. These simulations apply
+described in Section~\ref{enerj:energymodel}. These simulations apply
 all of the approximation strategies described in
-Section~\ref{strategies} simultaneously at their three levels of
+Section~\ref{enerj:strategies} simultaneously at their three levels of
 aggressiveness. As expected, the total energy saved increases both with
 the amount of approximation in the application (depicted in
-Figure~\ref{fig:approximateness}) and with
+Figure~\ref{enerj:fig:approximateness}) and with
 the aggressiveness of approximation used.
 
 Overall, we observe energy savings from 7\% (SOR in the Mild
@@ -1452,7 +1452,7 @@ fidelity across all applications studied.
 % Actually, I think it suggests that Mild is the preferred aproximation
 % degree! This is discussed in the next subsection. --ALDS
 
-The fifth column of Table~\ref{table:applications} shows the proportion of
+The fifth column of Table~\ref{enerj:table:applications} shows the proportion of
 floating point arithmetic in each application. In general, applications with
 principally integer computation (e.g., ZXing and ImageJ) exhibit less
 opportunity for approximation than do floating-point applications (e.g.,
@@ -1466,13 +1466,13 @@ to their inherent imprecision.
 \vspace{-4ex} % mysterious gap
 \caption{Output error for three different levels of approximation varied
 together. Each bar represents the mean error over 20 runs.}
-\label{fig:sensitivity}
+\label{enerj:fig:sensitivity}
 \end{figure}
 
-Figure~\ref{fig:sensitivity} presents the sensitivity of each
+Figure~\ref{enerj:fig:sensitivity} presents the sensitivity of each
 annotated application to the full suite of approximations
 explored. This quality-of-service reduction is the tradeoff for the
-energy savings shown in Figure~\ref{fig:energy}.
+energy savings shown in Figure~\ref{enerj:fig:energy}.
 
 While most applications show negligible error for the Mild level of
 approximation, applications' sensitivity to error varies greatly for the Medium
@@ -1506,11 +1506,11 @@ functional units: the output has a single bit flip; the last value computed is
 returned; or a random value is returned. The former two models resulted in
 significantly less QoS loss than the random-value model (25\% vs.~40\%).
 However, we consider the random-value model to be the most realistic, so we use it for
-the results shown in Figure~\ref{fig:sensitivity}.
+the results shown in Figure~\ref{enerj:fig:sensitivity}.
 
 \subsection{Annotation Effort}
-\label{effort}
-Table~\ref{table:applications} lists the number of qualifiers and
+\label{enerj:effort}
+Table~\ref{enerj:table:applications} lists the number of qualifiers and
 endorsements used in our annotations.
 Only a fraction of the types in each program must be annotated: at most 34\% of
 the possible annotation sites are used.
@@ -1584,7 +1584,7 @@ In no case, however, does an application as we annotated it do
 
 
 \section{Related Work}
-\label{sec:rel}
+\label{enerj:sec:rel}
 
 Space constraints preclude a discussion of the vast body of compiler
 or hybrid hardware/software work to improve energy efficiency.
@@ -1641,7 +1641,7 @@ recovery rather than exposing transient faults.
 
 
 % \section{Future Work}
-% \label{sec:future}
+% \label{enerj:sec:future}
 %
 % While the evaluation in this paper gives a rough picture of the potential
 % energy savings offered by EnerJ and underlying approximate hardware, future
@@ -1654,7 +1654,7 @@ recovery rather than exposing transient faults.
 % savings in I/O, storage, and other platform functionality.
 % \TODO{Aren't we using the JDK in an entirely \emph{precise} way?}
 %
-% As mentioned in Section~\ref{conditionals}, the present version of EnerJ
+% As mentioned in Section~\ref{enerj:conditionals}, the present version of EnerJ
 % simplifies control flow checking by requiring that all conditions on jumps be
 % precise. This restriction is obviously conservative; more sophisticated
 % implementations of the language could explore specialized control flow
@@ -1688,7 +1688,7 @@ recovery rather than exposing transient faults.
 
 
 \section{Conclusion}
-\label{sec:conc}
+\label{enerj:sec:conc}
 
 Approximate computing is a very promising way of saving energy in
 large classes of applications running on a wide range of systems, from

@@ -1,7 +1,7 @@
-\label{app:semantics}
+\label{decaf:app:semantics}
 
 This appendix expands on the formalism overview in
-Section~\ref{sec:semantics}.
+Section~\ref{decaf:sec:semantics}.
 We present the full syntax, static semantics, and dynamic semantics for the
 core \lang language.
 We prove a \emph{soundness} theorem that embodies the probability type
@@ -90,7 +90,7 @@ $\boxed{\Gamma \vdash e : T}$
 %
 In the static case, the output probability is the product of the probabilities
 for the left-hand operand, right-hand operand, and the operator itself.
-Section~\ref{sec:types} gives the probabilistic intuition behind this rule.
+Section~\ref{decaf:sec:types} gives the probabilistic intuition behind this rule.
 
 \subsection{Other Expressions}
 
@@ -136,7 +136,7 @@ statically-tracked counterpart.
 
 \subsection{Qualifiers and Subtyping}
 
-A simple subtyping relation, introduced in Section~\ref{sec:types}, makes high-probability types subtypes of their
+A simple subtyping relation, introduced in Section~\ref{decaf:sec:types}, makes high-probability types subtypes of their
 low-probability counterparts.
 
 \vspace{1ex}\noindent

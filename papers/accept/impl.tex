@@ -1,5 +1,5 @@
 \section{Implementation}
-\label{sec:impl}
+\label{accept:sec:impl}
 
 \sysname extends the LLVM compiler
 infrastructure~\cite{llvm} and has three main components:
@@ -116,7 +116,7 @@ program, execute it, and return the output and timing statistics. The master
 node coordinates the search and reports results.
 
 \subsection{Neural Acceleration}
-\label{sec:accelerator}
+\label{accept:sec:accelerator}
 
 We evaluate \sysname's approximate region selection using a Neural Processing
 Unit (NPU) accelerator implemented on an on-chip FPGA (\Sref{sec:npu}).  The
@@ -129,10 +129,10 @@ arrays~\cite{npu, snnap}.
     \includegraphics[width=0.8\linewidth]{figs/npu.pdf}
     \vspace{-1.5ex}
     \caption{Neural accelerator system diagram.}
-    \label{fig:snnap}
+    \label{accept:fig:snnap}
 \end{figure}
 
-Our design, shown in  Figure~\ref{fig:snnap}, consists of a cluster of eight processing units (PUs) connected through a bus.
+Our design, shown in  Figure~\ref{accept:fig:snnap}, consists of a cluster of eight processing units (PUs) connected through a bus.
 Each PU comprises a control block, a chain of processing elements (PEs),
 and a sigmoid unit. The PEs are implemented on DSP logic and form a one-dimensional systolic array that feeds into
 the sigmoid unit. When evaluating a neural network layer, PEs read the

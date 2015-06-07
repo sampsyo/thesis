@@ -1,5 +1,5 @@
 \section{Analysis and Relaxations}
-\label{sec:relaxations}
+\label{accept:sec:relaxations}
 
 \sysname takes an annotated program and applies a set of program transformations
 to code that affects only data marked approximate.  We call these
@@ -33,7 +33,7 @@ the program.
 \fi
 
 \subsection{\Precisepurity Analysis}
-\label{sec:precise-purity}
+\label{accept:sec:precise-purity}
 
 \sysname provides a core program analysis that client optimizations use to
 ensure safety.
@@ -93,7 +93,7 @@ explicitly marked as approximate.
 
 We implement the core \precisepurity analysis
 conservatively using SSA definition--use chains and a simple pointer-escape
-analysis.  Section~\ref{sec:impl} gives more implementation details.
+analysis.  Section~\ref{accept:sec:impl} gives more implementation details.
 
 \iffalse  % Seems out of place to me now. -ALDS
 Each program-relaxation strategy uses the shared \precisepurity analysis to
@@ -101,11 +101,11 @@ identify \emph{relaxation-opportunity sites:} places where the transformation
 can apply. When \sysname finds an opportunity site, it registers the site along
 with any relevant parameters in its catalog of such sites. The autotuner then
 uses this catalog to enable a subset of relaxation opportunities and set their
-parameters.  Section~\ref{sec:autotuner} describes the autotuning process in more detail.
+parameters.  Section~\ref{accept:sec:autotuner} describes the autotuning process in more detail.
 \fi
 
 \subsection{Target Region Selection}
-\label{subsec:regions}
+\label{accept:subsec:regions}
 
 \begin{algorithm}[tb]
   \DontPrintSemicolon
@@ -117,7 +117,7 @@ parameters.  Section~\ref{sec:autotuner} describes the autotuning process in mor
     \ForEach{block $B'$ strictly post-dominated by $B$} {
       \If{$B'$ dominates $B$}{
         $region \gets \text{formRegionBetween}(B', B)$ \;
-        \label{line:regionSel:dfs}
+        \label{accept:line:regionSel:dfs}
         \If{$region$ is \precisepure} {
           $R \gets R \cup \{region\}$\;
         }
@@ -125,7 +125,7 @@ parameters.  Section~\ref{sec:autotuner} describes the autotuning process in mor
     }
   }
 \caption{Candidate region selection.}
-\label{alg:regionSel}
+\label{accept:alg:regionSel}
 \end{algorithm}
 
 Accelerator-style program transformations work best when they target larger
@@ -155,7 +155,7 @@ tractable optimization targets in a large program.
 Each fragment could be optimized independently
 and spliced back into the program.
 
-Algorithm~\ref{alg:regionSel} shows how \sysname enumerates candidate regions.
+Algorithm~\ref{accept:alg:regionSel} shows how \sysname enumerates candidate regions.
 The algorithm uses dominance and post-dominance sets to
 identify pairs of basic blocks $B_1$ and $B_2$
 where $B_1$ dominates $B_2$ and $B_2$ post-dominates $B_1$.
@@ -211,7 +211,7 @@ whose intervening code is \precisepure, in such cases removing the \emph{first}
 call (the second call remains to delimit the end of the region).
 
 \subsubsection{Neural Acceleration}
-\label{sec:npu}
+\label{accept:sec:npu}
 
 Recent work has shown how to accelerate approximate programs with hardware
 neural networks~\cite{benchnn, temam-isca, temam-isca13}.

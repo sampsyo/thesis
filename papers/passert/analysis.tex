@@ -1,5 +1,5 @@
 \section{Distribution Extraction} 
-\label{sec:distex}
+\label{passert:sec:distex}
 
 
 Given a program with a \passert $e$ and either a concrete input or a
@@ -52,10 +52,10 @@ computation.
 %  the work
 % that would be wasted in a straightforward sampling approach to
 % evaluating \passerts---by sampling the specialized distribution (as in
-% Section~\ref{sec:sample}), we sample only the portion of the program
+% Section~\ref{passert:sec:sample}), we sample only the portion of the program
 % that changes from execution to execution.
 
-\label{sec:conditionals}
+\label{passert:sec:conditionals}
 
 
 \paragraph{Conditionals}
@@ -105,9 +105,9 @@ This expression computes the distribution for $b$ as a function of the
 distributions for $a$, $c$, and $d$. Intuitively, the probabilistic evaluation rewrites
 the condition to read \lil{b = a * c + (1 - a) * d}. This algebraic
 representation enables some optimizations described
-in Section~\ref{sec:expectation}.
+in Section~\ref{passert:sec:expectation}.
 
-\label{sec:loops}
+\label{passert:sec:loops}
 
 
 \paragraph{Loops and External Code}

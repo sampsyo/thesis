@@ -1,7 +1,7 @@
 \input{results}
 
 \section{Introduction}
-\label{sec:intro}
+\label{approxstorage:sec:intro}
 
 Many common applications have intrinsic tolerance to inaccuracies in
 computation. Techniques under the umbrella of {\em approximate
@@ -60,15 +60,15 @@ average while trading off less than 10\% of each application's output quality.
 
 We begin by describing the programming models and hardware--software interfaces
 we assume for main-memory and persistent approximate storage. Next,
-Sections~\ref{sec:amlc} and~\ref{sec:recycling} describe our two
-approximate-storage techniques in detail. Section~\ref{sec:eval} describes our
+Sections~\ref{approxstorage:sec:amlc} and~\ref{approxstorage:sec:recycling} describe our two
+approximate-storage techniques in detail. Section~\ref{approxstorage:sec:eval} describes our
 evaluation of the techniques using a variety of error-tolerant
-benchmarks and Section~\ref{sec:results} gives the results for these
+benchmarks and Section~\ref{approxstorage:sec:results} gives the results for these
 experiments. Finally, we enumerate related work on storage and approximate
 computing and conclude.
 
 \section{Interfaces for Approximate Storage}
-\label{sec:idea}
+\label{approxstorage:sec:idea}
 
 % what we need: interface, mechanisms. interface needs as way to specific which bits matter more.
 % who keeps track of what is approximate: SW knows. HW does not keep track of that. simplifies bookkeeping.
@@ -121,7 +121,7 @@ more significant bits to be stored with higher accuracy.
 
 Prior work on approximate computing has suggested that different applications
 can tolerate different error rates~\cite{enerj,truffle} and our experimental
-results (Section~\ref{sec:results}) corroborate this. However, rather than
+results (Section~\ref{approxstorage:sec:results}) corroborate this. However, rather than
 providing interfaces to control precision levels at a fine grain, we apply a
 uniform policy to all approximate data in the program.
 Empirically, we find 
@@ -196,13 +196,13 @@ in precise blocks.)
 To maintain this property, the allocator uses
 two mechanisms depending on whether the memory supports software control over
 approximation.
-With software control, as in Section~\ref{sec:amlc}, the program sets the precision state
+With software control, as in Section~\ref{approxstorage:sec:amlc}, the program sets the precision state
 of each block implicitly via the flags on write instructions. (Reads do not
 affect the precision state.)
-In a hardware-controlled setting, as in Section~\ref{sec:recycling}, the operating system maintains a
+In a hardware-controlled setting, as in Section~\ref{approxstorage:sec:recycling}, the operating system maintains a
 list of approximate blocks reported by the hardware.
 The allocator consults this list when reserving
-space for new objects. Section~\ref{sec:recycling-interface} describes this OS
+space for new objects. Section~\ref{approxstorage:sec:recycling-interface} describes this OS
 interface in more detail.
 
 In the main memory case and when using object-based persistent stores like
@@ -235,20 +235,20 @@ helps the memory decide where to expend its error protection
 resources to minimize the magnitude of errors when they occur.
 
 \section{Approximate Multi-Level Cells}
-\label{sec:amlc}
+\label{approxstorage:sec:amlc}
 
 \begin{figure}
     \begin{subfigure}{0.5\columnwidth}
         \centering
         \includegraphics[scale=0.8]{figs/mlc-precise.pdf}
         \caption{Precise MLC}
-        \label{fig:mlc-precise}
+        \label{approxstorage:fig:mlc-precise}
     \end{subfigure}
     \begin{subfigure}{0.5\columnwidth}
         \centering
         \includegraphics[scale=0.8]{figs/mlc-approx.pdf}
         \caption{Approximate MLC}
-        \label{fig:mlc-approx}
+        \label{approxstorage:fig:mlc-approx}
     \end{subfigure}
     \caption{
         The range of analog values in a precise (a) and approximate (b) four-level cell. The shaded areas are
@@ -258,7 +258,7 @@ resources to minimize the magnitude of errors when they occur.
         analog value after writing one of the levels. Approximate  MLCs
         decrease guard bands so the probability distributions overlap.
     }
-    \label{fig:mlc}
+    \label{approxstorage:fig:mlc}
 \end{figure}
 
 PCM and other solid-state memories
@@ -291,10 +291,10 @@ These guard bands lead to tighter tolerances on target values, which in turn lim
 the achievable write performance.
 Approximate MLCs reduce or eliminate guard bands to speed up
 iterative writes at the cost of occasional errors.
-Figure~\ref{fig:mlc} illustrates this idea.
+Figure~\ref{approxstorage:fig:mlc} illustrates this idea.
 
 \subsection{Multi-Level Cell Model}
-\label{sec:mlcmodel}
+\label{approxstorage:sec:mlcmodel}
 
 \begin{figure}
     \centering
@@ -305,7 +305,7 @@ Figure~\ref{fig:mlc} illustrates this idea.
         distribution from which the ending value, $v_2$, is drawn. Here, since
         $v_2$ lies outside the target range, another step must be taken.
     }
-    \label{fig:mlc-step}
+    \label{approxstorage:fig:mlc-step}
 \end{figure}
 
 The basis for MLC storage is an underlying analog value (e.g., resistance for
@@ -374,12 +374,12 @@ To model the latency and error characteristics of iterative writes, we
 consider the effect of each step to be drawn from a normal
 distribution. The write mechanism determines the ideal pulse size but
 applies that pulse with some error added.
-Figure~\ref{fig:mlc-step} illustrates one iteration in this process.
+Figure~\ref{approxstorage:fig:mlc-step} illustrates one iteration in this process.
 
 Two parameters control the operation of the P\&V write algorithm.
 First, iteration terminates when the stored value is within a
 threshold distance $T$ from the target value. 
-Setting $T < \frac{1}{2n}$ as in Figure~\ref{fig:mlc} provides \emph{guard bands} between the
+Setting $T < \frac{1}{2n}$ as in Figure~\ref{approxstorage:fig:mlc} provides \emph{guard bands} between the
 levels to account for read error. The value of $T$ dictates the probability
 that a read error will occur.
 Second, the variance of
@@ -409,13 +409,13 @@ def $w$($v_t$):
         $\sigma^2$. The parameter $T$ controls the termination
         criterion and $P$ reflects the precision of each write pulse.
     }
-    \label{fig:pcode-pcm}
+    \label{approxstorage:fig:pcode-pcm}
 \end{figure}
 
-Figure~\ref{fig:pcode-pcm} shows the pseudocode for
+Figure~\ref{approxstorage:fig:pcode-pcm} shows the pseudocode for
 writes, which resembles the PCM programming feedback
 control loop of Pantazi et al.~\cite{mlcmodelchar}.
-Section~\ref{sec:errorparams} describes our methodology for
+Section~\ref{approxstorage:sec:errorparams} describes our methodology for
 calibrating the algorithm's parameters to reflect realistic PCM
 systems.
 
@@ -487,7 +487,7 @@ which simply decreases the size of guard bands relative to their
 nominal size.
 
 \subsection{Encoding Values to Minimize Error}
-\label{sec:coding}
+\label{approxstorage:sec:coding}
 
 MLC systems typically divide the bits from a single cell among different
 memory pages~\cite{mlcflash}.
@@ -510,13 +510,13 @@ $l$---corresponds to a integer error of $1$ in the stored value.
         \centering
         \includegraphics[scale=0.65]{figs/coding-chunk}
         \caption{Concatenation code}
-        \label{fig:coding-chunk}
+        \label{approxstorage:fig:coding-chunk}
     \end{subfigure}
     \begin{subfigure}{0.5\columnwidth}
         \centering
         \includegraphics[scale=0.65]{figs/coding-stripe}
         \caption{Striping code}
-        \label{fig:coding-stripe}
+        \label{approxstorage:fig:coding-stripe}
     \end{subfigure}
     \caption{
         Two codes for storing 16-bit numbers in four
@@ -531,9 +531,9 @@ $l$---corresponds to a integer error of $1$ in the stored value.
 
 But we also need to combine multiple cells to store larger numbers.
 We consider two approaches. Concatenation
-(Figure~\ref{fig:coding-chunk}) appends the bits from the
+(Figure~\ref{approxstorage:fig:coding-chunk}) appends the bits from the
 constituent cells to form each word. Striping
-(Figure~\ref{fig:coding-stripe}) interleaves the cells so that the highest-order
+(Figure~\ref{approxstorage:fig:coding-stripe}) interleaves the cells so that the highest-order
 bits of each cell all map to the highest-order bits of the word.
 
 An ideal code would make errors in high bits rare while allowing more errors
@@ -541,14 +541,14 @@ in the low bits of a word. With the straightforward concatenation code, however,
 a single-level error can cause a high-order bit flip: the word's $\log n$-th
 most significant bit is the \emph{least} significant bit in its cell.
 The striping code mitigates high-bit errors but does not prevent them. In the
-example shown in Figure~\ref{fig:coding-stripe}, the white cell stores the
+example shown in Figure~\ref{approxstorage:fig:coding-stripe}, the white cell stores the
 value 0111, so a single-level error can change its value to 1000. This error
 causes a bit flip in the word's most significant bit.
 (Gray coding, which some current MLC systems use~\cite{improvingwrites}, does
 not address this problem: single-level errors are as likely to cause flips in
 high-order bits as in low-order bits.)
 We evaluate both approaches in
-Section~\ref{sec:results} and find, as expected, that the striping code
+Section~\ref{approxstorage:sec:results} and find, as expected, that the striping code
 mitigates errors most effectively.
 
 
@@ -611,7 +611,7 @@ MLC blocks can be made precise or approximate by adjusting the target threshold 
 operations. For this reason, the memory array must know which threshold value
 to use for each write operation. Rather than storing the precision level as
 metadata for each block of memory, we encode that information in the operation itself by extending the memory interface to include
-precision flags as described in Section~\ref{sec:idea}. This approach, aside
+precision flags as described in Section~\ref{approxstorage:sec:idea}. This approach, aside
 from eliminating metadata space overhead, eliminates the need for a metadata
 read on the critical path for writes.
 
@@ -629,10 +629,10 @@ and write request on the memory interface to indicate the operation's
 precision. If multiple threshold values are provided to support varying precision
 levels, multiple bits will be needed. Additional circuitry may also be
 necessary to permit a tunable threshold value during cell writes. Our performance
-evaluation, in Section~\ref{sec:eval}, does not quantify these circuit area overheads.
+evaluation, in Section~\ref{approxstorage:sec:eval}, does not quantify these circuit area overheads.
 
 \section{Using Failed Memory Cells}
-\label{sec:recycling}
+\label{approxstorage:sec:recycling}
 
 PCM, along with Flash and other upcoming memory technologies, suffers from cell
 failures during a device's deployment---it ``wears out.'' Thus, techniques for hiding failures from
@@ -658,7 +658,7 @@ exploit the awareness of failure positions to provide more effective
 error correction via \emph{bit priorities}.
 
 \subsection{Prioritized Bit Correction}
-\label{sec:bitprior}
+\label{approxstorage:sec:bitprior}
 
 In an error model incorporating
 stuck-at failures, we can use error correction to concentrate
@@ -682,11 +682,11 @@ more failures appear in this block, only the least-harmful stuck bits will
 remain uncorrected.
 
 \subsection{Memory Interface}
-\label{sec:recycling-interface}
+\label{approxstorage:sec:recycling-interface}
 
 A memory module supporting failed-block recycling determines which blocks are
 approximate and which may be used for precise storage. Unlike with the
-approximate MLC technique (Section~\ref{sec:amlc}), software has no control
+approximate MLC technique (Section~\ref{approxstorage:sec:amlc}), software has no control
 over blocks' precision state. To permit safe allocation of approximate and
 precise data, the memory must inform software of the locations of approximate
 (i.e., failed) blocks.
@@ -707,7 +707,7 @@ module must be replaced.
 To provide traditional error correction for precise data, the memory system must be
 able to detect hard failures after each write~\cite{ecp}. We reuse this
 existing error detection support; the precision level of
-the write operation (see Section~\ref{sec:idea}) determines the action taken
+the write operation (see Section~\ref{approxstorage:sec:idea}) determines the action taken
 when a failure is detected. When a failure occurs during a precise write, the
 module either constructs ECP entries for all failed bits if sufficient
 entries are available or issues an interrupt otherwise. When a failure occurs
@@ -717,7 +717,7 @@ corrects as many errors as possible and leaves the remainder uncorrected.
 To make bit prioritization work, the memory module needs information from
 the software indicating which bits are most important. Software specifies this
 using a value size associated with each approximate write as described in
-Section~\ref{sec:idea}. The value size indicates the homogenous byte-width of
+Section~\ref{approxstorage:sec:idea}. The value size indicates the homogenous byte-width of
 approximate values stored in the block. If a block represents part of an array
 of double-precision floating point numbers, for example, the appropriate value
 size is 8 bytes. This indicates to the memory that the bits at index $i$ where
@@ -748,7 +748,7 @@ layers (FTLs) remap bad blocks.
 
 
 \section{Evaluation}
-\label{sec:eval}
+\label{approxstorage:sec:eval}
 
 Approximate storage trades off precision for performance, durability, and density.
 To understand this trade-off in the context of real-world approximate data, we
@@ -820,10 +820,10 @@ the persistent data sets are entirely
 approximate.
 
 \subsection{MLC Model Parameters}
-\label{sec:errorparams}
+\label{approxstorage:sec:errorparams}
 
 To assess our approximate MLC technique, we use the model described in
-Section~\ref{sec:mlcmodel}. The abstract model has a number of parameters that
+Section~\ref{approxstorage:sec:mlcmodel}. The abstract model has a number of parameters that
 we need to select for the purposes of simulation. To set the parameters, we use
 values from the literature on MLC PCM configurations. Since our
 architecture-level model of iterative program-and-verify writes is original, we
@@ -835,7 +835,7 @@ errors are improbable but not impossible. We choose a conservative
 baseline raw bit error rate (RBER) of $10^{-8}$, which comports with
 RBERs observed in Flash memory today~\cite{flasherror,flasherrors}.
 
-We first select parameters for the read model in Section~\ref{sec:mlcmodel},
+We first select parameters for the read model in Section~\ref{approxstorage:sec:mlcmodel},
 which incorporates the probabilistic effects of read noise and drift.
 % for level 1, mu = 0.02 and sigma = 0.4 * mu
 % but this is for a value range from 3.0 to 6.0, so we divide mu by 3
@@ -868,7 +868,7 @@ $10^{-8}$ for a retention time of $10^5$ seconds.
 % error probability at this config is measured at 1.95e-8 (per day)
 
 \subsection{Wear-Out Model}
-\label{sec:wearmodel}
+\label{approxstorage:sec:wearmodel}
 
 To evaluate the effect of using blocks with failed cells for approximate
 storage, we simulate single-level PCM.
@@ -889,7 +889,7 @@ While precise configurations of the ECP technique typically use 6-bit
 correction, approximate storage can extend device lifetime without incurring as
 much overhead as a fully precise configuration.
 Approximate blocks also use the bit priority assignment mechanism from
-Section~\ref{sec:bitprior}: where possible, ECP corrections are allocated to
+Section~\ref{approxstorage:sec:bitprior}: where possible, ECP corrections are allocated to
 higher-order bits within each value in the block.
 
 To understand the occurrence of stuck bits in failed blocks,
@@ -916,7 +916,7 @@ setting.
         $3.2 \times 10^{7}$ times under the main-memory wear model. (At this
         stage, half of the blocks have at least one uncorrectable failure.)
     }
-    \label{fig:hist}
+    \label{approxstorage:fig:hist}
 \end{figure}
 
 To model wear in main-memory PCM deployments, we simulate the above suite of main-memory
@@ -935,7 +935,7 @@ memory that remains precise along with the distribution of failures
 among the approximate blocks.
 We simulate each application under these measured failure conditions.
 
-As an example, Figure~\ref{fig:hist} depicts the error rate distribution for the
+As an example, Figure~\ref{approxstorage:fig:hist} depicts the error rate distribution for the
 wear stage at which 50\% of the memory's blocks have at least one failure that
 is uncorrectable using ECP$_2$---i.e.,
 half the blocks are approximate. In this stage,
@@ -955,7 +955,7 @@ to inject bit errors into stored data.
 
 
 \section{Results}
-\label{sec:results}
+\label{approxstorage:sec:results}
 
 We evaluate both sets of benchmarks under each of our two approximate storage
 techniques.
@@ -989,7 +989,7 @@ case~\cite{pcm-dram-alt,flash-retention-relax}.
         \caption{
             Main-memory applications with approximate MLC.
         }
-        \label{fig:qos-mlc}
+        \label{approxstorage:fig:qos-mlc}
     \end{subfigure}
     \begin{subfigure}[b]{0.5\columnwidth}
         \centering
@@ -997,7 +997,7 @@ case~\cite{pcm-dram-alt,flash-retention-relax}.
         \caption{
             Persistent data sets with approximate MLC.
         }
-        \label{fig:nv-qos-mlc}
+        \label{approxstorage:fig:nv-qos-mlc}
     \end{subfigure}
     \caption{
         Output degradation for each benchmark using the approximate
@@ -1018,10 +1018,10 @@ case~\cite{pcm-dram-alt,flash-retention-relax}.
         Proportions of approximate writes and approximate data in
         each main-memory benchmark.
     }
-    \label{fig:approxstats}
+    \label{approxstorage:fig:approxstats}
 \end{figure}
 
-Figure~\ref{fig:qos-mlc} relates write performance to application output
+Figure~\ref{approxstorage:fig:qos-mlc} relates write performance to application output
 quality loss.
 For configurations with fewer write iterations---to the
 right-hand side of the plot---performance improves and quality declines. The
@@ -1046,7 +1046,7 @@ for tuning.
 To put these speedups in the context of the whole application, we
 show the fraction of
 dynamic writes that are to approximate data in
-Figure~\ref{fig:approxstats}.
+Figure~\ref{approxstorage:fig:approxstats}.
 Most applications use approximate writes for
 more than half of their stores; \textsf{jmeint} in particular has 98\%
 approximate writes. One application, \textsf{zxing}, has a large amount of
@@ -1056,7 +1056,7 @@ approximate writes.
 
 \paragraph{Persistent storage}
 
-Figure~\ref{fig:nv-qos-mlc} shows the quality degradation for each
+Figure~\ref{approxstorage:fig:nv-qos-mlc} shows the quality degradation for each
 persistent data set when running on approximate MLC memory. The
 persistent data sets we examine are more tolerant than the
 main-memory benchmarks. The sensor logging application, for instance,
@@ -1087,7 +1087,7 @@ of PCM energy, the overall energy efficiency of the memory array is improved.
 
 \paragraph{Impact of encoding}
 
-Section~\ref{sec:coding} examines two different strategies for encoding
+Section~\ref{approxstorage:sec:coding} examines two different strategies for encoding
 numeric values for storage on approximate MLCs. In the first, the bits from
 multiple cells are concatenated to form whole words; in the second, each value
 is ``striped'' across constituent cells so that the highest bits of the value
@@ -1109,7 +1109,7 @@ which the effect of the striped code was inconsistent (positive at some write
 speeds and negative for others). 
 
 While the striped code is imperfect, as
-discussed in Section~\ref{sec:coding}, it fares better than the naive code in
+discussed in Section~\ref{approxstorage:sec:coding}, it fares better than the naive code in
 practice since it lowers the probability of errors in the high-order bits of
 words.
 
@@ -1126,7 +1126,7 @@ Our experiments show acceptable error rates when six levels are used (and no
 other parameters are changed).
 A non-power-of-two MLC requires additional hardware,
 similar to binary-coded decimal (BCD) circuitry, to implement even the naive
-code from Section~\ref{sec:coding} but can
+code from Section~\ref{approxstorage:sec:coding} but can
 still yield density benefits. For example, a 512-bit block can be stored in
 $\lceil \frac{512}{\log 6} \rceil = 199$
 six-level cells (compared to 256 four-level cells). With the same average number of
@@ -1147,7 +1147,7 @@ density increase should only be used with certain applications.
         \caption{
             Drift impact for main-memory applications.
         }
-        \label{fig:mm-drift}
+        \label{approxstorage:fig:mm-drift}
     \end{subfigure}
     \begin{subfigure}[b]{0.5\columnwidth}
         \centering
@@ -1155,7 +1155,7 @@ density increase should only be used with certain applications.
         \caption{
             Drift impact for persistent data sets.
         }
-        \label{fig:nv-drift}
+        \label{approxstorage:fig:nv-drift}
     \end{subfigure}
     \caption{
         Application output quality over time using the approximate MLC
@@ -1163,7 +1163,7 @@ density increase should only be used with certain applications.
         Drift causes errors to increase in proportion to the time
         since the last write to the PCM cell.
     }
-    \label{fig:drift}
+    \label{approxstorage:fig:drift}
 \end{figure}
 
 Previous work has suggested that straightforward MLC storage in PCM can be
@@ -1179,9 +1179,9 @@ read operation; we examined retention times between $10^1$ and $10^9$ seconds
 (about 80 years) for an intermediate approximate MLC configuration using an
 average of 2.1 cycles per write.
 
-Figure~\ref{fig:drift} depicts the application output quality for a range of
+Figure~\ref{approxstorage:fig:drift} depicts the application output quality for a range of
 time intervals.
-For the main-memory applications in Figure~\ref{fig:mm-drift}, in which typical retention times are
+For the main-memory applications in Figure~\ref{approxstorage:fig:mm-drift}, in which typical retention times are
 likely far less than one day, we see little quality loss (1\% or
 less) for retention times of $10^4$ seconds or shorter.
 As above, these simulations assume the same drift interval for \emph{every}
@@ -1191,7 +1191,7 @@ are to recently written data and therefore incur less error from
 drift.
 
 For the
-persistent-storage benchmarks in Figure~\ref{fig:nv-drift}, in contrast, longer retention times are the
+persistent-storage benchmarks in Figure~\ref{approxstorage:fig:nv-drift}, in contrast, longer retention times are the
 norm.
 In that setting, quality loss remains under 10\% for at least
 $10^6$ seconds and, for all benchmarks except \textsf{ann}, through $10^7$ seconds.
@@ -1271,7 +1271,7 @@ their precise data or quality drops below a threshold.
     memory available. The gray bar shows when the application's
     output quality degrades more than 10\%.
     }
-    \label{fig:extension}
+    \label{approxstorage:fig:extension}
 \end{figure}
 
 \begin{figure}
@@ -1281,7 +1281,7 @@ their precise data or quality drops below a threshold.
         \caption{
             Main-memory applications using failed blocks.
         }
-        \label{fig:qos-p-tb}
+        \label{approxstorage:fig:qos-p-tb}
     \end{subfigure}
     \begin{subfigure}[b]{0.5\columnwidth}
         \centering
@@ -1289,7 +1289,7 @@ their precise data or quality drops below a threshold.
         \caption{
             Persistent data sets using failed blocks.
         }
-        \label{fig:nv-qos-tb}
+        \label{approxstorage:fig:nv-qos-tb}
     \end{subfigure}
     \caption{
         Output quality degradation for each benchmark when using the
@@ -1299,10 +1299,10 @@ their precise data or quality drops below a threshold.
     }
 \end{figure}
 
-Figure~\ref{fig:extension} depicts the lifetime extension afforded by
+Figure~\ref{approxstorage:fig:extension} depicts the lifetime extension afforded by
 using failed blocks as approximate storage. For
 each application, we determine the point in the memory's lifetime
-(under the wear model described in Section~\ref{sec:wearmodel}) at
+(under the wear model described in Section~\ref{approxstorage:sec:wearmodel}) at
 which the program can no longer run. We consider two termination
 conditions: when the amount of
 precise memory becomes insufficient (i.e., the proportion of
@@ -1318,13 +1318,13 @@ a harmonic mean of \result{recycle-mean-qos-ext}. With quality unconstrained, th
 extension is \result{recycle-mean-total-ext}, reflecting the fact that this technique leads to gradually
 decreasing quality as the memory array ages.
 
-To help explain these results, Figure~\ref{fig:qos-p-tb} shows the quality
+To help explain these results, Figure~\ref{approxstorage:fig:qos-p-tb} shows the quality
 degradation for each application at various points during the memory array's
 wear-out.
 The most error-tolerant application, \textsf{raytracer}, sees
 little quality degradation under all measured wear stages.
 Some applications are limited by the amount of approximate data they use.
-Figure~\ref{fig:approxstats} shows the proportion of bytes in each
+Figure~\ref{approxstorage:fig:approxstats} shows the proportion of bytes in each
 application's memory that is approximate (averaged over the execution).
 Some applications,
 such as \textsf{mc}, are tolerant to error but only have around 50\%
@@ -1339,11 +1339,11 @@ too aggressive.
 
 \paragraph{Persistent storage}
 
-Figure~\ref{fig:nv-qos-tb} shows the quality degradation for each data set at
+Figure~\ref{approxstorage:fig:nv-qos-tb} shows the quality degradation for each data set at
 different points during the lifetime of the memory.
 The memory's intermediate
 wear-out conditions come from the persistent-storage wear model described in
-Section~\ref{sec:wearmodel}.
+Section~\ref{approxstorage:sec:wearmodel}.
 In a fully-precise configuration, the memory fails (exceeds 10\% failed blocks)
 at about $3.4 \times 10^{7}$ overwrites, or at the left-hand side of the plot.
 Recall that, in these persistent-storage benchmarks, the data is stored 100\%
@@ -1375,7 +1375,7 @@ these savings translate to extending the array's lifetime
 from 5.2 years to 6.5 years.
 
 \paragraph{Impact of bit priority} The above results use our type-aware
-prioritized correction mechanism (Section~\ref{sec:bitprior}). To evaluate the
+prioritized correction mechanism (Section~\ref{approxstorage:sec:bitprior}). To evaluate the
 impact of bit prioritization, we ran a separate set of experiments with this
 mechanism disabled to model a system that just corrects the errors that
 occur earliest. We examine the difference in output quality at each wear stage and
@@ -1385,7 +1385,7 @@ statistically significant ($P < 0.01$).
 Bit prioritization had a statistically significant positive impact on output
 quality for all benchmarks except \textsf{mc}. In \textsf{sensorlog}, for example, bit
 prioritization decreases quality loss from 2.3\% to 1.7\% in an early stage of
-wear (the leftmost point in Figure~\ref{fig:nv-qos-tb}). In \textsf{fft}, the
+wear (the leftmost point in Figure~\ref{approxstorage:fig:nv-qos-tb}). In \textsf{fft}, the
 impact is larger: bit prioritization reduces 7.3\% quality loss to
 3.3\% quality loss. As with encoding for approximate MLCs, the exception is \textsf{mc}, whose quality was
 (statistically significantly) improved in
@@ -1423,7 +1423,7 @@ increasing the ECP budget.
 
 
 \section{Related Work}
-\label{sec:related}
+\label{approxstorage:sec:related}
 
 Approximate storage builds on three broad categories of related work:
 approximate computing, optimizing accesses to storage
@@ -1497,7 +1497,7 @@ scope, a quantitative comparison with approximate storage would be
 illuminating future work.
 
 \section{Conclusion}
-\label{sec:conclusion}
+\label{approxstorage:sec:conclusion}
 
 Solid-state, non-volatile storage technologies such as PCM and Flash are
 becoming increasingly important components of the modern computing landscape.

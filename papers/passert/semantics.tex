@@ -7,7 +7,7 @@
 This section formalizes a simple probabilistic imperative
 language, \corelang,
 and \tool's distribution
-extraction process. % outlined in Section~\ref{sec:distex}. 
+extraction process. % outlined in Section~\ref{passert:sec:distex}. 
 We describe \corelang's 
 syntax, a \emph{concrete semantics} for nondeterministic
 run-time execution, and a \emph{symbolic semantics} for
@@ -31,7 +31,7 @@ the concrete semantics, demonstrating the soundness of \tool's core analysis.
     \end{align*}
     \vspace{-5ex}
     \caption{Syntax of \corelang.}
-    \label{fig:syntax}
+    \label{passert:fig:syntax}
 \end{figure}
 
 \corelang is an imperative language with assignment, conditionals,
@@ -41,7 +41,7 @@ Without loss of generality, a program is a sequence of statements followed by a
 single \passert, since we may verify a \passert at any program point
 by examining the program prefix leading up to the \passert.
 
-Figure~\ref{fig:syntax} defines \corelang's syntax for programs denoted
+Figure~\ref{passert:fig:syntax} defines \corelang's syntax for programs denoted
 $P$, which consist of conditionals $C$, expressions $E$, and
 statements $S$.
 For example, we write the
@@ -90,7 +90,7 @@ for addition and assignment are representative:
     x):H, \mathbf{skip})}
 \end{mathpar}
 %
-Figure~\ref{sem:concrete} gives the full set of rules for the
+Figure~\ref{passert:sem:concrete} gives the full set of rules for the
 concrete semantics.
 The rule for the sampling statement, $V \leftarrow D$, % where $v$ is a variable
 % and $d$ is a distribution,
@@ -150,7 +150,7 @@ It uses the draw to compute the sample, $d(\sigma)$.
   operational semantics for statements and programs.  Both use a heap
   $H$, which stores variable-value bindings. The small-step
   operational semantics uses a stream $\Sigma$ of draws.}
-\label{sem:concrete}
+\label{passert:sem:concrete}
 \end{figure}
 
 \noindent
@@ -213,7 +213,7 @@ are:
 The syntax $\{ x \}$ represents an expression in $E_o$, with the brackets
 intended to
 suggest quotation or suspended evaluation.
-Figure~\ref{sem:symbolic} lists the full set of rules.
+Figure~\ref{passert:sem:symbolic} lists the full set of rules.
 
 \begin{figure}[p]
 \begin{mathpar}
@@ -270,7 +270,7 @@ Figure~\ref{sem:symbolic} lists the full set of rules.
   has the form $(H, e) \judge_s \{ s_e \}$ or $(H, c) \judge_s \{ s_c
   \}$, where $e \in E$, $c \in C$, and $s_e \in E_o$, and $s_c \in
   C_o$.  $H$ maps variables to expressions in $E_o$.}
-\label{sem:symbolic}
+\label{passert:sem:symbolic}
 \end{figure}
 
 The rule for samples produces an expression tree that captures the
@@ -349,7 +349,7 @@ This rule applies when \tool proves that an expression tree evaluates to
 \textbf{false} independent of the random draws.
 In our implementation, \tool proves simple cases, when an
 expression tree contains no samples, and uses black-box sampling
-otherwise. Section~\ref{sec:loops} describes a more precise analysis
+otherwise. Section~\ref{passert:sec:loops} describes a more precise analysis
 that bounds path probabilities, but we leave its formalization to
 future work.
 
@@ -363,7 +363,7 @@ We can now define the symbolic evaluation of programs:
 %
 To evaluate the resulting expression tree requires a sequence of draws
 $\Sigma$ but no heap.
-Figure~\ref{sem:simple} shows the full set of rules. As an
+Figure~\ref{passert:sem:simple} shows the full set of rules. As an
 example,
 the rules for addition and sampling are representative:
 %
@@ -401,5 +401,5 @@ the rules for addition and sampling are representative:
 \caption{The semantics for our simple expression language.  $\Sigma$
   is a stream of draws, and $\sigma_k$ is the $k$-th element of
   $\Sigma$.}
-\label{sem:simple}
+\label{passert:sem:simple}
 \end{figure}

@@ -1,4 +1,4 @@
-\section{Evaluation}\label{sec:evaluation}
+\section{Evaluation}\label{accept:sec:evaluation}
 
 \input{results/counts.tex}
 \input{results/tunestats.tex}
@@ -83,7 +83,7 @@ Classification rate &
 \end{tabular}
 \caption{The approximate applications used in our evaluation. The
 final two columns show source code annotation counts.}
-\label{table:apps}
+\label{accept:table:apps}
 \end{table}
 
 We evaluated \sysname's effectiveness at helping programmers
@@ -98,7 +98,7 @@ and a low-power, embedded sensing device.
 
 \subsection{Applications}
 
-Table~\ref{table:apps} lists the applications we use in this evaluation. Since
+Table~\ref{accept:table:apps} lists the applications we use in this evaluation. Since
 there is no standard suite of benchmarks for evaluating approximate-computing
 systems, we collect approximable applications from multiple sources,
 following the lead of other work in the area~\cite{enerj, npu, benchnn,
@@ -126,14 +126,14 @@ To evaluate the applications' output accuracy, we
 develop application-specific quality metrics as in prior work on approximate
 computing~\cite{enerj, green,
 qosprof, npu, truffle}.
-Table~\ref{table:apps} lists the metric for each program.
+Table~\ref{accept:table:apps} lists the metric for each program.
 In one case,
 \bench{fluidanimate}, the benchmark shipped with an output-comparison tool.
 
 We annotated each benchmark by inserting type annotations and
 interacting with the compiler's feedback mechanisms to identify fruitful
 optimizations.
-Table~\ref{table:apps} shows the source code annotation density.
+Table~\ref{accept:table:apps} shows the source code annotation density.
 \secref{sec:casestudy} reports qualitatively on our experiences with the
 annotation process.
 
@@ -148,7 +148,7 @@ of inputs (the \emph{training set}) during autotuning and a distinct input set
     \includegraphics[width=0.8\linewidth]{figs/wisp.jpg}
     \vspace{-1ex}
     \caption{WISP sensing platform~\cite{wisp-transactions}.}
-    \label{fig:wispphoto}
+    \label{accept:fig:wispphoto}
 \end{figure}
 
 Each application targets one of three evaluation platforms: an x86 server,
@@ -165,7 +165,7 @@ fabric on a single TSMC 28\,nm die.
 Full details on the accelerator implementation can be found in~\cite{snnap}.
 Finally,
 for the embedded \bench{msp430-activity} workload, we used the
-WISP~\cite{wisp-transactions} device depicted in Figure~\ref{fig:wispphoto}. The
+WISP~\cite{wisp-transactions} device depicted in Figure~\ref{accept:fig:wispphoto}. The
 WISP incorporates a prototype MSP430FR5969 ``Wolverine'' microcontroller with
 2\,KB of SRAM and 64\,KB of nonvolatile ferroelectric RAM (FRAM) along with an
 onboard accelerometer.  The WISP can harvest energy from radio waves, but we
@@ -189,32 +189,32 @@ averaged the running times.
 
 
 \subsection{Results}
-\label{sec:results}
+\label{accept:sec:results}
 
 \begin{figure}[t]
 \begin{subfigure}[b]{2.35in}
 \input{plots/speedup-all.tex}\vspace{1.5ex}
 \caption{Main results (all optimizations)}
-\label{fig:speedup-all}
+\label{accept:fig:speedup-all}
 \end{subfigure}
 \begin{subfigure}[b]{2.05in}
 \input{plots/speedup-loopperf.tex}\vspace{1.5ex}
 \caption{Loop perforation}
-\label{fig:speedup-loopperf}
+\label{accept:fig:speedup-loopperf}
 \end{subfigure}
 \begin{subfigure}[b]{1.15in}
 \input{plots/speedup-desync.tex}\vspace{1.5ex}
 \caption{Sync.~elision}
-\label{fig:speedup-desync}
+\label{accept:fig:speedup-desync}
 \end{subfigure}
 \begin{subfigure}[b]{1.3in}
 \input{plots/speedup-npu.tex}\vspace{1.5ex}
 \caption{Neural acceleration}
-\label{fig:speedup-npu}
+\label{accept:fig:speedup-npu}
 \end{subfigure}
 \caption{Speedup for each application, including all
 optimizations (a) and each optimization in isolation (b--d).}
-\label{fig:performance}
+\label{accept:fig:performance}
 \end{figure}
 
 \begin{table}
@@ -227,10 +227,10 @@ Application & Sites & Composites & Total & Optimal & Error & Speedup \\
 \bottomrule
 \end{tabular}
 \caption{Tuning statistics and resulting optimal configurations for each benchmark.}
-\label{table:stats}
+\label{accept:table:stats}
 \end{table}
 
-Figure~\ref{fig:speedup-all} plots the speedup (versus precise execution) of the
+Figure~\ref{accept:fig:speedup-all} plots the speedup (versus precise execution) of the
 best-performing relaxed versions that \sysname found for each application with
 output error under 10\%.
 Speedups in the figure range from \result{speedup-min}
@@ -238,7 +238,7 @@ Speedups in the figure range from \result{speedup-min}
 (\bench{\result{speedup-max-app}}) with
 a harmonic mean of \result{speedup-x86-mean} across all three platforms.
 
-Figure~\ref{fig:performance} shows the speedup for relaxed versions with only
+Figure~\ref{accept:fig:performance} shows the speedup for relaxed versions with only
 one type of optimization enabled.
 Not every optimization applies to every benchmark: notably, neural
 acceleration applies only to the Zynq benchmarks, and synchronization elision
@@ -265,7 +265,7 @@ the
 programmer can select the configuration that strikes the best
 quality--performance balance for a particular deployment.
 %
-Table~\ref{table:stats} shows the range of output error rates and speedups in
+Table~\ref{accept:table:stats} shows the range of output error rates and speedups in
 the frontiers for our benchmarks.
 %
 We highlight \bench{canneal} as an example.
@@ -289,7 +289,7 @@ configurations.
 
 \paragraph{Autotuner characterization.}
 
-Table~\ref{table:stats} shows
+Table~\ref{accept:table:stats} shows
 the number of relaxation opportunities (labeled \term{sites}), the number of
 composite configurations considered, the total number of configurations
 explored (including parameter-tuning configurations),
@@ -333,7 +333,7 @@ When we account for the performance gains, energy savings range from 2$\times$ (
 
 
 \subsection{Experiences}
-\label{sec:casestudy}
+\label{accept:sec:casestudy}
 
 This section
 reports qualitatively on our experiences using \sysname to optimize the benchmarks.
@@ -371,7 +371,7 @@ annotation or to stop the flow of approximation with an \lil{ENDORSE}
 annotation.
 
 Next, programmers expanded the annotation set to enable more optimizations.
-Using \sysname's analysis log (Section~\ref{sec:feedback}), they looked for
+Using \sysname's analysis log (Section~\ref{accept:sec:feedback}), they looked for
 optimizations that could \emph{almost} apply---those that indicated only a
 small number of blockers.
 

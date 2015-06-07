@@ -118,7 +118,7 @@ and we report on our implementation and empirical findings.
 
 
 \section{Language Overview}
-\label{sec:overview}
+\label{decaf:sec:overview}
 
 The goal of \lang is to enforce quality constraints on programs that execute
 on approximate hardware.
@@ -170,7 +170,7 @@ The programmer never needs to annotate the
 operators \code{-}, \code{*}, and \code{+}; these reliabilities are inferred.
 More simply, the programmer places annotations where she can make sense of
 them and relies on inference where she can not.
-Sections~\ref{sec:types} and~\ref{sec:inference} describe the type system and
+Sections~\ref{decaf:sec:types} and~\ref{decaf:sec:inference} describe the type system and
 inference.
 
 \lang also adapts reused code for different reliability levels.
@@ -183,7 +183,7 @@ and other code,
 and result.
 The operations in each clone are specialized to provide the optimal efficiency
 for its quality demands.
-Section~\ref{sec:cloning} describes how \lang specializes
+Section~\ref{decaf:sec:cloning} describes how \lang specializes
 functions.
 
 Finally, \lang provides optional dynamic tracking to cope with code that
@@ -203,7 +203,7 @@ compiler adds code to the loop to compute an upper bound on the reliability
 loss at run time.
 The programmer then requests a dynamic check, and a transition back to static
 tracking, with an explicit \code{check()} cast.
-Section~\ref{sec:dyn} describes \lang's dynamic type and run-time checks.
+Section~\ref{decaf:sec:dyn} describes \lang's dynamic type and run-time checks.
 
 By combining all of these features, one possible approximate implementation of
 \code{distance} in \lang reads:
@@ -221,14 +221,14 @@ By combining all of these features, one possible approximate implementation of
 
 
 \section{Probability Type System}
-\label{sec:types}
+\label{decaf:sec:types}
 
 \begin{figure}
     \begin{subfigure}{\linewidth}
         \input{semantics/syntax}
         \vspace{-4ex}
         \caption{Core language.}
-        \label{fig:syntax:core}
+        \label{decaf:fig:syntax:core}
     \end{subfigure}
     \begin{subfigure}{\linewidth}
         \begin{align*}
@@ -242,12 +242,12 @@ By combining all of these features, one possible approximate implementation of
         \end{align*}
         \vspace{-4ex}
         \caption{With type inference.}
-        \label{fig:syntax:inferred}
+        \label{decaf:fig:syntax:inferred}
     \end{subfigure}
     \caption{Syntax of the \lang language. The inferred forms
     (b) allow omission of the explicit probabilities in
     the core language (a).}
-    \label{fig:syntax}
+    \label{decaf:fig:syntax}
 \end{figure}
 
 The core concept in \lang is an expression's \emph{probability of
@@ -259,7 +259,7 @@ each type and operation is explicitly qualified to encode its correctness
 probability.
 Later sections add inference, functions and function cloning, and optional dynamic tracking.
 
-Figure~\ref{fig:syntax} depicts the syntax for a simplified version of \lang.
+Figure~\ref{decaf:fig:syntax} depicts the syntax for a simplified version of \lang.
 A type qualifier $q$ indicates
 the probability that an
 expression is correct:
@@ -305,7 +305,7 @@ other types with lower probability:
 We control implicit flows by enforcing that only fully reliable types---i.e.,
 \code{@Approx(1.0) $\tau$}---may appear in conditions in \code{if} and
 \code{while} statements.
-(Appendix~\ref{app:semantics} gives the full type type system.)
+(Appendix~\ref{decaf:app:semantics} gives the full type type system.)
 
 Endorsement expressions provide an unsound escape hatch from \lang's
 information flow rules.
@@ -380,7 +380,7 @@ result type qualifier for operators:
 \]
 %
 where $\text{optype}$ defines the unqualified types.
-Appendix~\ref{app:semantics} lists the full set of rules.
+Appendix~\ref{decaf:app:semantics} lists the full set of rules.
 
 This basic type system soundly constrains the correctness probability for
 every expression.
@@ -391,7 +391,7 @@ its expressiveness.
 
 
 \section{Inferring Probability Types}
-\label{sec:inference}
+\label{decaf:sec:inference}
 
 We introduce type inference to address the verbosity of the basic system.
 Without inference, \lang requires a reliability level annotation on every
@@ -468,7 +468,7 @@ The compiled binary, including reliability values for each operator, may
 be run on an approximate-hardware simulator to observe energy usage.
 
 \subsection{Function Specialization}
-\label{sec:cloning}
+\label{decaf:sec:cloning}
 
 \lang's inference system is interprocedural: parameters and return values can
 have inferred approximate types.
@@ -563,7 +563,7 @@ Recursion requires that parameter and return types be specified explicitly.
 
 
 \section{Optional Dynamic Tracking}
-\label{sec:dyn}
+\label{decaf:sec:dyn}
 
 A static approach to constraining reliability avoids run-time surprises but
 becomes an obstacle when control flow is unbounded.
@@ -573,7 +573,7 @@ Instead, we opt for a general dynamic mechanism.
 
 Inspired by languages with gradual and optional typing~\cite{gradualfp},
 we provide optional run-time reliability tracking via a dynamic type.
-The data-dependent loop in Section~\ref{sec:overview}'s Euclidean
+The data-dependent loop in Section~\ref{decaf:sec:overview}'s Euclidean
 distance function is one example where dynamic tracking fits.
 Another important pattern where static approaches fall short is convergent
 algorithms, such as simulated annealing, that iteratively refine a result:
@@ -640,7 +640,7 @@ dynamic outcomes of approximate operations.
 
 In our experience, \code{@Dyn} is only necessary when an approximate variable
 forms a loop-carried dependency.
-Section~\ref{sec:eval} gives more details on the placement and overhead of the
+Section~\ref{decaf:sec:eval} gives more details on the placement and overhead of the
 \code{@Dyn} qualifier.
 
 \paragraph{Interaction with inference.}
@@ -657,7 +657,7 @@ The assignment into \code{y} generates no constraints on the type of \code{x};
 any inferred type can transition to dynamic tracking.
 (The compiler emits a warnings when no other code constrains
 \code{x}, a situation that can also arise in the presence of endorsements. See
-% Section~\ref{sec:warn}.)
+% Section~\ref{decaf:sec:warn}.)
 the next section.)
 
 Inference can also apply when transitioning from dynamic to static tracking
@@ -686,13 +686,13 @@ can explicitly annotate intermediate operations to get approximate operators.
 
 
 \section{Using the Language}
-\label{sec:practice}
+\label{decaf:sec:practice}
 
 This section details two practical considerations in \lang beyond the core
 mechanisms of inference, specialization, and dynamic tracking.
 
 \paragraph{Constraint warnings.}
-\label{sec:warn}
+\label{decaf:sec:warn}
 
 In any type inference system, programmers can encounter unintended
 consequences when constraints interact in unexpected ways.
@@ -753,7 +753,7 @@ profiles.
 
 
 \section{Formalism}
-\label{sec:semantics}
+\label{decaf:sec:semantics}
 
 A key feature in \lang is its conservative quality guarantee.
 In the absence of unchecked endorsements, a \lang program's probability types
@@ -767,9 +767,9 @@ soundness.
 The formal language represents a version of \lang where all types have been
 inferred.
 Namely, the core language consists of the syntax in
-Figure~\ref{fig:syntax:core}.
+Figure~\ref{decaf:fig:syntax:core}.
 It excludes the inferred expressions and types in
-Figure~\ref{fig:syntax:inferred} but
+Figure~\ref{decaf:fig:syntax:inferred} but
 includes approximate operators, dynamic tracking, and endorsements.
 (While we define the semantics for both kinds of endorsements for
 completeness, we will prove a property for programs having only \emph{checked}
@@ -785,7 +785,7 @@ with implicit int-to-float coercion in Java or C.
 
 This section gives an overview of the formalism's type system, operational
 semantics, and main soundness theorem.
-Appendix~\ref{app:semantics} gives the full details and proofs.
+Appendix~\ref{decaf:app:semantics} gives the full details and proofs.
 
 \paragraph{Types.}
 There are two judgments in \lang's type system:
@@ -873,7 +873,7 @@ through the small-step statement evaluation semantics.
 \input{semantics/soundness-thm}
 
 \noindent
-See Appendix~\ref{app:semantics} for the full proof of the theorem.
+See Appendix~\ref{decaf:app:semantics} for the full proof of the theorem.
 The appendix also states an erasure theorem to show that $S$ does not affect
 the actual operation of the program:
 its only purpose is to define soundness for the language.
@@ -881,7 +881,7 @@ its only purpose is to define soundness for the language.
 
 
 \section{Evaluation}
-\label{sec:eval}
+\label{decaf:sec:eval}
 
 We implemented \lang and evaluated it using a variety of
 approximation-tolerant applications.
@@ -934,7 +934,7 @@ constraints for hardware research.
     were approximate (as opposed to implicitly reliable) and dynamically
     tracked (both approximate and reliable operations can be dynamically
     tracked).}
-    \label{table:bench}
+    \label{decaf:table:bench}
 \end{table}
 
 
@@ -972,7 +972,7 @@ In practice, we observe this adverse effect for two benchmarks where hardware
 constraints cause an explosion in solver time (see below).
 
 We optimize programs according to a static proxy for a program's overall
-efficiency (see Section~\ref{sec:inference}).
+efficiency (see Section~\ref{decaf:sec:inference}).
 Our evaluation tests this objective's effectiveness as a static proxy for
 dynamic behavior by measuring dynamic executions.
 
@@ -1018,7 +1018,7 @@ We used OpenJDK 1.7.0's HotSpot VM and version Z3 version 4.3.1.
 
 We evaluate a set of Java benchmarks shown in previous work to be amenable to
 approximate execution~\cite{enerj, approxstorage}.
-Table~\ref{table:bench} lists the applications and statistics about their
+Table~\ref{decaf:table:bench} lists the applications and statistics about their
 source code and annotations.
 
 The benchmarks came with an initial set of simple annotations that distinguish
@@ -1116,7 +1116,7 @@ yield energy savings~\cite{hizli, kumarhpca, palem-adders}.
     assigned to each level. The \emph{rounded} executions were assigned to levels
     after solving without restrictions; the \emph{solved} executions used the
     hardware profile during type inference.}
-    \label{fig:spark}
+    \label{decaf:fig:spark}
 \end{figure}
 
 To run a \lang-compiled program on realistic approximate hardware, two
@@ -1127,7 +1127,7 @@ The compiler can potentially do better by using the SMT solver to apply hardware
 constraints during type inference if the deployment architecture is known
 ahead of time.
 
-Figure~\ref{fig:spark} compares the two approaches, denoted \emph{solving} and
+Figure~\ref{decaf:fig:spark} compares the two approaches, denoted \emph{solving} and
 \emph{rounding},
 for two of
 our benchmarks on \mbox{two-,} \mbox{three-,} and four-level machines.
@@ -1173,12 +1173,12 @@ cheaper rounding strategy.
     potential energy savings.
     Bars marked $\star$ used
     the cheaper rounding strategy instead of solving to determine levels.}
-    \label{fig:levels}
+    \label{decaf:fig:levels}
 \end{figure}
 
 More hardware probability levels can enable greater efficiency gains by
 closely matching applications' probability requirements.
-Figure~\ref{fig:levels} depicts the allocation of approximate operations in benchmark
+Figure~\ref{decaf:fig:levels} depicts the allocation of approximate operations in benchmark
 executions to reliability levels for a range of hardware configurations
 from 2 to 8 levels.
 In this graphic, white and lighter shades indicate more reliable execution and
@@ -1233,14 +1233,14 @@ could make larger level counts more tractable.
     lower-reliability operations.
     The hatched box indicates approximate operations that are forced to
     execute reliably by program constraints, even on ideal hardware.}
-    \label{fig:idealhist}
+    \label{decaf:fig:idealhist}
 \end{figure}
 
 An ideal approximate architecture that features arbitrary probability levels
 could offer more flexibility at the extremes of the probability range.
 To evaluate the importance of higher and lower levels, we
 simulated an ideal continuous machine.
-Figure~\ref{fig:idealhist} shows the fraction of approximate operations in
+Figure~\ref{decaf:fig:idealhist} shows the fraction of approximate operations in
 executions of each benchmark that used probabilities below the range of our
 realistic machines (below 99\% probability) and above the range (above $p =
 1.0 - 10^{-8}$).
@@ -1336,7 +1336,7 @@ throughout the program.
 The \code{@Dyn} type qualifier lets programmers request dynamic
 probability tracking, in exchange for run-time overhead, when \lang's static
 tracking is too conservative.
-Table~\ref{table:bench} shows the number of types we annotated with
+Table~\ref{decaf:table:bench} shows the number of types we annotated with
 \code{@Dyn} in each benchmark.
 Dynamic tracking was necessary at least once in every benchmark except one
 (\code{imagefill}).
@@ -1350,7 +1350,7 @@ Since the loop's trip count depends on the input image, dynamic tracking was
 necessary for precision:
 no nonzero static bound on the size variable's probability would suffice.
 
-Table~\ref{table:bench} also shows the fraction of operations in an execution
+Table~\ref{decaf:table:bench} also shows the fraction of operations in an execution
 of each benchmark that required dynamic tracking.
 In five of our eight benchmarks, less than 1\% of the operations in the
 program need to be dynamically tracked, suggesting that energy overhead would
@@ -1381,7 +1381,7 @@ further reduce overhead.
 
 \subsection{Tool Performance}
 
-Table~\ref{table:bench} lists the running time of the inference system for
+Table~\ref{decaf:table:bench} lists the running time of the inference system for
 each benchmark.
 The total time includes time spent on the initial system-satisfiability query,
 the optimization query series, parsing and analyzing the Java

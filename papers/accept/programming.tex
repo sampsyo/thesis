@@ -1,5 +1,5 @@
 \section{Annotation and Programmer Feedback}
-\label{sec:annotation-feedback}
+\label{accept:sec:annotation-feedback}
 
 This section describes \sysname's annotations and feedback,
 which helps programmers balance safety with approximation.
@@ -10,7 +10,7 @@ lightweight safety guarantees, programmer insight, and testing to apply
 approximation to general code.
 
 \subsection{Annotation Language}
-\label{sec:language}
+\label{accept:sec:language}
 
 The programmer uses annotations to communicate to the compiler which parts of
 a program are safe targets for program relaxation.
@@ -78,7 +78,7 @@ Programmers can use endorsements to explicitly circumvent this restriction.
 
 \paragraph{Escape hatches.}
 \sysname decides whether program relaxations are safe based on the
-\emph{effects} of the statements involved. Section~\ref{sec:relaxations} goes
+\emph{effects} of the statements involved. Section~\ref{accept:sec:relaxations} goes
 into more detail, but at a high level, code can be relaxed if its externally
 visible effects are approximate.  For example, if \lil{a} is a pointer to
 an \lil{APPROX int}, then the statement \lil{*a = 5;} has an approximate effect
@@ -101,11 +101,11 @@ annotations much less frequently than the primary annotations
 useful when experimentally exploring program behavior before annotating and in
 system programming involving memory-mapped registers.  Conversely,
 \annforbid is useful for marking parts of the program involved in
-introspection. Section~\ref{sec:casestudy} gives more detail on these
+introspection. Section~\ref{accept:sec:casestudy} gives more detail on these
 experiences.
 
 \subsection{Programmer Feedback}
-\label{sec:feedback}
+\label{accept:sec:feedback}
 
 \sysname takes inspiration from parallelizing compilers that use a development
 feedback loop to help guide the programmer toward parallelization
