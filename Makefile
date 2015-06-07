@@ -12,3 +12,7 @@ export TEXINPUTS := .:./fontspec:$(TEXINPUTS)
 deploy: $(PDFTARGETS)
 	scp $(PDFTARGETS) recycle.cs.washington.edu:public_html/share
 	@echo https://homes.cs.washington.edu/~$(USER)/share/$(PDFTARGETS)
+
+.PHONY: fast
+fast:
+	$(PDFLATEX) $(TARGET) $(ERRFILTER)
