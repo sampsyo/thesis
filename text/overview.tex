@@ -1,3 +1,5 @@
+\section{sec:overview}
+
 Computer systems typically provide strong, specific guarantees for their behavior. A
 programmer can reasonably expect that the processor never exposes timing
 errors and never loses a bit in its cache or main memory. When errors do
@@ -43,7 +45,7 @@ into applying fine-grained, statically controlled approximation to the process
 of hardware design.
 
 
-\paragraph{Thesis}
+\section{Approximate Hardware and Software}
 
 I plan to demonstrate in my dissertation that \textit{familiar programming
 models can incorporate approximate computing in a way that enables large
@@ -56,9 +58,6 @@ components with the goal of gaining efficiency without sacrificing
 programmability.
 
 
-
-\section{Preliminary Work}
-\label{sec:prelim}
 
 In this section, I enumerate my completed and in-progress work on
 disciplined approximate programming. The purpose of this section is to set the stage
@@ -126,6 +125,8 @@ their results combined, the impact on the computation is even more obscure.
 Understanding and controlling probabilistic system components is critical to
 composing them to do useful work.
 
+
+\section{Organization}
 
 \subsection{EnerJ: Safely Programming Approximate Systems}
 \label{sec:prelim:enerj}
@@ -386,3 +387,28 @@ One important takeaway from this work is the utility of dynamic enforcement
 to constrain the effects of nondeterminism and unknown probabilities. While
 static analysis is infeasible when the pattern of approximation is unknown,
 dynamic techniques can directly observe and cope with nondeterministic events.
+
+
+\section{Previously Published Material}
+
+This dissertation comprises work published elsewhere in conference papers:
+
+\begin{itemize}
+\item Chapter~\ref{ch:enerj}:
+\textit{EnerJ: Approximate Data Types for Safe and General Low-Power
+Computation.}
+Adrian Sampson, Werner Dietl, Emily Fortuna, Danushen Gnanapragasam, Luis Ceze, and Dan Grossman.
+In Programming Language Design and Implementation (PLDI), 2011.
+\item Chapter~\ref{ch:approxstorage}:
+\textit{Approximate Storage in Solid-State Memories.}
+Adrian Sampson, Jacob Nelson, Karin Strauss, and Luis Ceze.
+In the IEEE/ACM International Symposium on Microarchitecture (MICRO), 2013.
+\item Chapter~\ref{ch:passert}:
+\textit{Expressing and Verifying Probabilistic Assertions.}
+Adrian Sampson, Pavel Panchekha, Todd Mytkowicz, Kathryn McKinley, Dan Grossman, and Luis Ceze.
+In Programming Language Design and Implementation (PLDI), 2014.
+\item Chapter~\ref{ch:decaf}:
+\textit{Probability Type Inference for Flexible Approximate Programming.}
+Brett Boston, Adrian Sampson, Dan Grossman, and Luis Ceze.
+To appear in OOPSLA 2015.
+\end{itemize}
