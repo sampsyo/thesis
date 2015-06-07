@@ -1,0 +1,199 @@
+Approximate computing research combines insights from hardware engineering,
+architecture, system design, programming languages, and even application
+domains like machine learning. I have confined this section to describe work
+that considers the possibility of exposing errors, incorrectness, and
+uncertainty to applications. I will not discuss the large body of work on
+traditional fault tolerance, which attempts to recover from faults to compute
+results without error.
+
+\section{Application-Level Error Tolerance}
+\label{sec:related:studies}
+
+Many authors have identified the property of error tolerance in existing
+``soft''
+applications. A large class of studies have examined this property by
+injecting errors into certain parts of applications and assessing the
+execution quality in terms of both crashes and output fidelity~\cite{li06,
+li07, li08, dekruijf-selse09, wong-selse06, palem-arcs, freton, besteffort,
+yeh, thaker-iiswc06, efc, llfi}.
+
+It is a consensus among many of these studies that different parts of the
+application have different impacts on reliability and fidelity. Some conclude
+that there is a useful distinction between critical and non-critical program
+points (typically instructions)~\cite{palem-arcs, thaker-iiswc06, flikker,
+llfi}.
+The work tends to assume that at least the instructions involved in control
+flow are critical~\cite{thaker-iiswc06}. In my work, I use this idea of
+distinguishing between critical and noncritical components to help the
+programmer express approximations with bounded effects on the program as a
+whole. In each of the approximate system components I have designed, the
+execution substrate supports precise (traditional) and relaxed operation to
+exploit this distinction. An important question, however, is the granularity
+at which to switch between these two modes. Section~\ref{sec:prelim} discusses
+this challenge in more detail.
+
+This class of work also typically attempts to classify the kinds of programs
+that can tolerate error injection gracefully. For example, papers have focused
+on video~\cite{freton}, recognition and mining~\cite{besteffort}, physical
+simulation~\cite{yeh}, and optimization~\cite{hogwild}.
+
+Aside from existing software, some studies have evaluated error-resilience in
+integrated circuit designs~\cite{breuer, scalable-effort-hardware}. These
+studies focus on the kinds of applications that are typically implemented with
+application-specific circuits: media codecs, numerical kernels, and digital
+signal processing.
+
+
+\section{Exploiting Resilience in Architecture}
+
+The existence of a large class of error-resilient applications has motivated
+research into techniques that exploit this property to reduce resource usage.
+Specifically, designs have emerged that extend circuits and processor
+architectures to trade off error for energy, time, manufacturing yield, or
+verification complexity.
+
+Since floating-point operations are both expensive and inexact, they make a
+profitable target for this research direction. Researchers have designed units
+that dynamically adapt mantissa width~\cite{bitwidthred}, ``fuzzily'' memoize
+similar arithmetic computations~\cite{fuzzymemo}, or tolerate timing
+errors~\cite{palem-adders, impact, kumarhpca, hizli, adder-metrics}. Alternative number
+representations work in tandem with relaxed functional units to bound the
+numerical error that can result from bit flips~\cite{stanleymarbell}. SRAM
+structures spend significant static power on retaining data, so they represent
+another opportunity for fidelity trade-offs~\cite{hybrid-sram}. Similarly,
+DRAM structures can reduce the power spent on refresh cycles where bit flips
+are allowed~\cite{flikker}.
+In my own work, I have extended an existing language an existing ISA to
+support an abstract notion of approximation that can encapsulate this
+disparate collection of hardware approximation techniques. Rather than
+focusing on adding new approximation capabilities to CPU architectures, my
+work primarily focuses on how they can be made usable in the development of
+approximate programs.
+
+Some recent work has also proposed general techniques for making quality trade-offs
+when synthesizing and optimizing general hardware
+circuits~\cite{lossysynthesis, palem-pruning}. My proposed work on approximate
+hardware design (Section~\ref{sec:proposed:hw}) builds on this research direction.
+
+As a dual to adding errors in some circuits, some researchers have
+explored differential fault protection in the face of universally unreliable
+circuits. As process sizes continue to shrink, it is likely that reliable
+transistors will become the minority; redundancy and checking will be
+necessary to provide reliable operation~\cite{li-asplos08}. Circuit design
+techniques have been proposed that reduce the cost of redundancy by providing
+it selectively for certain instructions in a CPU~\cite{wreft} or certain
+blocks in a DSP~\cite{unequal-protection, ant}. More recently, Yetim, Martonosi,
+and Malik proposed a technique that uses coarse-grained quality techniques to
+allow errors even in processor control logic~\cite{martonosi-date}.
+
+
+\section{Exploiting Resilience with Program Transformations}
+\label{sec:related:software}
+
+Aside from system-level accuracy trade-offs, there are opportunities for
+adapting \emph{algorithms} to execute with varying precision. Algorithmic
+quality--complexity trade-offs are not new: approximation algorithms are a
+well-studied area of complexity theory and many domains, notably real-time
+vision and graphics, have ad-hoc ``cheap'' implementations of computations
+that are prohibitively expensive to compute exactly.
+
+In contrast to these
+traditional views on approximation, recent work has sought to provide
+tools for transforming real programs---as opposed to high-level
+algorithmic specifications---to explore practical relaxations.
+Transformations include removing portions of a program's dynamic execution
+(termed \emph{code perforation})~\cite{perforation-fse}, unsound
+parallelization of serial programs~\cite{quickstep}, eliminating
+synchronization in parallel programs~\cite{dubstep, races-ibm, hogwild},
+identifying and adjusting parameters that control output
+quality~\cite{dynamicknobs}, randomizing portions of deterministic
+programs~\cite{zhu-popl12, sasa-sas11}, dynamically choosing between
+different programmer-provided implementations of the same
+specification~\cite{green}, and replacing pure computations with invocations
+of a trained neural network~\cite{benchnn, temam-isca}.
+
+Central to each of these program transformation techniques are the questions
+of automation and quality. For a relaxation to be generally useful, it should
+be applicable automatically with only minimal programmer involvement but
+should still result in transformed code that the programmer is happy with.
+Recently, a set of techniques have been proposed to help constrain the space
+of possible transformations to those that result in a profitable
+quality trade-off. Quality of service profiling~\cite{qosprof} uses many
+executions to identify parts of a program that are likely to be good
+candidates for transformation. Some verification tools and proof systems help
+the programmer prove relationships between the original program and a
+candidate relaxed version~\cite{carbin-pldi, carbin-races, carbin-pepm,
+rice-transformation-semantics}.
+Another approach constrains the programming model to help express programs
+that refine their results as they run longer, permitting quality trade-offs in
+hard real-time settings~\cite{chung90}.
+
+As with hardware approximation, my own work has focused on unifying software
+approximation techniques so that they can be most useful for programmers.
+Namely, the ACCEPT project (Section~\ref{sec:prelim:accept}) identifies a
+subset of transformations that can be applied automatically while preserving
+guarantees requested by the programmer. The research seeks to constrain
+existing optimizations---most of which do not carry safety guarantees---using
+lightweight program annotation.
+
+
+\section{Exploiting Resilience in Other Systems}
+
+While architecture optimizations and program transformations dominate the
+field of proposed exploitations of approximate software, some recent work has
+explored the same trade-off in other components of computer systems. Network
+communication, with its reliance on imperfect underlying channels, exhibits
+opportunities for fidelity trade-offs~\cite{softcast, luo-globecom, apex,
+smpmup2006}. Notably, SoftCast~\cite{softcast} transmits images and video by
+making the signal magnitude directly proportional to pixel luminance. BlinkDB
+is a database system that can respond to queries that include a required
+accuracy band on their output~\cite{blinkdb}. By eschewing redundancy and
+recovery in a fault-tolerant distributed system, researchers at Wisconsin were
+able to make quality trade-offs in a supercomputing
+setting~\cite{dekruijf-icpp}.
+
+
+\section{Probabilistic Computation}
+
+Several research projects have proposed radically different models of
+computation that, rather than adapting existing software to expose its error
+resilience, are based exclusively on probabilistic reasoning. Most
+prominently, Probabilistic CMOS~\cite{pcmos, pcmos-cacm, palem-dac-position}
+and stochastic processors~\cite{stochasticproc} expose the probabilistic
+behavior of transistors as part of their ISA.
+Other preliminary efforts from MIT~\cite{batesmit, lyric, mansinghka-circuits} and
+Stanford~\cite{ersa} fall into the same category.
+
+While these designs have shown large efficiency gains on a restricted domain
+of problems, the challenge remains to develop a programming model that allows
+developers to efficiently express general applications. \emph{Probabilistic
+programming}, a separate effort in the machine learning community, helps
+express inference and learning algorithms by making probability a first-class
+concern~\cite{church}. Similarly, recent work has sought to express
+uncertainties in the context of traditional, imperative programming
+languages~\cite{uncertaint}. These programming models incorporate algorithmic
+probabilities---such as those inherent in sensor readings or machine learning
+model parameters---but do not yet address the computational probabilities of
+techniques like PCMOS and stochastic processors.
+
+One of my proposed projects (Section~\ref{sec:proposed:se}) uses a technique
+that resembles probabilistic computation in its incorporation of probabilities
+into the semantics of an approximate program. Rather than letting the
+programmer express probabilities directly, however, my proposed system
+represents the approximate behavior of the underlying system
+probabilistically.
+
+
+\section{Robustness Analysis}
+
+As the studies in Section~\ref{sec:related:studies} repeatedly find, error
+tolerance varies greatly in existing software, both within and between
+programs. Several program analysis approaches have been proposed to evaluate
+and enhance error resilience properties. SJava analyzes programs to prove that
+errors only temporarily disrupt the execution path of a program~\cite{sjava}.
+Program smoothing~\cite{smoothing-cav, smoothing-pldi, smoothing-fse} and
+``robustification''~\cite{robustification} both find continuous, mathematical
+functions that resemble the input--output behavior of numerical programs.
+Finally, Cong and Gururaj describe a technique for automatically
+distinguishing between critical and non-critical instructions for the purpose
+of selective fault tolerance~\cite{cong-iccad}

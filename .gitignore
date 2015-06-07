@@ -10,6 +10,7 @@ thesis.pdf
 *.toc
 *.thm
 *.xdv
+*.aux
 *-eps-converted-to.pdf
 revision.tex
 metadata.tex
