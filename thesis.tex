@@ -16,9 +16,7 @@
 \usepackage{tabularx}
 \usepackage{etoolbox}
 \usepackage{listings}
-\usepackage[eulerchapternumbers,%
-            pdfspacing,%floatperchapter,%linedheaders,%
-            ]{classicthesis}
+\usepackage[eulerchapternumbers,parts,linedheaders]{classicthesis}
 \usepackage{tikz}
 \usepackage{import}
 \usepackage{multirow}
@@ -91,6 +89,7 @@
 }
 \lstloadlanguages{Java,C,C++,Python}
 \newcommand{\ilcode}[1]{\textsf{#1}}
+\newcommand{\code}[1]{\lstinline{#1}}
 
 % I don't know why classicthesis wants this. Something about hyperlinks?
 \newcounter{dummy}
@@ -105,6 +104,16 @@
 \def\qed{\unskip\kern 10pt{\unitlength1pt\linethickness{.4pt}\framebox(6,6){}}}
 
 \newcommand{\bench}[1]{\textsf{#1}}
+
+% For the semantics.
+\newcommand{\defeq}{\equiv}
+\newcommand{\judge}{\Downarrow}
+\newcommand{\alt}{\:|\:}
+
+% Math macros for probability stuff.
+\newcommand{\prob}[1]{\ensuremath{\Pr\!\left[#1\right]}}
+\newcommand{\expc}[1]{\ensuremath{\mathrm{E}\!\left[#1\right]}}
+\newcommand{\varc}[1]{\ensuremath{\mathrm{Var}\!\left[#1\right]}}
 
 \hyphenation{analy-ses analy-sis proto-type}
 
@@ -239,31 +248,27 @@
 
 
 \pagenumbering{arabic}
-
 \cleardoublepage
+
+
+\part{Overview}
+\label{part:overview}
+
 \chapter{Approximate Computing}
 \label{ch:overview}
 \subimport*{text/}{overview}
-
 
 \chapter{Survey}
 \label{ch:related}
 \subimport*{text/}{related}
 
 
+\part{Programmable Approximation}
+\label{part:programming}
+
 \chapter{A Safe and General Language Abstraction}
 \label{ch:enerj}
 \subimport*{papers/enerj/}{epaj}
-
-
-\chapter{Approximate Storage}
-\label{ch:approxstorage}
-\subimport*{papers/approxstorage/}{approxstorage}
-
-
-\chapter{Probabilistic Assertions}
-\label{ch:passert}
-\subimport*{papers/passert/}{paper}
 
 
 \chapter{Probability Types}
@@ -271,17 +276,39 @@
 \subimport*{papers/decaf/}{approx-within}
 
 
+\chapter{Probabilistic Assertions}
+\label{ch:passert}
+\subimport*{papers/passert/}{paper}
+
+
+
+\part{Approximate Systems}
+\label{part:systems}
+
+\chapter{Approximate Storage}
+\label{ch:approxstorage}
+\subimport*{papers/approxstorage/}{approxstorage}
+
+
 \chapter{An Open-Source Approximation Infrastructure}
 \label{ch:accept}
 \subimport*{papers/accept/}{accept}
 
 
+\part{Closing}
+\label{part:conclusion}
+
 \chapter{Retrospective}
 \label{ch:conclusion}
 \subimport*{text/}{conclusion}
 
+\chapter{Prospective}
+\label{ch:future}
+\subimport*{text/}{future}
+
 
 \appendix
+\part{Appendix: Semantics and Proofs}
 
 \chapter{EnerJ: Noninterference Proof}
 \label{app:enerj}

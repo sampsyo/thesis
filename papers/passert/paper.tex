@@ -3,12 +3,6 @@
 % Tolerate quotes like "this" instead of like ``this''.
 \MakeOuterQuote{"}
 
-% Math macros for probability stuff.
-\newcommand{\prob}[1]{\ensuremath{\Pr\!\left[#1\right]}}
-\newcommand{\expc}[1]{\ensuremath{\mathrm{E}\!\left[#1\right]}}
-\newcommand{\varc}[1]{\ensuremath{\mathrm{Var}\!\left[#1\right]}}
-\newcommand{\code}[1]{\lstinline{#1}}
-
 \providecommand{\unct}[1]{\ensuremath{\mathit{Uncertain}\langle \mathit{#1} \rangle}\xspace}
 
 % Text macros.
@@ -19,13 +13,8 @@
 \newcommand{\Passerts}{\textsf{Passert}s\xspace}
 \newcommand{\tool}{\textsc{Mayhap}\xspace} % feel free to come up with a better name!
 \newcommand{\mayhap}{\textsc{Mayhap}\xspace} % feel free to come up with a better name!
-\newcommand{\lang}{\textsc{Prob}\xspace} % feel free to come up with a better name!
+\renewcommand{\lang}{\textsc{Prob}\xspace} % feel free to come up with a better name!
 \newcommand{\corelang}{\textsc{ProbCore}\xspace} % me too!
-
-% For the semantics.
-\newcommand{\defeq}{\equiv}
-\newcommand{\judge}{\Downarrow}
-\newcommand{\alt}{\:|\:}
 
 \input{introduction}
 \input{model}
