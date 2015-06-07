@@ -129,6 +129,47 @@ composing them to do useful work.
 
 \section{Organization}
 
+The next chapter is a literature survey of work on efficiency--accuracy
+trade-offs.
+Historical context is particularly important to this dissertation because the
+fundamental idea of exchanging accuracy for returns in efficiency is so old:
+analog computers and floating-point numbers, for example, are prototypical
+approximate-computing strategies.
+
+Parts~\ref{part:programming} and~\ref{part:systems} form the core of the
+dissertation.
+They comprise five independent but interlocking research projects that
+together build up abstractions for making approximate computing both tractable
+and efficient.
+%
+Part~\ref{part:programming} describes three approaches to abstracting
+approximation in programming languages:
+EnerJ, a type system that uses type qualifiers to make approximation safe;
+DECAF, an extension of EnerJ's type system that adds probabilistic reasoning
+about the likelihood that data is correct;
+and probabilistic assertions, a strategy for efficiently verifying complex
+probabilistic properties via sampling.
+%
+Part~\ref{part:systems} describes two system designs for implementing
+efficiency--accuracy trade-offs:
+a hardware architecture that exploits the nuances of resistive memory
+technologies such as phase-change memory;
+and an open-source compiler toolkit that provides the scaffolding to quickly
+implement new approximation strategies while balancing programmability with
+approximation's potential benefits.
+
+Finally, Chapters~\ref{ch:conclusion} and~\ref{ch:future} look forward and
+backward, respectively.
+The retrospective chapter distills lessons from the work in this dissertation
+about approximate computing and hardware--software co-design in general, and
+the prospective chapter suggests next steps for bringing approximation into
+the mainstream.
+
+This dissertation also includes appendices that formalize the
+programming-languages techniques in Part~\ref{part:programming} and prove
+their associated theorems.
+
+
 \subsection{EnerJ: Safely Programming Approximate Systems}
 \label{sec:prelim:enerj}
 
@@ -400,19 +441,23 @@ This dissertation comprises work published elsewhere in conference papers:
 Computation.}
 Adrian Sampson, Werner Dietl, Emily Fortuna, Danushen Gnanapragasam, Luis Ceze, and Dan Grossman.
 In Programming Language Design and Implementation (PLDI), 2011.
+\cite{enerj}
 
 \item Chapter~\ref{ch:decaf}:
 \textit{Probability Type Inference for Flexible Approximate Programming.}
 Brett Boston, Adrian Sampson, Dan Grossman, and Luis Ceze.
 To appear in OOPSLA 2015.
+\cite{decaf}
 
 \item Chapter~\ref{ch:passert}:
 \textit{Expressing and Verifying Probabilistic Assertions.}
 Adrian Sampson, Pavel Panchekha, Todd Mytkowicz, Kathryn McKinley, Dan Grossman, and Luis Ceze.
 In Programming Language Design and Implementation (PLDI), 2014.
+\cite{passert}
 
 \item Chapter~\ref{ch:approxstorage}:
 \textit{Approximate Storage in Solid-State Memories.}
 Adrian Sampson, Jacob Nelson, Karin Strauss, and Luis Ceze.
 In the IEEE/ACM International Symposium on Microarchitecture (MICRO), 2013.
+\cite{approxstorage}
 \end{itemize}
