@@ -1,12 +1,12 @@
 \emph{Approximate computing} is the idea that we are hindering computer
 systems' efficiency by demanding too much accuracy from them.
-While predictability and reliability are crucial for some tasks, many
+While precision is crucial for some tasks, many
 modern applications are fundamentally approximate.
 Perfect answers are unnecessary or even impossible in domains such as
 computer vision, machine learning,
 speech recognition, search, graphics, and physical simulation.
 Today's systems waste time, energy, and complexity to provide uniformly
-pristine operation for these applications that do not require it.
+pristine operation for applications that do not require it.
 
 Resilient applications are not, however, a license for computers to abandon
 predictability in favor of arbitrary errors.
@@ -27,7 +27,7 @@ For approximate programming, this dissertation proposes:
 %
 \begin{itemize}
 \item
-a type system based on static information flow tracking that separates an
+a type system that uses information flow to separate an
 application's error-resilient components from its critical control structures;
 \item
 an extended type system that restricts the probability that a value
