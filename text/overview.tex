@@ -13,23 +13,33 @@ Cosmic rays can silently flip bits in DRAM, for example,
 and systems typically cope with the threat using error-correcting codes to
 maintain the illusion for programmers that the memory is infinitely reliable.
 
-But enforcing perfect accuracy at all levels of the system comes at a high
-cost. Circuits must be clocked so that they effectively never violate timing;
-due to process variability, DRAM must be refreshed frequently enough to
-account for the worst cell among the billions on a chip.
+But abstractions with perfect accuracy come at a cost.
+Chips need to choose conservative clock rates to banish timing errors,
+storage and communication channels incur error-correction overhead,
+and parallelism requires expensive synchronization.
 
-Meanwhile, many common applications have intrinsic tolerance to inaccuracies
-in computation. Applications in domains like computer vision, media
+Meanwhile, many applications have intrinsic tolerance to inaccuracy.
+Applications in domains like computer vision, media
 processing, machine learning, and sensor data analysis already incorporate
-imprecision in their operation. These applications are \emph{approximate
+imprecision into their design.
+Large-scale data analytics focus on aggregate trends rather than the integrity
+of individual data elements.
+In domains such as computer vision and robotics, there are no perfect answers:
+results can vary in their usefulness, and the output quality is always in
+tension with the resources that the software needs to produce them.
+All these applications are \emph{approximate
 programs}: a range of possible values can be considered ``correct'' outputs
-for a given input. From the perspective of an approximate program, today's
+for a given input.
+
+From the perspective of an approximate program, today's
 systems are overprovisioned with accuracy. Since the program is resilient, it
 does
-not need every arithmetic operation to be precisely correct and every byte of memory to be preserved
-exactly. \emph{Approximate computing} is a set of techniques that exploit this
-tolerance to trade off accuracy for resource consumption like performance and
-energy efficiency.
+not need every arithmetic operation to be precisely correct and every bit of
+memory to be preserved at the same level of reliability.
+\emph{Approximate computing} is a research agenda that seeks to better match
+the accuracy in system abstractions with the requirements of approximate
+programs.
+
 
 However, applying approximation without discipline would make the construction
 of reliable software nearly impossible. For approximate computation to be
