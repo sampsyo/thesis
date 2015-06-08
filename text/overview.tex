@@ -37,18 +37,17 @@ does
 not need every arithmetic operation to be precisely correct and every bit of
 memory to be preserved at the same level of reliability.
 \emph{Approximate computing} is a research agenda that seeks to better match
-the accuracy in system abstractions with the requirements of approximate
+the accuracy in system abstractions with the needs of approximate
 programs.
 
-
-However, applying approximation without discipline would make the construction
-of reliable software nearly impossible. For approximate computation to be
-usable, it must be confined to the error-tolerant parts of the program.  It
-must not, for example, lead to uncontrolled jumps or wild pointers. My
+\paragraph{Order from chaos.}
+The central challenge in approximate computing is forging abstractions that
+make imprecision \emph{controlled and predictable} without sacrificing its
+efficiency benefits.
+Without constraints, approximation risks making programming intractable.
+My
 research focuses on techniques that collaborate with the programmer to balance
-efficiency and correctness. This research area, which I call \emph{disciplined
-approximate programming}, provides approximate behavior in careful ways that
-enable the construction of reliable software despite their own unreliability.
+efficiency and correctness.
 
 My work so far in this area has explored disciplined approximate programming
 in the context of programming languages, CPU architecture, hardware
