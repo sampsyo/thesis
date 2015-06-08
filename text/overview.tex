@@ -1,16 +1,14 @@
 \section{Introduction}
 \label{sec:intro}
 
-\emph{Accuracy} and \emph{reliability} are fundamental tenets in the design of
-computer systems.
-A
-programmer can reasonably expect that the processor never exposes timing
+Accuracy and reliability are fundamental tenets in computer system design.
+Programmers can expect that the processor never exposes timing
 errors, and networking stacks typically aim to provide reliable transports
 even on unreliable physical media.
 When errors do occasionally happen, we treat them as exceptional outliers, not
 as part of the system abstraction.
 Cosmic rays can silently flip bits in DRAM, for example,
-and systems typically cope with the threat using error-correcting codes to
+but the machine will typically use error-correcting codes to
 maintain the illusion for programmers that the memory is infinitely reliable.
 
 But abstractions with perfect accuracy come at a cost.
@@ -48,6 +46,8 @@ Without constraints, approximation risks making programming intractable.
 My
 research focuses on techniques that collaborate with the programmer to balance
 efficiency and correctness.
+
+This dissertation designs hardware and software to support approximation-aware abstractions.
 
 My work so far in this area has explored disciplined approximate programming
 in the context of programming languages, CPU architecture, hardware
