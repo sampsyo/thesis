@@ -1,12 +1,19 @@
 \section{Introduction}
 \label{sec:intro}
 
-Computer systems typically provide strong, specific guarantees for their behavior. A
+\emph{Accuracy} and \emph{reliability} are fundamental tenets in the design of
+computer systems.
+A
 programmer can reasonably expect that the processor never exposes timing
-errors and never loses a bit in its cache or main memory. When errors do
-occasionally happen, such as when cosmic rays flips bits in DRAM, they are
-treated as rare outliers rather than part of typical operation.
-But providing perfect accuracy at all levels of the system comes at a high
+errors, and networking stacks typically aim to provide reliable transports
+even on unreliable physical media.
+When errors do occasionally happen, we treat them as exceptional outliers, not
+as part of the system abstraction.
+Cosmic rays can silently flip bits in DRAM, for example,
+and systems typically cope with the threat using error-correcting codes to
+maintain the illusion for programmers that the memory is infinitely reliable.
+
+But enforcing perfect accuracy at all levels of the system comes at a high
 cost. Circuits must be clocked so that they effectively never violate timing;
 due to process variability, DRAM must be refreshed frequently enough to
 account for the worst cell among the billions on a chip.
