@@ -336,6 +336,8 @@ fine-grained approximation: it conservatively avoids relaxing \emph{control}
 in terms of both the program (e.g., pointers and control flow) and the
 execution substrate (e.g., fetch and decode).
 
+\TODO{cite \cite{hadi-thesis}}
+
 \subsection{Neural Acceleration}
 
 Neural Processing Units represent a hybrid compiler--accelerator approach to
@@ -367,8 +369,7 @@ yield a profitable accuracy--efficiency trade-off.
 This shortcoming demonstrates a tension in my work so far between
 programmability and efficiency.
 
-TODO: also cite
-\cite{snnap}
+\TODO{also cite \cite{snnap} \cite{hadi-thesis}}
 
 \subsection{Monitoring and Debugging Quality}
 
@@ -407,8 +408,7 @@ to constrain the effects of nondeterminism and unknown probabilities. While
 static analysis is infeasible when the pattern of approximation is unknown,
 dynamic techniques can directly observe and cope with nondeterministic events.
 
-TODO: cite
-\cite{approxdebug}
+\TODO{cite \cite{approxdebug} \cite{ringenburg-thesis}}
 
 
 
@@ -430,7 +430,7 @@ and efficient.
 Part~\ref{part:programming} describes three approaches to abstracting
 approximation in programming languages:
 EnerJ, a type system that uses type qualifiers to make approximation safe;
-DECAF, an extension of EnerJ's type system that adds probabilistic reasoning
+DECAF, an extension of EnerJ that adds probabilistic reasoning
 about the likelihood that data is correct;
 and probabilistic assertions, a strategy for efficiently verifying complex
 probabilistic properties via sampling.
