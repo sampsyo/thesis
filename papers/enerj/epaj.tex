@@ -2,42 +2,6 @@
 
 \section{Introduction}
 
-%%% The problem space.
-
-% Power is increasingly a first-order design constraint on
-% system components. In data centers, the cost of power and cooling
-% dominate the cost of equipment. In recent higher-performance mobile
-% consumer devices like smartphones, battery life is an important
-% constraint on the CPU design. Fundamentally, trends point toward a
-% ``utilization wall,'' in which the amount of active die area is
-% limited by how much power can be fed to a chip.
-
-Energy consumption is an increasing concern in many computer systems.
-%; from mobile phones to data-centers.
-Battery life is a first-order constraint in mobile systems, and
-power/cooling costs largely dominate the cost of equipment in
-data-centers. More fundamentally, current trends point toward a
-``utilization wall,'' in which the amount of active die area is
-limited by how much power can be fed to a chip.
-
-%% How exposing concerns at the programming model level makes sense.
-
-%There has been significant progress , where
-
-Much of the focus in reducing energy consumption has been
-on low-power architectures, performance/power trade-offs, and resource
-management. While those techniques are effective and can be applied
-without software knowledge, exposing energy considerations at the programming
-language level can enable a whole new set of energy
-optimizations. This work is a step in that direction.
-
-Recent research has begun to explore energy-accuracy trade-offs in
-general-purpose programs. A key observation is that systems spend a
-significant amount of energy guaranteeing correctness. Consequently, a
-system can save energy by exposing faults to the application.
-% As feature sizes decrease, this will only become more
-% true; more energy will be spent on detecting and recovering from
-% hardware faults.
 Many studies have shown that a variety of applications are resilient
 to hardware and software errors during execution
   \cite{li07, ersa, softcomputing,
@@ -69,16 +33,6 @@ checking properties at runtime. The key insight in this work is
 the application of type-based information-flow tracking~\cite{infflow-survey}
 ideas to address these problems.
 
-% However,
-% relying on manual identification of instructions and allocations is
-% not only unwieldy, it is prone to accidental corruption of critical
-% computations when approximate data leaks into the fundamental control
-% flow of the program. Ad-hoc programming models seeking to partition
-% the critical from non-critical program components are \emph{unsafe}:
-% they provide no guarantees about the correctness of programs with
-% approximate parts.
-
-\paragraph{Contributions.}
 This chapter proposes a model for approximate programming that is
 both \emph{safe} and \emph{general}. We use a type system that
 isolates the precise portion of the program from the
@@ -89,19 +43,6 @@ programmer permission.  Safety is
 statically enforced and no dynamic checks are
 required, minimizing the overheads imposed by
 the language.
-
-%% Our programming model allows \emph{general} forms of approximation:
-%% the programmer can take advantage of a wide range of concrete
-%% power-saving strategies offered implicitly by the
-%% architecture and compiler or explicitly by the program
-%% itself. Also, this single abstraction encapsulates both approximate
-%% data storage as well as approximate computation.
-%% % ; furthermore, the actual approximate computation may be either
-%% % implicit---implemented by the compiler or architecture---or
-%% % programmer-defined. %% Luis: Redundant with the power savings strategy sentence?
-%% Our programming model addresses the problem of
-%% distinguishing what may be approximated; it is generic with respect to
-%% the kind and degree of approximation.
 
 We present EnerJ, a language for principled approximate
 computing.
@@ -117,21 +58,6 @@ algorithmic approximation, in which the programmer produces different
 implementations of functionality for approximate and precise data.
 We formalize a core of EnerJ and prove a
 non-interference property in the absence of endorsements.
-
-% implement an approximable abstraction e.g., a class).
-
-% Our programming model is \emph{general}. A single abstraction unifies
-% approximate data storage, approximate computation and approximate
-% algorithms. Approximate computation may be implemented implicitly
-% ---by the compiler, runtime or hardware--- or explicitly by the
-% programmer.  Moreover, programmers can use any combination of these
-% techniques.  Abstractions can let clients choose whether an instance
-% is approximate or not without revealing the approximation techniques
-% used in the abstraction's implementation.  The model is also
-% \emph{high-level and portable}: The implementation (compiler, runtime
-% system, hardware) is entirely responsible for choosing the
-% energy-saving mechanisms to employ and when to do so, guaranteeing
-% correctness for precise data and ``best effort'' for the rest.
 
 Our programming model is \emph{general} in that it unifies approximate
 data storage, approximate computation, and approximate algorithms.
@@ -151,25 +77,6 @@ functional units. We have ported several applications to EnerJ to
 demonstrate that a small amount of annotation can allow a program to
 save a large amount of energy while not compromising quality of
 service significantly.
-
-\paragraph{Outline.}
-We first detail the EnerJ language extensions in
-Section~\ref{enerj:sec:typesys}. Section~\ref{enerj:semantics} formalizes a core of the
-language, allowing us to prove a non-interference property. The full
-formalism and proof are
-presented in an accompanying technical report \cite{EnerJ-TR}.
-Next,
-Section~\ref{enerj:sec:execution} describes hypothetical hardware for executing
-EnerJ programs.
-While other execution substrates are possible,
-this proposed model provides a basis for the evaluation in
-Sections~\ref{enerj:sec:impl} and~\ref{enerj:sec:res}; there, we assess
-EnerJ's expressiveness and potential energy savings.
-The type checker and simulation infrastructure used in our evaluation are
-available at \url{http://sampa.cs.washington.edu/}.
-Section~\ref{enerj:sec:rel} presents related work and
-Section~\ref{enerj:sec:conc} concludes.
-
 
 
 \section{A Type System for Approximate Computation}

@@ -1,33 +1,9 @@
 \section{Introduction}\label{accept:sec:intro}
 
-% Energy is an increasingly important consideration for system designers;
-% conserving energy enables longer battery life and lower chip temperatures.
-%
-Recent work on \emph{approximate computing} has exploited the fact that 
-many applications, particularly those whose outputs are meant for human
-interpretation, can enable more efficient execution at the cost of slightly
-inaccurate outputs. 3-D rendering, search, and machine learning
-are examples of the many tasks that tolerate inaccuracy.
-
-Research over the past few years has proposed a variety of software and hardware 
-approaches to approximate computing, including:
-%
-producing multiple versions of a program with varying accuracy and choosing
-between them at run
-time~\cite{green, dynamicknobs};
-%
-periodically skipping loop iterations~\cite{perforation, qosprof};
-%
-removing synchronization to reduce contention~\cite{dubstep, quickstep, races-ibm};
-%
-adjusting floating-point precision~\cite{precimonious};
-%
-using special low-power hardware
-structures that produce wrong results probabilistically~\cite{truffle, flikker};
-%
-and training hardware neural networks to mimic the behavior of costly
-functions~\cite{npu, anpu}.
-
+The term \emph{approximate computing} includes a diverse spectrum of
+implementation techniques, spanning both hardware and software:
+everything from adjusting numerical representations~\cite{precimonious}
+to exploiting analog circuits~\cite{anpu}.
 These proposals share an important distinction
 from traditional program optimizations:
 they have subtle and broad-ranging effects on safety, reliability, and output
@@ -78,7 +54,6 @@ To incorporate application insight, \sysname furnishes programmers with feedback
 to guide them toward better annotations.
 
 
-\paragraph{Contributions.}
 \sysname is an end-to-end framework that makes existing proposals for approximate
 program transformations practical and disciplined.
 Its contributions are:
