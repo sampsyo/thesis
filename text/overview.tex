@@ -300,16 +300,114 @@ hardware and developer tools.
 
 \subsection{An Approximate CPU and ISA}
 
-\cite{truffle}
+Truffle is a processor architecture that implements EnerJ's semantics to save
+energy~\cite{truffle}. It uses a secondary, subcritical voltage that allows timing errors in
+a portion of the logic and retention errors in a portion of the SRAM.
+We
+designed an ISA extension for approximate architectures that can serve as a
+target for EnerJ-like languages that provides approximation per instruction,
+per register, and per cache line.
+The architecture uses replicated functional units, one running at the nominal
+voltage and one running at the subcritical voltage, and steers instructions to the
+appropriate unit based on a flag in the instruction. Each row in the SRAMs for
+the register file and data cache carries a precision flag that controls the
+voltage sent to the row; instructions control the precision of each line
+dynamically by setting this flag.
+
+To evaluate the Truffle design,
+we reused the simulation infrastructure from the EnerJ evaluation and paired
+it with a extension of a standard architectural energy model~\cite{mcpat}.
+Results ranged from a 5\% energy efficiency \emph{loss} to a 43\%
+consumption reduction.
+
+These results emphasize the efficiency limits of very fine-grained
+approximation. Even in a maximally approximate program---in which every
+arithmetic instruction and every byte of memory is marked as
+approximate---much of Truffle's energy is spent on precise work. Fetching
+code, scheduling instructions, indexing into SRAMs, computing addresses, and
+tracking precision state all must be performed reliably to avoid violating
+the semantics of the EnerJ-like ISA.
+Modern processors spend as much energy on
+control as they do on computation itself, so any technique that optimizes only
+computation will quickly encounter Amdahl's law.
+
+Together, EnerJ and Truffle illustrate an essential shortcoming of
+fine-grained approximation: it conservatively avoids relaxing \emph{control}
+in terms of both the program (e.g., pointers and control flow) and the
+execution substrate (e.g., fetch and decode).
 
 \subsection{Neural Acceleration}
 
-\cite{npu}
+Neural Processing Units represent a hybrid compiler--accelerator approach to
+the problem of approximation granularity~\cite{npu}. The technique relaxes a
+pure-functional portion of a program---a pure C function, in our
+implementation---by observing its input/output behavior in a set of test runs.
+This empirical characterization of the function is used to train a function
+approximator based on an artificial neural network. Since neural networks have
+efficient hardware implementations, the transformed function can be much
+faster and lower-power than the original code. We designed a hardware neural
+network accelerators to unlock these potential gains in transformed programs.
+
+The NPU technique distinguishes itself from EnerJ and Truffle by applying
+approximation based on observed inputs and outputs rather than the structure
+of the code itself. This approach removes many practical restrictions on the
+granularity of approximation: any computation with well-defined inputs and
+outputs is a candidate for NPU-based relaxation. In our evaluation, we were
+able to transform code regions that contained complex control flow, memory
+allocation, and pointer arithmetic---all of which EnerJ and Truffle would have
+classified as precise. As a result, our simulations demonstrated a 3$\times$
+average energy reduction---far better than our results for Truffle.
+
+But the coarser granularity comes at a cost of programmer visibility and
+control. Since the NPU technique treats the target code as a black box, the
+programmer has no direct influence over the performance and accuracy of the
+resulting neural network. Instead, the programmer has to try applying the
+transformation to a variety of candidate functions and hope that some will
+yield a profitable accuracy--efficiency trade-off.
+This shortcoming demonstrates a tension in my work so far between
+programmability and efficiency.
+
+TODO: also cite
 \cite{snnap}
-\cite{anpu}
 
 \subsection{Monitoring and Debugging Quality}
 
+I recently worked on a tool that addresses the programmability challenge posed
+by nondeterministic approximation. Since testing can never capture
+the full set of possible dynamic executions, uncertainty necessarily remains
+when deploying software that can, via probabilistic behavior, go arbitrarily
+wrong. Worse, even executions on the identical inputs can result in
+widely varying result quality. Our system constrains the possible impacts of
+nondeterministic approximation by directly measuring them and raising a
+runtime exception when quality is degraded beyond a threshold. The program can
+respond by re-executing the approximate computation or increasing its
+precision level.
+
+The central challenge of this work is the design of monitoring strategies that
+are cheap enough to leave enabled in production. When performance is no object,
+as it is during development, it suffices to use high-overhead approaches like our
+own earlier work on prototyping and autotuning~\cite{enercaml} and Misailovic
+\etal's profiler~\cite{qosprof}.
+While no single low-overhead approach
+generalizes to all approximate computations, we identify three strategies that
+vary in their overhead, the kinds of computations they can monitor, and the
+strength of their guarantees.
+
+Our approaches have low overhead partially because they apply to
+coarse-grained regions of code. Instead of checking the effects of
+approximation after every arithmetic operation or when reading from any
+approximate variable, we require the programmer to specify quality in terms of
+the output of an entire approximate computation. This granularity choice
+results in infrequent checks and allows programmers to write quality
+evaluation where it is most natural: only at variables that represent outputs, not intermediate
+values.
+
+One important takeaway from this work is the utility of dynamic enforcement
+to constrain the effects of nondeterminism and unknown probabilities. While
+static analysis is infeasible when the pattern of approximation is unknown,
+dynamic techniques can directly observe and cope with nondeterministic events.
+
+TODO: cite
 \cite{approxdebug}
 
 
