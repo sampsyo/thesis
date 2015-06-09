@@ -82,7 +82,29 @@ specification, approximate-computing tools start with a quality metric.
 
 \paragraph{Safety vs.~quality.}
 
-The EnerJ type system in Chapter~\ref{ch:enerj} 
+At first glance, a quality metric seems like sufficient information to specify
+an application's constraints on approximation.
+If the system can guarantee that a program's output will always have a quality
+score above $q$, and the programmer decides that $q$ is good enough, what
+could possibly go wrong?
+
+In reality, it can be difficult or impossible for systems to prove arbitrary
+quality bounds with perfect certainty.
+Realistic tools can often only certify, for example, that any output's quality
+score will be at least $q$ \emph{with high probability},
+or that \emph{nearly every output} will exceed quality $q$ but rare edge cases
+may do worse.
+Even more fundamentally, it can be difficult for programmers to devise formal
+quality metrics that capture every possible factor in their intuitive notion
+of output quality.
+Quality metrics can be simpler if their scope is narrowed to data where they
+are most relevant: the pixels in an output image, for example, but not the
+header data.
+
+To that end, this dissertation embraces \emph{safety} as a separate concept
+from quality.
+\TODO{What do these mean?}
+The EnerJ type system in Chapter~\ref{ch:enerj}
 
 \paragraph{Programming with probabilistic reasoning.}
 
@@ -101,14 +123,14 @@ their results combined, the impact on the computation is even more obscure.
 Understanding and controlling probabilistic system components is critical to
 composing them to do useful work.
 
-\paragraph{Granularity and efficiency.}
+\paragraph{Granularity of approximation.}
 
 When approximate computing is introduced in the context of a traditional
 programming model, there are several choices for the kinds of computations
 that are optimized with approximation. A system can approximate a whole
 program or algorithm at once, a discrete program component like a function,
 loop, or block, or individual operations (e.g., instructions).
-Approximating an entire algorithm 
+Approximating an entire algorithm
 offers a large window of potential relaxations,
 requiring only that a transformed version of the algorithm produce outputs
 acceptably similar to the original.
