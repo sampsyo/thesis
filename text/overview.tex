@@ -120,22 +120,31 @@ complement EnerJ's safety constraints.
 
 \subsection{Programming with Probabilistic Reasoning}
 
-To support effective reasoning about approximation and quality,
-programming models need to incorporate abstractions for statistical behavior.
-\TODO{Chapters~\ref{ch:decaf} and~\ref{ch:passert}}
+Often, the most natural ways to reason about approximation and quality use
+probabilistic tools.
+Probabilistic reasoning lets us show show statements such as \emph{this output
+will be high-quality with at least probability $P$} or \emph{an input randomly
+selected from this distribution leads to a high-quality output with
+probability $P'$}.
+These probabilistic statements can simultaneously match the nondeterministic behavior
+of approximate systems~\cite{truffle, npu, approxstorage}
+and correspond to software quality criteria~\cite{decaf, passert}.
 
-Many of the techniques available for exploiting approximate applications do so
-nondeterministically. For example, a low-voltage functional unit that allows
-timing errors will compute correctly for most invocations but will produce wrong
-answers with low probability. But the distribution is rarely uniform: the
-probability and pattern of errors in an overclocked functional unit depends on
-its input and different output bits will have different probabilities of being
-correct. When multiple probabilistic components are invoked repeatedly and
-their results combined, the impact on the computation is even more obscure.
-Understanding and controlling probabilistic system components is critical to
-composing them to do useful work.
+To support reasoning about quality, approximate
+programming models need to incorporate abstractions for statistical behavior.
+The DECAF type system, in Chapter~\ref{ch:decaf}, and
+probabilistic assertions, in Chapter~\ref{ch:passert}}, represent two
+complementary approaches to reasoning about probabilistic quality
+properties.
+
+These approaches dovetail with the recent expansion of interest in
+\emph{probabilistic programming languages}, which seek to augment
+machine-learning techniques with language abstractions~\cite{church}.
+Approximate programming systems can adapt lessons from this body of research.
 
 \subsection{Granularity of Approximation}
+
+\TODO{rewrite}
 
 When approximate computing is introduced in the context of a traditional
 programming model, there are several choices for the kinds of computations
