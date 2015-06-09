@@ -272,11 +272,19 @@ functions according to the accuracy constraints of their calling contexts.
 
 \subsubsection{Probabilistic Assertions}
 
-more general but weaker guarantees
+DECAF's approach to controlling quality achieves strong probabilistic
+guarantees by constraining the range of possible approximation strategies:
+it works only with techniques where errors appear at an operation granularity;
+whey they occur randomly but rarely; and when the error probability is
+independent of the input values.
 
-dedicated (non-type) language construct
+A complementary project takes the opposite approach:
+it allows arbitrary probabilistic behavior
+at the cost of weaker guarantees.
+\TODO{finish}
 
-not just about approximation
+\TODO{ dedicated (non-type) language construct --
+not just about approximation}
 
 \subsection{Exploiting Resilience for Efficiency}
 
