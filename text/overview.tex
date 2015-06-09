@@ -184,10 +184,15 @@ safely apply coarse-grained optimizations.
 
 \section{Abstractions for Disciplined Approximation}
 
-\TODO{Finish the overview. What goes here?}
+This dissertation supports the above research principles using a set of
+concrete system designs.
+The systems comprise programming-language constructs that express
+applications' resilience to approximation along with system-level
+techniques for exploiting that latent resilience to gain efficiency.
+This section serves as an overview of the interlocking designs;
+Parts~\ref{part:programming} and~\ref{part:systems} give the full details.
 
-\subsection{EnerJ: Safely Programming Approximate Systems}
-\label{sec:prelim:enerj}
+\subsection{Controlling Safety and Quality}
 
 EnerJ is a type system for expressing programs' resilience to approximate
 execution~\cite{enerj}. In EnerJ, programmers distinguish between the precise
@@ -256,7 +261,11 @@ distribution of errors---than others. Programmers must pessimistically
 assume a worst-case approximate execution and therefore treat components with
 intermediate error resilience as precise.
 
-\subsection{Approximate Storage in Flash and Phase-Change Memory}
+\TODO{DECAF and passert}
+
+\subsection{Exploiting Resilience for Efficiency}
+
+% \subsection{Approximate Storage in Flash and Phase-Change Memory}
 
 Recently, I worked on a project that exploits the unique properties of
 solid-state memory technologies, such as flash and phase-change memory,
@@ -290,8 +299,8 @@ further benefits. Exposing these properties to the programmer, for instance,
 contrasts with EnerJ's simplistic approach of completely obscuring error
 information but could enable more approximation opportunities.
 
-\subsection{ACCEPT: An Approximate Compiler}
-\label{sec:prelim:accept}
+% \subsection{ACCEPT: An Approximate Compiler}
+% \label{sec:prelim:accept}
 
 I am currently working on a compiler-based approach to optimizing approximate
 programs, called ACCEPT (for Approximate C Compiler for Energy and Performance
