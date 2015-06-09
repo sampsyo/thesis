@@ -241,7 +241,34 @@ mechanisms, EnerJ keeps its type system simple.
 
 \subsubsection{Extending EnerJ with Probability Types}
 
-DECAF, in \chref{decaf},
+DECAF, in \chref{decaf}, extends EnerJ's type-based approach to safety with
+quality guarantees.
+The idea is to generalize the original \code{@Approx} type qualifier to a
+parameterized qualifier \code{@Approx($p$)}, where $p$ dictates the
+\emph{degree} of approximation.
+Specifically, in DECAF, $p$ is the lower bound on the probability that a value
+is \emph{correct:} that the value in an approximate execution equals its
+counterpart in a completely precise execution of the same program.
+DECAF defines sound type rules for introducing and propagating these
+correctness probabilities.
+
+DECAF's added sophistication over EnerJ's simple two-level system comes at a
+cost in complexity:
+a type system that requires probability annotations on every expression,
+however, would quickly become infeasible for programmers.
+To mitigate annotation overhead, DECAF adds type inference.
+Sparse probability annotations on the inputs and outputs of coarse-grained
+subcomputations are typically enough for DECAF's inference system to determine
+the less-intuitive probabilities for intermediate values.
+Crucially, DECAF places no constraints on where programmers can write explicit
+annotations:
+developers can write probabilities where they make the most sense and leave
+the remaining details to the compiler.
+
+DECAF addresses the limitations of a conservative quality analysis using
+an optional dynamic-tracking mechanism.
+The inference system also allows efficient code reuse by specializing
+functions according to the accuracy constraints of their calling contexts.
 
 \subsubsection{Probabilistic Assertions}
 
