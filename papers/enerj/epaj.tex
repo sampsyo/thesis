@@ -574,13 +574,16 @@ subclassing.
 
 The following rules define the ordering of precision qualifiers:
 
-\vspace{0.5ex}
+\vspace{1.0ex}
 \noindent
 \begin{ottdefnblock}[#1]{$ \ottnt{q} \  \textsf{$<:_{\mathrm{q}}$} \  \ottnt{q'} $}{\ottcom{ordering of precision qualifiers}}
+\begin{centering}
 \ottusedrule{\ottdruleqqXXlost{}} \hspace{1em}
 \ottusedrule{\ottdruleqqXXtop{}} \hspace{1em}
 \ottusedrule{\ottdruleqqXXrefl{}}\\
+\end{centering}
 \end{ottdefnblock}
+\vspace{1.5ex}
 
 \noindent
 Recall that \top{} qualifies the common supertype of \precise{} and
@@ -637,13 +640,16 @@ declared types.
 
 Given a static environment, expressions are typed as follows:
 
-\vspace{0.5ex}
+\vspace{1.0ex}
 \noindent
 \begin{ottdefnblock}[#1]{$ \mathit{ {^s}\!\Gamma} \  \textsf{$\vdash$} \  \ottnt{e} \  \textsf{:} \  T $}{\ottcom{expression typing}}
+\begin{centering}
 \ottusedrule{\ottdruletrXXread{}}\\[2mm]
 \ottusedrule{\ottdruletrXXwrite{}}\\[2mm]
 \ottusedrule{\ottdruletrXXcond{}}\\
+\end{centering}
 \end{ottdefnblock}
+\vspace{1.5ex}
 
 A field read determines the type of the receiver expression and then
 uses FType to determine the adapted type of the field.
@@ -676,14 +682,17 @@ $v$.
 The runtime system of FEnerJ defines a standard big-step operational
 semantics:
 
-\vspace{0.5ex}
+\vspace{1.0ex}
 \noindent
 \begin{ottdefnblock}[#1]{$ \mathit{ {^r}\!\Gamma} \  \textsf{$\vdash$} \  \ottnt{h} ,  \ottnt{e} \ \leadsto\  \ottnt{h'} ,  v $}{\ottcom{big-step operational semantics}}
+\begin{centering}
 \ottusedrule{\ottdruleosXXread{}}\\[1mm plus 1mm minus .5mm]
 \ottusedrule{\ottdruleosXXwrite{}}\\[1mm plus 1mm minus .5mm]
 \ottusedrule{\ottdruleosXXcondXXt{}}\\[1mm plus 1mm minus .5mm]
 \ottusedrule{\ottdruleosXXcondXXf{}}\\
+\end{centering}
 \end{ottdefnblock}
+\vspace{1.5ex}
 
 \noindent
 These rules reflect precise execution with conventional precision
@@ -819,7 +828,7 @@ our assumed hardware model.
 
 \begin{figure}[t]
   \centering
-    \includegraphics[width=\columnwidth]{figs/hwmodel.pdf}
+    \includegraphics[width=0.85\columnwidth]{figs/hwmodel.pdf}
       \caption{Hardware model assumed in our system. Shaded areas indicate
         components that support approximation.
         Registers and the data cache have SRAM storage cells that
@@ -918,7 +927,7 @@ our simulations, which we describe later. The techniques are summarized
 in Table~\ref{enerj:table:approximations}.
 
 
-\paragraph{Voltage scaling in logic circuits} Aggressive voltage
+\paragraph{Voltage scaling} Aggressive voltage
 scaling can result in over $30\%$ energy reduction with
 $\sim \! 1\%$ error rate~\cite{razor} and $22\%$ reduction with
 $\sim \! 0.01\%$ error rate.  Recent work~\cite{hpca10cam,relax} proposed to
@@ -930,7 +939,7 @@ error model, the choices are single bit flip, last value, and random
 value. We consider all three but our evaluation mainly depicts the
 random-value assumption, which is the most realistic.
 
-\paragraph{Width reduction in floating point operations}
+\paragraph{Floating point operation width}
 A direct approach to approximate arithmetic operations on floating point values
 is to ignore part of the mantissa in the operands. As observed in
 \cite{bitwidthred}, many applications do not need the full mantissa.
@@ -958,7 +967,7 @@ probability approximately $10^{-5}$. We conservatively assume this error
 rate for the reduced refresh rate of 1~Hz.
 
 \paragraph{SRAM supply voltage}
-Registers and data caches consist of static RAM (SRAM)
+Registers and data caches in modern CPUs consist of static RAM (SRAM)
 cells. Reducing the supply voltage to SRAM cells lowers the leakage
 current of the cells but decreases the data integrity~\cite{drowsycaches}. As
 examined by Kumar~\cite{sramthesis}, these
@@ -1037,9 +1046,8 @@ Java, including arrays and generics.
 We also implement a simulation infrastructure that emulates an
 approximate computing architecture as described in Section~\ref{enerj:sec:execution}.
 \footnote{The EnerJ type checker and simulator
-are available from
-our website:
-\url{http://sampa.cs.washington.edu/sampa/EnerJ}
+are available online:
+\url{http://sampa.cs.washington.edu/research/approximation/enerj.html}
 }
 
 \subsection{Type Checker}
@@ -1103,7 +1111,7 @@ approximate integer divide-by-zero returns zero.
 % involved in a proposed new hardware approximation.
 
 \subsection{Approximations}
-Our simulator implements the approximation strategies described in
+Our simulator implements the set of approximation techniques enumerated in
 Section~\ref{enerj:strategies}. Table~\ref{enerj:table:approximations} summarizes the
 approximations used, their associated error probabilities, and their
 estimated energy savings.
@@ -1172,11 +1180,10 @@ settings. %, as energy is an important constraint in both
           %environments. %% Already said in intro.
 
 \begin{table}
-\small
-\begin{center}
-\input{results/applications_table}
-\vspace{-1ex}
-\end{center}
+\footnotesize
+\makebox[\textwidth][c]{%
+\input{results/applications_table}%
+}
 \caption{Applications used in our evaluation,
 application-specific metrics for quality of service, and
 metrics of annotation density. ``Proportion FP''
@@ -1254,8 +1261,9 @@ is correct and $1$ otherwise. %when it is incorrect.
 \subsection{Energy Savings}
 
 \begin{figure}
+\center
+\sffamily
 \input{results/approximateness_chart}
-\vspace{-4ex} % mysterious gap\
 \caption{Proportion of approximate storage and computation in each benchmark.
 For storage (SRAM and DRAM) measurements, the bars
 show the fraction of byte-seconds used in storing approximate data.
@@ -1265,8 +1273,9 @@ that were executed approximately.}
 \end{figure}
 
 \begin{figure}
+\center
+\sffamily
 \input{results/energy_chart}
-\vspace{-4ex} % mysterious gap
 \caption{Estimated CPU/memory system energy consumed for
 each benchmark. The bar labeled ``B'' represents the baseline value:
 the energy consumption for the program running without approximation.
@@ -1292,7 +1301,8 @@ exception with a significant fraction of integer approximation; this is
 because it uses integers to represent pixel values, which are amenable
 to approximation.
 
-DRAM and SRAM approximation is measured in byte-seconds.
+DRAM and SRAM approximation is quantified the proportion of byte-seconds in
+the execution.
 The data shows that
 both storage types are frequently used in approximate
 mode. Many applications have DRAM approximation rates
@@ -1364,8 +1374,9 @@ to their inherent imprecision.
 
 \subsection{Quality-of-Service Tradeoff}
 \begin{figure}
+\center
+\sffamily
 \input{results/sensitivity_chart}
-\vspace{-4ex} % mysterious gap
 \caption{Output error for three different levels of approximation varied
 together. Each bar represents the mean error over 20 runs.}
 \label{enerj:fig:sensitivity}
@@ -1398,7 +1409,7 @@ precise one.
 
 We also measured the relative impact of various approximation
 strategies by running our benchmark suite with each optimization enabled in
-isolation. DRAM errors have a nearly negligible impact on application output;
+isolation. The DRAM errors we modeled have a nearly negligible impact on application output;
 floating-point bit width reduction similarly results in at most 12\% QoS loss
 in the Aggressive configuration. SRAM write errors are much more detrimental to
 output quality than read upsets. Functional unit voltage reduction had the
@@ -1448,10 +1459,18 @@ during image processing) but precise matrices in other settings (e.g., in
 checksum calculation). Similarly, the jMonkeyEngine benchmark uses a
 \ilcode{Vector3f} class for much of its computation, which we marked
 as approximable.
-In this setting, approximate vector declarations
-(\ilcode{@Approx Vector3f v})
+In this setting, approximate vector declarations:
+%
+\begin{lstlisting}
+@Approx Vector3f v;
+\end{lstlisting}
+%
 are syntactically identical to
-approximate primitive-value declarations (\ilcode{@Approx int i}).
+approximate primitive-value declarations:
+%
+\begin{lstlisting}
+@Approx int i;
+\end{lstlisting}
 
 We found that the \ilcode{@Context} annotation helped us to approach program
 annotation incrementally. A commonly-used class that is a target for
@@ -1462,8 +1481,8 @@ necessary. The programmer can then update the clients individually to use the
 approximate version of the class rather than addressing the whole program at
 once.
 
-An opportunity for algorithmic approximation also arose in ZXing. The
-\ilcode{BitArray} approximable class contains a method \ilcode{isRange} that
+An opportunity for algorithmic approximation also arose in ZXing. The approximable class
+\ilcode{BitArray} contains a method \ilcode{isRange} that
 takes two indices and determines whether all the bits between the
 two indices are set. We implemented an approximate version of the method that
 checks only some of the bits in the range by skipping some loop iterations.
