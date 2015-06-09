@@ -38,72 +38,70 @@ memory to be preserved at the same level of reliability.
 the accuracy in system abstractions with the needs of approximate
 programs.
 
-\paragraph{Order from chaos.}
+
+\section{Abstractions for Disciplined Approximation}
+
 The central challenge in approximate computing is forging abstractions that
 make imprecision \emph{controlled and predictable} without sacrificing its
 efficiency benefits.
-Without constraints, approximation risks making programming intractable.
-My
-research focuses on techniques that collaborate with the programmer to balance
-efficiency and correctness.
-
-This dissertation designs hardware and software to support approximation-aware abstractions.
-
-My work so far in this area has explored disciplined approximate programming
-in the context of programming languages, CPU architecture, hardware
-acceleration, storage technologies, profile-driven compilation, and programmer
+This goal of this dissertation is to design hardware and software around
+approximation-aware abstractions that, together, make accuracy--efficiency
+trade-offs attainable for programmers.
+My work examines approximate abstractions
+in the contexts of programming languages, computer architecture,
+memory technologies, compilers, and software development
 tools.
 
+\subsection{Research Principles}
 
-\section{Disciplined Approximation in Hardware and Software}
+The work in this dissertation is organized around a collection of principles
+for the design of disciplined approximate abstractions.
+These themes represent the collective findings of the concrete research
+projects described later.
 
-I plan to demonstrate in my dissertation that \textit{familiar programming
-models can incorporate approximate computing in a way that enables large
-efficiency gains without introducing unworkable complexity into the
-development process}. There are two broad components to this thesis: the
-design of programming languages and tools that safely incorporate approximate
-semantics; and the implementation of efficient, approximate systems that match
-those semantics. My dissertation will focus on co-designing these two
-components with the goal of gaining efficiency without sacrificing
-programmability.
+\paragraph{Result quality is application specific.}
 
+Since approximate computing navigates trade-offs between efficiency and result
+quality, it needs definitions of both sides of the balance.
+While \emph{efficiency} can have universal definitions---the time to
+completion, for example, or the number of joules consumed---output
+\emph{quality} is more subtle.
+A key tenet in this work is is that applications must define ``output
+quality'' case by case:
+the platform cannot define quality without information from the programmer.
 
+Following this philosophy, the system designs in this dissertation assume that
+each approximate program comes with a \emph{quality metric}, expressed as
+executable code, that scores the program's output on a continuous scale from
+0.0 to 1.0.
+A quality metric is the approximate-computing analog to a traditional software
+\emph{specification}, which typically makes a binary decision about whether an
+implementation is correct or incorrect.
+Just as ordinary verification and optimization tools start from a
+specification, approximate-computing tools start with a quality metric.
 
-In this section, I enumerate my completed and in-progress work on
-disciplined approximate programming. The purpose of this section is to set the stage
-for my proposed work by distilling lessons from the successes and shortcomings
-of my prior work.unrelated 
-To focus on the work most relevant to my thesis topic, I omit some ongoing
-research that I am partially involved in to varying degrees. These include
-projects on analog neural networks, neural networks on FPGAs, and approximate
-wireless networking.
-I also omit my unrelated work on safe parallel programming and
-performance analysis for mobile Web browsers.
+\paragraph{Safety vs.~quality.}
 
-My work concerns the incorporation of approximate computing
-into traditional execution models, existing
-languages, and legacy software.
-(A different approach, resembling probabilistic
-programming~\cite{church}, would eschew traditional semantics for a completely
-new programming model.)
-I see the three themes of \emph{programmability},
-\emph{granularity}, and \emph{nondeterminism} as underlying my work in this
-area.
+The EnerJ type system in Chapter~\ref{ch:enerj} 
 
-\paragraph{Programmability and safety.}
+\paragraph{Programming with probabilistic reasoning.}
 
-Imprecise results pose a threat to the feasibility of writing correct
-programs. Clearly, a programming model in which arbitrary, incorrect results
-are possible for any operation is too difficult to program. The programming
-language and its associated runtime systems need to provide tools that let
-programmers describe software's latent resilience to approximation. At the
-same time, these tools must not add
-untenable
-complexity to the practice of software development. In my work, these
-tools are in the form of lightweight extensions to traditional programming
-languages.
+To support effective reasoning about approximation and quality,
+programming models need to incorporate abstractions for statistical behavior.
+\TODO{Chapters~\ref{ch:decaf} and~\ref{ch:passert}}
 
-\paragraph{Granularity and composability.}
+Many of the techniques available for exploiting approximate applications do so
+nondeterministically. For example, a low-voltage functional unit that allows
+timing errors will compute correctly for most invocations but will produce wrong
+answers with low probability. But the distribution is rarely uniform: the
+probability and pattern of errors in an overclocked functional unit depends on
+its input and different output bits will have different probabilities of being
+correct. When multiple probabilistic components are invoked repeatedly and
+their results combined, the impact on the computation is even more obscure.
+Understanding and controlling probabilistic system components is critical to
+composing them to do useful work.
+
+\paragraph{Granularity and efficiency.}
 
 When approximate computing is introduced in the context of a traditional
 programming model, there are several choices for the kinds of computations
@@ -122,18 +120,7 @@ instructions allows direct programmer control over imprecision. But it can
 obscure the ways that local error patterns compose to affect the whole
 program.
 
-\paragraph{Nondeterminism and probabilities.}
-
-Many of the techniques available for exploiting approximate applications do so
-nondeterministically. For example, a low-voltage functional unit that allows
-timing errors will compute correctly for most invocations but will produce wrong
-answers with low probability. But the distribution is rarely uniform: the
-probability and pattern of errors in an overclocked functional unit depends on
-its input and different output bits will have different probabilities of being
-correct. When multiple probabilistic components are invoked repeatedly and
-their results combined, the impact on the computation is even more obscure.
-Understanding and controlling probabilistic system components is critical to
-composing them to do useful work.
+\TODO{Finish the overview. Probably two sections: software and hardware?}
 
 \subsection{EnerJ: Safely Programming Approximate Systems}
 \label{sec:prelim:enerj}
