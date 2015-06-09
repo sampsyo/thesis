@@ -113,10 +113,11 @@ program components deviate from their precise counterparts.
 In practice, we find a first-order distinction between \emph{no approximation at
 all} and \emph{approximation of some nonzero degree} both simplifies reasoning
 for programmers and makes tools more tractable.
-The EnerJ type system in \chref{enerj} embodies this distinction by
-building an abstraction for safety properties.
-The quality-focused mechanisms in \plurchref{decaf} and~\ref{ch:passert}
-complement EnerJ's safety constraints.
+My work has demonstrated that the two kinds of properties can be amenable to
+very different techniques:
+information flow tracking (\chref{enerj}) is appropriate for safety, for
+example, but statistical hypothesis testing (\chref{passert}) is better for
+quality.
 
 \subsection{Programming with Probabilistic Reasoning}
 
@@ -194,78 +195,73 @@ Parts~\ref{part:programming} and~\ref{part:systems} give the full details.
 
 \subsection{Controlling Safety and Quality}
 
-EnerJ is a type system for expressing programs' resilience to approximate
-execution~\cite{enerj}. In EnerJ, programmers distinguish between the precise
-portion of a program---those that should carry traditional semantics---and
-parts that can safely be relaxed. EnerJ's type system borrows from static data
-flow systems for security (seminally, Jif~\cite{jif}) to provide a static
-noninterference guarantee for precise data. Using EnerJ, programmers can rely
+The first set of projects consists of language abstractions that give
+programmers control over safety and quality in approximate programs.
+
+\subsubsection{Information Flow Tracking for General Safety}
+
+EnerJ, described in \chref{enerj}, is a type system for enforcing safety in
+the presence of approximation.
+The key insight in EnerJ is that approximate programs tend to consist of two
+intermixed kinds of storage and computation:
+critical control components
+and non-critical data components.
+The latter, which typically form the majority of the program's execution,
+are good candidates for approximation,
+while the former should be protected from error and carry traditional
+semantics.
+
+EnerJ lets programmers enforce a separation between critical and non-critical
+components.
+It uses a type system that
+borrows from static data
+flow systems for security~\cite{jif} to provide a static
+noninterference guarantee for precise data.
+EnerJ extends Java with two type qualifiers, \code{@Approx} and
+\code{@Precise}, and uses a subtyping relationship to prevent
+approximate-to-precise information flow.
+Using EnerJ, programmers can rely
 on a proof that data marked as precise remains untainted by the errors arising
 from approximation.
 
-For EnerJ's evaluation, we annotated a variety of Java
-programs and simulated an array of hardware approximation techniques to assess
-their energy benefits and error impact. To assess the quality impact of
-approximate computing, we developed application-specific \emph{quality
-metrics} for each benchmark. A quality metric quantifies the application's
-output fidelity by comparing it to the output of a precise execution on a
-scale from 0.0 (completely useless) to 1.0 (identical to the pristine output).
-I reused this quality metric concept in all of my subsequent evaluations for
-later research. Quality measurement is critical to expressing programmer
-intent and user expectations; while I do not explore it, there is an
-opportunity for future work on helping programmers design good quality
-metrics.
+A key design goal in EnerJ is its \emph{generality:}
+the language aims to encapsulate a range of approximation strategies under a
+single abstraction.
+Its type system covers approximate storage via the types of variables and
+fields;
+approximate processor logic via overloading of arithmetic operators;
+and even user-defined approximate algorithms using dynamic method dispatch
+based on its approximating qualifiers.
 
-EnerJ's focus is on programmability. Using a lightweight, conceptually simple
-annotation set, EnerJ programs can express approximation opportunities in
-arithmetic operations, data elements, and algorithm selection. Programmers can
-take advantage of a collection of disparate hardware approximation techniques
-without reasoning carefully about the semantics of each. And its static
-guarantees help quarantine the approximate component's nondeterminism while
-incurring no runtime overhead.
+EnerJ addresses safety, not quality:
+a variable with the type \code{@Approx float} can be arbitrarily incorrect and
+EnerJ does not seek to bound its incorrectness.
+By leaving the complementary concern of controlling quality to separate
+mechanisms, EnerJ keeps its type system simple.
 
-In retrospect, EnerJ's programming model has two important limitations. First,
-by providing approximation at a very fine grain---individual instructions and
-cache lines---EnerJ constrains the parts of a program that can be
-considered approximate. For example, consider this function (adapted from the original
-paper) that computes the average of a list of numbers:
+\subsubsection{Extending EnerJ with Probability Types}
 
-\begin{lstlisting}
-@Approx float[] nums;
-...
-@Approx float total = 0.0;
-for (int i = 0; i < nums.length; ++i)
-  total += nums[i];
-return total / nums.length;
-\end{lstlisting}
+DECAF, in \chref{decaf},
 
-The programmer has marked the input data, \ilcode{nums}, and the intermediate
-variable \ilcode{total}, as approximate.
-The loop iteration variable, \ilcode{i}, is implicitly marked as precise. This
-is compulsory under EnerJ's semantics: since approximate variables can take
-arbitrary values, approximating \ilcode{i} could lead to out-of-bounds errors
-and even nontermination. (This is why EnerJ forbids approximate values from
-being used in control flow and array indexing.) But a good approximation
-of this code does not need perfectly precise iteration over \ilcode{nums}: an
-acceptable computation could sample nondeterministically from the array.
-Here, EnerJ's fine-grained approach to approximation forces it to be
-conservative.
+\subsubsection{Probabilistic Assertions}
 
-Second, EnerJ does not expose any information about probabilities to the
-programmer. We made this design choice intentionally to allow EnerJ's
-semantics to generalize over a wide variety of implementation techniques. But
-while we need an initial distinction between critical components and those
-that can tolerate even a small amount of error, opportunity is lost when
-different parts of a program can tolerate more error---or even a different
-distribution of errors---than others. Programmers must pessimistically
-assume a worst-case approximate execution and therefore treat components with
-intermediate error resilience as precise.
+more general but weaker guarantees
 
-\TODO{DECAF and passert}
+dedicated (non-type) language construct
+
+not just about approximation
 
 \subsection{Exploiting Resilience for Efficiency}
 
-% \subsection{Approximate Storage in Flash and Phase-Change Memory}
+The second category of research is on the implementation of systems that
+exploit programs' tolerance for approximation to improve efficiency.
+This dissertation describes two projects: an architectural technique and an
+end-to-end compiler toolchain.
+A primary concern in both systems is exposing an abstraction that fits with
+the safety and quality constraints introduced in the above language
+abstractions.
+
+\subsubsection{Approximate Storage for Solid-State Memory Technologies}
 
 Recently, I worked on a project that exploits the unique properties of
 solid-state memory technologies, such as flash and phase-change memory,
@@ -299,8 +295,7 @@ further benefits. Exposing these properties to the programmer, for instance,
 contrasts with EnerJ's simplistic approach of completely obscuring error
 information but could enable more approximation opportunities.
 
-% \subsection{ACCEPT: An Approximate Compiler}
-% \label{sec:prelim:accept}
+\subsubsection{ACCEPT: An Approximate Compiler}
 
 I am currently working on a compiler-based approach to optimizing approximate
 programs, called ACCEPT (for Approximate C Compiler for Energy and Performance
