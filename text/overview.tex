@@ -103,8 +103,20 @@ header data.
 
 To that end, this dissertation embraces \emph{safety} as a separate concept
 from quality.
-\TODO{What do these mean?}
-The EnerJ type system in Chapter~\ref{ch:enerj}
+A safety property, in the context of approximate computing, is a guarantee
+that part of a program \emph{never} deviates from its precise counterpart---in
+other words, that it matches the semantics of a traditional, non-approximate
+system.
+A quality property, in contrast, constrains the \emph{amount} that approximate
+program components deviate from their precise counterparts.
+
+In practice, we find that distinguishing between \emph{no approximation at
+all} and \emph{approximation of some nonzero degree} both simplifies reasoning
+for programmers and makes tools more tractable.
+The EnerJ type system in Chapter~\ref{ch:enerj} embodies this distinction by
+building an abstraction for safety properties.
+The quality-focused mechanisms in Chapters~\ref{ch:decaf} and~\ref{ch:passert}
+complement EnerJ's safety constraints.
 
 \paragraph{Programming with probabilistic reasoning.}
 
