@@ -20,7 +20,7 @@ components~\cite{enerj}.
 As in EnerJ, all types in \sysname are qualified as either \emph{approximate} or
 \emph{precise}, with precise being the default.
 
-\paragraph{Information flow and endorsement.}
+\paragraph{Information flow and endorsement}
 \sysname's type system uses a standard information-flow
 approach to prevent approximate data from affecting precise data.
 %
@@ -57,7 +57,7 @@ cheapChecksumPrecise(ENDORSE(a));
 Endorsements give programmers explicit control over information flow
 when dealing with approximate values.
 
-\paragraph{Pointer types.}
+\paragraph{Pointer types}
 For basic, non-reference types, \sysname's dialect of C allows unidirectional
 information flow: precise values can be assigned into approximate variables
 but not vice-versa. For pointers and references, however,
@@ -67,7 +67,7 @@ Pointer types are therefore invariant in the referent type.
 The language does not permit approximate pointers---i.e., addresses must be
 precise.
 
-\paragraph{Implicit flow.}
+\paragraph{Implicit flow}
 Control flow provides an avenue for approximate data to affect precise data
 without a direct assignment. For example, \lil{if (a) p = 5;} allows the
 variable \lil{a} to affect the value of \lil{p}.
@@ -76,7 +76,7 @@ conditions---specifically, in \lil{if}, \lil{for}, \lil{do}, \lil{while}, and
 \lil{switch} statements and in the ternary conditional-expression operator.
 Programmers can use endorsements to explicitly circumvent this restriction.
 
-\paragraph{Escape hatches.}
+\paragraph{Escape hatches}
 \sysname decides whether program relaxations are safe based on the
 \emph{effects} of the statements involved. Section~\ref{accept:sec:relaxations} goes
 into more detail, but at a high level, code can be relaxed if its externally

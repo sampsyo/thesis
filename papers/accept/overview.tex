@@ -33,7 +33,7 @@ feedback loops make \sysname's optimizations both controlled and practical.
 %
 %\sysname's workflow comprises three main components:
 
-\paragraph{Safety constraints and feedback.}
+\paragraph{Safety constraints and feedback}
 Because program relaxations can have outsize effects on program behavior,
 programmers need \emph{visibility} into---and \emph{control} over---the
 transformations the compiler applies.
@@ -48,7 +48,7 @@ constraining it.  Through annotation and feedback, the programmer iterates
 toward an annotation set that unlocks new performance benefits while relying on
 an assurance that critical computations are unaffected.
 
-\paragraph{Automatic program transformations.}
+\paragraph{Automatic program transformations}
 Based on programmer annotations, \sysname's compiler passes apply
 transformations that involve only approximate data.
 To this end,
@@ -59,7 +59,7 @@ identification to existing work
 on approximate program transformations~\cite{perforation, races-ibm,
 rinard-hotpar, quickstep, dubstep, npu, anpu}.
 
-\paragraph{Autotuning.}
+\paragraph{Autotuning}
 While a set of annotations may permit many different safe program relaxations,
 not all of them are beneficial.
 A practical system must help programmers choose from

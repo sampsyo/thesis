@@ -179,7 +179,7 @@ We find that this limitation is not cumbersome in practice.
 We also introduce a \ilcode{@Top} qualifier to denote the common
 supertype of \ilcode{@Approx} and \ilcode{@Precise} types.
 
-\paragraph{Semantics of approximation.}
+\paragraph{Semantics of approximation}
 EnerJ takes an all-or-nothing approach to approximation.
 Precise values carry traditional guarantees of correctness; approximate
 values have no guarantees. A more complex system could provide
@@ -250,7 +250,7 @@ approximately and thus may run on low-power hardware.
 Programmers can extend this concept by overloading methods with
 qualified parameter types.
 
-\paragraph{Bidirectional typing.}
+\paragraph{Bidirectional typing}
 The above approach occasionally applies precise operations where
 approximate operations would suffice. Consider the expression \ilcode{a = b + c}
 where \ilcode{a} is approximate but \ilcode{b} and \ilcode{c} are
@@ -565,7 +565,7 @@ For brevity, the discussion below presents only the
 rules for field reads, field writes, and conditionals.
 
 
-\paragraph{Subtyping.}
+\paragraph{Subtyping}
 Subtyping is defined using an ordering of the precision qualifiers and
 subclassing.
 
@@ -599,7 +599,7 @@ For primitive types, we additionally have that a precise type is a
 subtype of the approximate type as described in Section~\ref{enerj:types}.
 
 
-\paragraph{Context adaptation.}
+\paragraph{Context adaptation}
 
 We use \emph{context adaptation} to replace the \context{} qualifier
 when it appears in a field
@@ -630,7 +630,7 @@ invocation.
 Note that these use the adaptation rules described above.
 
 
-\paragraph{Type rules.}
+\paragraph{Type rules}
 
 The static type environment \sG{} maps local variables to their
 declared types.
@@ -843,7 +843,7 @@ energy. An approximation-aware ISA thus allows a single
 binary to benefit from new approximations as they are
 implemented in future microarchitectures.
 
-\paragraph{Layout of approximate data.} Our hardware model supports
+\paragraph{Layout of approximate data} Our hardware model supports
 approximate memory data at a cache line granularity, in which software
 can configure any line as approximate. This can be supported by having a
 bit per line in each page that indicates whether the corresponding line is
@@ -918,7 +918,7 @@ our simulations, which we describe later. The techniques are summarized
 in Table~\ref{enerj:table:approximations}.
 
 
-\paragraph{Voltage scaling in logic circuits.} Aggressive voltage
+\paragraph{Voltage scaling in logic circuits} Aggressive voltage
 scaling can result in over $30\%$ energy reduction with
 $\sim \! 1\%$ error rate~\cite{razor} and $22\%$ reduction with
 $\sim \! 0.01\%$ error rate.  Recent work~\cite{hpca10cam,relax} proposed to
@@ -930,7 +930,7 @@ error model, the choices are single bit flip, last value, and random
 value. We consider all three but our evaluation mainly depicts the
 random-value assumption, which is the most realistic.
 
-\paragraph{Width reduction in floating point operations.}
+\paragraph{Width reduction in floating point operations}
 A direct approach to approximate arithmetic operations on floating point values
 is to ignore part of the mantissa in the operands. As observed in
 \cite{bitwidthred}, many applications do not need the full mantissa.
@@ -945,7 +945,7 @@ energy per operation than a full 24-bit multiplier.
 
 % ftp://ftp.computer.org/press/outgoing/proceedings/Patrick/ADI/sc10%20usb%20drive/data/0000a193.pdf
 
-\paragraph{DRAM refresh rate.}
+\paragraph{DRAM refresh rate}
 Reducing the refresh rate of dynamic RAM leads to potential data decay
 but can substantially reduce power consumption with a low error rate.
 As proposed by Liu et al.~\cite{flikker}, an approximation-aware DRAM system
@@ -957,7 +957,7 @@ refreshed for 10 seconds experiences a failure with per-bit
 probability approximately $10^{-5}$. We conservatively assume this error
 rate for the reduced refresh rate of 1~Hz.
 
-\paragraph{SRAM supply voltage.}
+\paragraph{SRAM supply voltage}
 Registers and data caches consist of static RAM (SRAM)
 cells. Reducing the supply voltage to SRAM cells lowers the leakage
 current of the cells but decreases the data integrity~\cite{drowsycaches}. As
@@ -1186,7 +1186,7 @@ floating-point (as opposed to integer) operations.
 \label{enerj:table:applications}
 \end{table}
 
-\paragraph{Applications.} We evaluate the FPU-heavy kernels of the SciMark2 benchmark suite to
+\paragraph{Applications} We evaluate the FPU-heavy kernels of the SciMark2 benchmark suite to
 reflect scientific workloads.\footnote{SciMark2:
   \url{http://math.nist.gov/scimark2/}} ZXing is a bar code reader library
 targeted for mobile devices based on the Android operating
@@ -1209,7 +1209,7 @@ Raytracer is a simple 3D renderer; our workload executes
 ray plane intersection on a simple scene.\footnote{Raytracer:
 \url{http://www.planet-source-code.com/vb/scripts/ShowCode.asp?txtCodeId=5590&lngWId=2}}
 
-\paragraph{Annotation approach.} We annotated each application
+\paragraph{Annotation approach} We annotated each application
 manually. While many possible
 annotations exist for a given program, we attempted to strike a
 balance between reliability and energy savings. As a rule, however, we
@@ -1229,7 +1229,7 @@ beforehand, so our annotations did not depend on extensive domain
 knowledge. The annotations were not labor intensive.
 
 
-\paragraph{QoS metrics.} For each application, we measure the
+\paragraph{QoS metrics} For each application, we measure the
 degradation in output quality of approximate executions with respect
 to the precise executions. To do so, we define application-specific
 quality of service (QoS) metrics. Defining our own ad-hoc QoS metrics

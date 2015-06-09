@@ -272,7 +272,7 @@ In our implementation, as in EnerJ, the precise
 qualifier---\code{@Approx(1.0)}---is the default, so programmers can
 incrementally annotate reliable code to safely enable approximation.
 
-\paragraph{Information flow and subtyping.}
+\paragraph{Information flow and subtyping}
 \lang preserves soundness by permitting data flow high probabilities
 to lower probabilities while preventing low-to-high flow:
 %
@@ -305,7 +305,7 @@ has the type \code{@Approx(0.8) $\tau$} regardless of the original qualifier
 $q$.
 
 
-\paragraph{Approximate operations.}
+\paragraph{Approximate operations}
 \lang provides primitive arithmetic operations parameterized by a correctness
 probability.
 For example, the expression \lstinline!x +$_{0.9}$ y! produces the sum of \code{x}
@@ -634,7 +634,7 @@ forms a loop-carried dependency.
 Section~\ref{decaf:sec:eval} gives more details on the placement and overhead of the
 \code{@Dyn} qualifier.
 
-\paragraph{Interaction with inference.}
+\paragraph{Interaction with inference}
 Like explicitly parameterized types, inferred static types can interact bidirectionally
 with the \code{@Dyn}-qualified types.
 When a value with an inferred type flows into a dynamic type, as in:
@@ -682,7 +682,7 @@ can explicitly annotate intermediate operations to get approximate operators.
 This section details two practical considerations in \lang beyond the core
 mechanisms of inference, specialization, and dynamic tracking.
 
-\paragraph{Constraint warnings.}
+\paragraph{Constraint warnings}
 \label{decaf:sec:warn}
 
 In any type inference system, programmers can encounter unintended
@@ -715,7 +715,7 @@ transformation).
 More complex situations require a \code{@Dyn} type.
 
 
-\paragraph{Hardware profiles.}
+\paragraph{Hardware profiles}
 
 While \lang's types and inference are formulated using a continuous range of
 probabilities, realistic approximate hardware is likely to support only a
@@ -778,7 +778,7 @@ This section gives an overview of the formalism's type system, operational
 semantics, and main soundness theorem.
 Appendix~\ref{decaf:app:semantics} gives the full details and proofs.
 
-\paragraph{Types.}
+\paragraph{Types}
 There are two judgments in \lang's type system:
 one for expressions, $\Gamma \vdash e : T$,
 and another for statements,
@@ -801,7 +801,7 @@ Here, $\text{optype}$ is a helper judgment defining operators' unqualified
 types.
 
 
-\paragraph{Operational semantics.}
+\paragraph{Operational semantics}
 We present \lang's run-time behavior using operational semantics: small-step
 for statements and large-step for expression evaluation.
 Both sets of semantics are nondeterministic: the operators in \lang can
@@ -848,7 +848,7 @@ It updates both the heap $H$ and the bookkeeping map $S$.
 A similar rule uses the dynamically-tracked expression judgment and also
 updates $D$.
 
-\paragraph{Soundness.}
+\paragraph{Soundness}
 To express our soundness property, we define a \emph{well-formedness}
 criterion that states that a dynamic probability field map $D$ and a static
 context $\Gamma$ together form lower bounds on the ``true'' probabilities in
@@ -1085,7 +1085,7 @@ reliable operation.
 Architecture proposals suggest that even low probabilities of error can
 yield energy savings~\cite{hizli, kumarhpca, palem-adders}.
 
-\paragraph{Solving vs.~rounding levels.}
+\paragraph{Solving vs.~rounding levels}
 
 \begin{figure}
     \centering
@@ -1153,7 +1153,7 @@ scheme, except for these cases where solving times out and we fall back to the
 cheaper rounding strategy.
 
 
-\paragraph{Probability granularity.}
+\paragraph{Probability granularity}
 
 \begin{figure}
     \hspace{-3ex}
@@ -1212,7 +1212,7 @@ future work on optimizing \lang's constraint systems for efficient solving
 could make larger level counts more tractable.
 
 
-\paragraph{Comparison to ideal.}
+\paragraph{Comparison to ideal}
 
 \begin{figure}
     \hspace{-3ex}
@@ -1251,7 +1251,7 @@ Among our benchmarks, the $0.99 \le p \le 0.99999999$ probability range
 suffices to capture most of the flexibility offered by an ideal machine.
 
 
-\paragraph{Example energy model.}
+\paragraph{Example energy model}
 This evaluation measures error probabilities with the goal of allowing
 hardware designers to plug in energy models.
 (We intend to make the raw data available in full after publication.)

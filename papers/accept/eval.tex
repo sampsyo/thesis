@@ -287,7 +287,7 @@ overall error (change in final particle positions) under $0.00001$\%.  For
 \bench{msp430-activity}, error remained at $0$\% in all acceptable
 configurations.
 
-\paragraph{Autotuner characterization.}
+\paragraph{Autotuner characterization}
 
 Table~\ref{accept:table:stats} shows
 the number of relaxation opportunities (labeled \term{sites}), the number of
@@ -313,7 +313,7 @@ Tuning for the Zynq and MSP430 platforms was not parallelized and took
 \tunestats{time-zynq-mean} on average and
 \tunestats{time-msp430-mean}, respectively.
 
-\paragraph{Accelerator power and energy.}
+\paragraph{Accelerator power and energy}
 We measured power consumption on the Zynq SoC, including its FPGA and DRAM,
 using a Texas Instruments UCD9240 power supply controller while executing each
 benchmark in a loop to reach a steady state.
@@ -342,7 +342,7 @@ beginners with C and C++ and new to approximate computing,
 as well as graduate students familiar with the field.
 
 
-\paragraph{Quality metrics.}
+\paragraph{Quality metrics}
 The first step in tuning a program with \sysname is to write a quality metric.
 In some cases, the program included code to assess output quality.
 For each remaining
@@ -356,7 +356,7 @@ configurations; these results revealed a quality metric that was ignoring
 certain missing values in the output and was therefore too permissive.
 
 
-\paragraph{Initial and iterated annotations.}
+\paragraph{Initial and iterated annotations}
 One option when annotating a program for \sysname is to first analyze an
 unannotated program to enumerate all potential optimization sites.
 However, the programmers preferred
@@ -400,7 +400,7 @@ Both components help alleviate the ``manual labor'' otherwise necessary to
 reason about hidden program effects or repeatedly invoke and analyze
 measurement runs.
 
-\paragraph{Code navigation and heuristics.}
+\paragraph{Code navigation and heuristics}
 For large programs, programmers reported a need to balance their time
 between learning the application's architecture and trying new
 optimizations.
@@ -419,7 +419,7 @@ or system calls, which are rarely fruitful approximation opportunities.
 Relaxation sites primarily involved with large data arrays were typically good
 targets.
 
-\paragraph{Encapsulating precise systems programming.}
+\paragraph{Encapsulating precise systems programming}
 The ``escape hatches'' from \sysname's safety analysis were crucial for
 low-level systems code.
 In \bench{msp430-activity}, a routine manipulates memory-mapped registers to read
@@ -431,7 +431,7 @@ This annotation suggests a pattern in systems programming: the language's
 last-resort annotations can communicate approximation information about
 opaque low-level code to \sysname.
 
-\paragraph{Self-checking code.}
+\paragraph{Self-checking code}
 The complementary escape hatch, \annforbid, was useful for one specific
 pattern: when benchmarks include code to evaluate their own quality. For
 example, \bench{x264} computes a standard image quality metric and
