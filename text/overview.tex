@@ -39,7 +39,7 @@ the accuracy in system abstractions with the needs of approximate
 programs.
 
 
-\section{Abstractions for Disciplined Approximation}
+\paragraph{Disciplined approximation.}
 
 The central challenge in approximate computing is forging abstractions that
 make imprecision \emph{controlled and predictable} without sacrificing its
@@ -52,14 +52,14 @@ in the contexts of programming languages, computer architecture,
 memory technologies, compilers, and software development
 tools.
 
-\subsection{Research Principles}
+\section{Research Principles}
 
 The work in this dissertation is organized around a collection of principles
 for the design of disciplined approximate abstractions.
 These themes represent the collective findings of the concrete research
 projects described later.
 
-\paragraph{Result quality is application specific.}
+\subsection{Result Quality is Application Specific}
 
 Since approximate computing navigates trade-offs between efficiency and result
 quality, it needs definitions of both sides of the balance.
@@ -80,7 +80,7 @@ implementation is correct or incorrect.
 Just as ordinary verification and optimization tools start from a
 specification, approximate-computing tools start with a quality metric.
 
-\paragraph{Safety vs.~quality.}
+\subsection{Safety vs.~Quality}
 
 At first glance, a quality metric seems like sufficient information to specify
 an application's constraints on approximation.
@@ -110,7 +110,7 @@ system.
 A quality property, in contrast, constrains the \emph{amount} that approximate
 program components deviate from their precise counterparts.
 
-In practice, we find that distinguishing between \emph{no approximation at
+In practice, we find a first-order distinction between \emph{no approximation at
 all} and \emph{approximation of some nonzero degree} both simplifies reasoning
 for programmers and makes tools more tractable.
 The EnerJ type system in Chapter~\ref{ch:enerj} embodies this distinction by
@@ -118,7 +118,7 @@ building an abstraction for safety properties.
 The quality-focused mechanisms in Chapters~\ref{ch:decaf} and~\ref{ch:passert}
 complement EnerJ's safety constraints.
 
-\paragraph{Programming with probabilistic reasoning.}
+\subsection{Programming with Probabilistic Reasoning}
 
 To support effective reasoning about approximation and quality,
 programming models need to incorporate abstractions for statistical behavior.
@@ -135,7 +135,7 @@ their results combined, the impact on the computation is even more obscure.
 Understanding and controlling probabilistic system components is critical to
 composing them to do useful work.
 
-\paragraph{Granularity of approximation.}
+\subsection{Granularity of Approximation}
 
 When approximate computing is introduced in the context of a traditional
 programming model, there are several choices for the kinds of computations
@@ -154,7 +154,9 @@ instructions allows direct programmer control over imprecision. But it can
 obscure the ways that local error patterns compose to affect the whole
 program.
 
-\TODO{Finish the overview. Probably two sections: software and hardware?}
+\section{Abstractions for Disciplined Approximation}
+
+\TODO{Finish the overview. What goes here?}
 
 \subsection{EnerJ: Safely Programming Approximate Systems}
 \label{sec:prelim:enerj}
