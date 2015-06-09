@@ -144,24 +144,43 @@ Approximate programming systems can adapt lessons from this body of research.
 
 \subsection{Granularity of Approximation}
 
-\TODO{rewrite}
+The \emph{granularity} at which approximate computing applies is a
+nonintuitive but essential factor in its success.
+My and other researchers' work has explored approximation strategies at
+granularities of both extremes:
+fine-grained approximations that apply to individual instructions and
+individual words of memory (e.g., Truffle~\cite{truffle});
+and coarse-grained approximations that holistically transform entire
+algorithms (e.g., neural acceleration~\cite{npu}).
 
-When approximate computing is introduced in the context of a traditional
-programming model, there are several choices for the kinds of computations
-that are optimized with approximation. A system can approximate a whole
-program or algorithm at once, a discrete program component like a function,
-loop, or block, or individual operations (e.g., instructions).
-Approximating an entire algorithm
-offers a large window of potential relaxations,
-requiring only that a transformed version of the algorithm produce outputs
-acceptably similar to the original.
-But such a large space of possible optimizations can make a search of the
-quality--efficiency trade-off space intractable, and black-box transformations
-risk being opaque to programmer understanding and control.
-Conversely, introducing approximation at the granularity of individual
-instructions allows direct programmer control over imprecision. But it can
-obscure the ways that local error patterns compose to affect the whole
-program.
+An technique's granularity affects its
+generality and its efficiency potential.
+A fine-grained approximation can be very general:
+an approximate multiplier unit, for example, can potentially apply to any
+multiplication in a program.
+But the efficiency gains are fundamentally limited to \emph{non-control} components,
+since control errors can disrupt execution arbitrarily.
+Even if an approximate multiplier unit can be very efficient,
+the same technique can never
+improve the efficiency of a branch, an address calculation,
+or even the
+scheduling of an approximate multiply instruction.
+Approximations that work at a coarser granularity can address control costs,
+so their potential gains are larger.
+But these techniques tend to apply more narrowly:
+techniques that pattern-match on algorithm structures~\cite{paraprox},
+for example, place nuanced restrictions on the code they can transform.
+
+The EnerJ language in Chapter~\ref{ch:enerj} was initially designed for
+fine-grained hardware approximation techniques such as low-voltage functional
+units.
+While the granularity was good for programmability, it was bad for efficiency:
+our detailed hardware design for fine-grained hardware
+approximation~\cite{truffle} demonstrated limited benefit.
+The ACCEPT compiler in Chapter~\ref{ch:accept} bridges the gap: its analysis
+library and optimizations exploit the fine-grained annotations from EnerJ to
+safely apply coarse-grained optimizations.
+
 
 \section{Abstractions for Disciplined Approximation}
 
