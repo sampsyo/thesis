@@ -454,42 +454,28 @@ logic~\cite{snnap}.
 
 \subsection{Monitoring and Debugging Quality}
 
-I recently worked on a tool that addresses the programmability challenge posed
-by nondeterministic approximation. Since testing can never capture
-the full set of possible dynamic executions, uncertainty necessarily remains
-when deploying software that can, via probabilistic behavior, go arbitrarily
-wrong. Worse, even executions on the identical inputs can result in
-widely varying result quality. Our system constrains the possible impacts of
-nondeterministic approximation by directly measuring them and raising a
-runtime exception when quality is degraded beyond a threshold. The program can
-respond by re-executing the approximate computation or increasing its
-precision level.
+Many approaches to making approximation programmable focus on proving
+conservative, static bounds.
+As in traditional software development,
+approximate computing also needs complementary dynamic techniques.
+To this end, I contributed to a pair of techniques for dynamically controlling
+result quality~\cite{approxdebug}.
 
-The central challenge of this work is the design of monitoring strategies that
-are cheap enough to leave enabled in production. When performance is no object,
-as it is during development, it suffices to use high-overhead approaches like our
-own earlier work on prototyping and autotuning~\cite{enercaml} and Misailovic
-\etal's profiler~\cite{qosprof}.
-While no single low-overhead approach
-generalizes to all approximate computations, we identify three strategies that
-vary in their overhead, the kinds of computations they can monitor, and the
-strength of their guarantees.
+The first dynamic system is a framework for monitoring quality in deployment.
+The goal is to raise an exception whenever the program produces a ``bad''
+output.
+While the ideal monitoring system would directly measure the quality
+degradation of every output,
+perfect measurement is infeasible expensive for run-time deployment.
+Our framework provides a range of techniques for specific scenarios where we
+can make monitoring cheap enough to be feasible.
 
-Our approaches have low overhead partially because they apply to
-coarse-grained regions of code. Instead of checking the effects of
-approximation after every arithmetic operation or when reading from any
-approximate variable, we require the programmer to specify quality in terms of
-the output of an entire approximate computation. This granularity choice
-results in infrequent checks and allows programmers to write quality
-evaluation where it is most natural: only at variables that represent outputs, not intermediate
-values.
-
-One important takeaway from this work is the utility of dynamic enforcement
-to constrain the effects of nondeterminism and unknown probabilities. While
-static analysis is infeasible when the pattern of approximation is unknown,
-dynamic techniques can directly observe and cope with nondeterministic events.
-
-\TODO{cite \cite{approxdebug} \cite{ringenburg-thesis}}
+The second system is a debugging tool.
+The idea is that certain subcomputations can be more critical to important to
+quality than others, but that this difference is not necessarily obvious to
+programmers.
+The tool identifies and blames specific approximation decisions in a large
+codebase when they are responsible for too much quality degradation.
 
 The work on dynamic monitoring and debugging appears in the thesis of
 Michael F.\ Ringenburg~\cite{ringenburg-thesis}.
