@@ -1,8 +1,34 @@
-The future of approximate computing!
+The research on approximate computing during this decade
+has asked more questions than it has answered.
 
-Composition is unsolved.
+\paragraph{Composition}
+Unsolved. Passert is whole-program. ACCEPT is *really* whole-program.
 
-Connecting to everyday approximation (e.g., DSP parameters, the entire field
-of approximation algorithms).
+\paragraph{Connecting with everyday approximation}
+Approximation is not a new idea.
+It's fundamental in some disciplines.
+For example, DSP pipelines consist of many parameters that control accuracy.
+Most real-time graphics focuses on getting good-enough results more cheaply
+than a perfect algorithm.
+There is an entire subfield in theoretical computer science that designs
+approximation algorithms for intractable problems.
+These are approximations, but they look very different from the kind of
+system-level approximations in this dissertation.
 
+\paragraph{Fault tolerance in high-performance computing}
+Approximation techniques *should* intuitively be useful for tolerating errors
+in extremely large-scale computations where silent failures are a fact of
+life.
+But the workflow is extremely challenging to make work:
+how do we test for tolerance when the probabilities are so astronomically
+small?
+
+\paragraph{Defining quality}
 What is quality?
+
+\paragraph{Unifying with probabilistic programming}
+DECAF (\chref{decaf}) and probabilistic assertion checking (\chref{passert})
+are two such constructs,
+but there is far more work to be done.
+The programming-languages community has recently developed an interest in
+probabilistic programming, but the area currently focuses 
