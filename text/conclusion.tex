@@ -61,7 +61,18 @@ and \chref{passert} explores a new way for programmers to express
 general probabilistic bounds.
 
 \paragraph{Granularity of Approximation}
-\TODO{write this}
+Approximation techniques work by replacing some accurate part of a program
+with a cheaper, less accurate counterpart.
+A critical dimension in these techniques is the \emph{granularity} of
+components they replace.
+Approaches that replace individual arithmetic operations~\cite{truffle} can be
+general and flexible, but their efficiency gains are usually small.
+Coarse-grained replacement techniques, such as neural acceleration~\cite{npu},
+can be more complex to apply
+but tend to offer larger gains.
+The ACCEPT compiler framework in \chref{accept} represents a step toward
+unifying an intelligible fine-grained programming abstraction
+with powerful coarse-grained approximation strategies.
 
 \TODO{spacing, then}
 These principles should guide the next phase of research on new abstractions
