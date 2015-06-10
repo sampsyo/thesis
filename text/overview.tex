@@ -81,6 +81,7 @@ Just as ordinary verification and optimization tools start from a
 specification, approximate-computing tools start with a quality metric.
 
 \subsection{Safety vs.~Quality}
+\label{sec:princ:safety}
 
 At first glance, a quality metric seems like sufficient information to specify
 an application's constraints on approximation.
@@ -324,7 +325,7 @@ abstractions.
 One system design, detailed in \chref{approxstorage}, exploits builds on trend in hardware technologies.
 It exploits unique properties of new solid-state memories,
 such as flash and phase-change memory,
-to implement two orthogonal resource--accuracy trade-offs.
+to implement two orthogonal trade-offs between resource and accuracy.
 
 The first technique recognizes that the underlying material in these memory
 technologies is analog.
@@ -337,7 +338,7 @@ The second technique embraces resistive memory technologies' tendency to wear
 out.
 Ordinarily, architectures need to detect failed memory blocks and avoid
 storing data in them---limiting the memory module's useful lifetime.
-Instead, in the context of an error-resilient application, we can harvest the otherwise-unusable
+Instead, in the context of an approximate application, we can harvest the otherwise-unusable
 blocks and store approximate data in them.
 
 Both strategies need a new set of common CPU and operating-system interfaces
