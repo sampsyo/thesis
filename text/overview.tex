@@ -54,10 +54,25 @@ tools.
 
 \section{Research Principles}
 
-The work in this dissertation is organized around a collection of principles
+The work in this dissertation is organized around five principles
 for the design of disciplined approximate abstractions.
 These themes represent the collective findings of the concrete research
 projects described later.
+The principles are:
+%
+\begin{enumerate}
+\item Result quality is an application-specific property.
+\item Approximate abstractions should distinguish between safety properties
+    and quality properties.
+\item Hardware and software need to collaborate to reach realize the best
+    potential of approximate computing.
+\item Approximate programming models need to incorporate probability and
+    statistics.
+\item The granularity of approximation represents a trade-off between
+    generality and potential efficiency.
+\end{enumerate}
+%
+This section outlines each finding in more detail.
 
 \subsection{Result Quality is Application Specific}
 
@@ -119,6 +134,12 @@ very different techniques:
 information flow tracking (\chref{enerj}) is appropriate for safety, for
 example, but statistical hypothesis testing (\chref{passert}) is better for
 quality.
+
+\subsection{Hardware--Software Co-Design}
+
+Approximate computing research works best when it extends abstractions that
+involve both hardware and software.
+\TODO{finish this}
 
 \subsection{Programming with Probabilistic Reasoning}
 
