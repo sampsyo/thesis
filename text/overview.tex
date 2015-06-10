@@ -144,6 +144,7 @@ machine-learning techniques with language abstractions~\cite{church}.
 Approximate programming systems can adapt lessons from this body of research.
 
 \subsection{Granularity of Approximation}
+\label{sec:princ:granularity}
 
 The \emph{granularity} at which approximate computing applies is a
 nonintuitive but essential factor in its success.
@@ -320,7 +321,7 @@ abstractions.
 
 \subsubsection{Approximate Storage for Solid-State Memory Technologies}
 
-One system design exploits builds on trend in hardware technologies.
+One system design, detailed in \chref{approxstorage}, exploits builds on trend in hardware technologies.
 It exploits unique properties of new solid-state memories,
 such as flash and phase-change memory,
 to implement two orthogonal resource--accuracy trade-offs.
@@ -345,52 +346,40 @@ We develop these abstractions to match the structure and semantics of EnerJ.
 
 \subsubsection{ACCEPT: An Approximate Compiler}
 
-I am currently working on a compiler-based approach to optimizing approximate
-programs, called ACCEPT (for Approximate C Compiler for Energy and Performance
-Trade-offs). The project's goal is to harness the wide variety of
-algorithmic approximation techniques enumerated in
-Section~\ref{sec:related:software} with a compilation workflow that is both
-\emph{automatic} and \emph{safe}. Using a lightweight annotation system
-resembling EnerJ's, the compiler constrains the space of optimizations avoid
-transformations that observably affect precise data.
+The final system design takes a different tactic:
+rather than simulating hypothetical hardware,
+the idea is to build a practical infrastructure for experimenting with
+approximation in the nearer term.
+\chref{accept} introduces ACCEPT, an open-source compiler workflow designed both for
+practitioners, to try out approximation techniques on their code,
+and for researchers, to prototype and evaluate new ideas for approximation
+strategies.
 
-The central challenge of this work is bridging the gap between fine-grained,
-code-centric annotations to coarse, code-centric program transformations. To
-reuse the averaging example from Section~\ref{sec:prelim:enerj}, ACCEPT
-permits transformation (i.e., perforation~\cite{perforation}) of the
-\ilcode{for} loop even though the loop control itself is not marked as
-approximate. It accomplishes this by analyzing the effects of each candidate
-code transformation and proving that changes can only affect the
-observed values of approximate variables. Although it can affect the values of
-precise \emph{intermediate} variables, ACCEPT permits a modified version of
-EnerJ's guarantee: any \emph{observation} of a precise variable is identical
-to the equivalent observation in a pristine execution.
+The first challenge that ACCEPT faces is to bridge the granularity gap (see
+\secref{princ:granularity}, above).
+EnerJ's fine-grained annotations can be more general and easier to apply to
+programs,
+but coarse-grained optimizations can offer better efficiency
+gains---especially in the pure-software domain.
+ACCEPT's interactive optimization architecture,
+compiler analysis library,
+and auto-tuner infrastructure help connect fine-grained safety annotations to
+coarse-grained optimizations.
 
-In this sense, ACCEPT is an attempt to combine the potential efficiency gains
-of coarse-grained approximation strategies like NPUs with the fine-grained
-programmer control of Truffle and EnerJ. Since ACCEPT's program relaxations,
-unlike NPUs' learning-based approach, are based on the \emph{implementation}
-of approximate computations, the performance and precision impacts of each
-transformation can be explained in terms of code changes to the original
-program. ACCEPT exploits this property to provide programmer feedback that
-illuminates which code changes are successful and which are prevented by the
-current annotations. Developers can use this information to guide the compiler
-to a better solution. This feedback loop resembles techniques used in
-parallelizing compilers (e.g., Cray's~\cite{canal}).
-
-While ACCEPT's whole-program analysis enables its coarse-grained
-transformations, it also complicates the task of identifying the best such
-transformation. The compiler needs to consider many types of optimizations as
-they apply to many different portions of the program, and each optimization
-may compose subtly with the others. Exploring this search space can require
-a large number of executions, which may make it unworkable for large programs
-when a human is in the loop. This shortcoming illustrates an important
-pattern: a large scope of possible optimizations implies a large search space.
-Techniques that make this search space faster to explore---by reducing the
-size or simplifying the evaluation of each point---can help in generating
-better approximations.
-
-
+ACCEPT also addresses a second persistent challenge in approximate
+programmability:
+balancing automation with programmer control.
+Fully manual approximation can be tedious and error prone,
+but fully automatic systems can also frustrate developers by isolating them
+from decisions that can break their code.
+ACCEPT relies on the distinction between quality and safety (see
+\secref{princ:safety}) reconcile the extremes.
+Type annotations resembling EnerJ's enforce safety, but programmers are kept
+in the loop with an interactive optimization workflow to rule out unexpected
+quality effects.
+Together, the systems leverage the best of both factors:
+programmer insight for preserving application-specific properties,
+and automatic compiler reasoning for identifying obscure data flows.
 
 \section{Other Work}
 
