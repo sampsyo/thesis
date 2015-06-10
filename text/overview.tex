@@ -279,12 +279,34 @@ whey they occur randomly but rarely; and when the error probability is
 independent of the input values.
 
 A complementary project takes the opposite approach:
-it allows arbitrary probabilistic behavior
-at the cost of weaker guarantees.
-\TODO{finish}
+it accommodates any probability distribution, but it offers weaker
+guarantees.
+The idea is to use statistical hypothesis tests to prove properties up to a
+\emph{confidence level:}
+to allow a small probability of ``verifying'' a false property.
 
-\TODO{ dedicated (non-type) language construct --
-not just about approximation}
+The technique is based on a new language construct called a
+\emph{probabilistic assertion}.
+The construct is analogous to a traditional assertion: \code{assert $e$}
+expresses that the expression $e$ must always be true.
+A probabilistic assertion \code{passert $e$, $p$, $c$} indicates that $e$ must
+be true with at least probability $p$, and the system has to prove the
+property at confidence level $c$.
+These assertions can encode important quality properties in approximate
+programs, such as bounds on the frequency of ``bad'' pixels produced by an
+image renderer.
+The same construct is useful in other domains where probabilistic behavior is
+essential, such as when dealing with noisy sensors.
+
+\chref{passert} describes probabilistic assertions in more detail
+along with a workflow for verifying them efficiently.
+The verifier uses a symbolic-execution technique to extract a representation
+of a program's probabilistic behavior: a Bayesian network.
+The verifier can optimize this Bayesian-network representation using
+off-the-shelf statistical properties that are difficult to apply to the
+original program code.
+The complete workflow can make probabilistic-assertion verification dozens of
+times faster to check than a naive stress-testing approach.
 
 \subsection{Exploiting Resilience for Efficiency}
 
