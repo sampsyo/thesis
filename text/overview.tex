@@ -391,78 +391,66 @@ influence is evident in the trajectory of projects that do appear here.
 For context, this section describes a handful of other projects on approximate
 hardware and developer tools.
 
+
 \subsection{An Approximate CPU and ISA}
 
 Truffle is a processor architecture that implements EnerJ's semantics to save
 energy~\cite{truffle}. It uses a secondary, subcritical voltage that allows timing errors in
 a portion of the logic and retention errors in a portion of the SRAM.
-We
-designed an ISA extension for approximate architectures that can serve as a
-target for EnerJ-like languages that provides approximation per instruction,
-per register, and per cache line.
-The architecture uses replicated functional units, one running at the nominal
-voltage and one running at the subcritical voltage, and steers instructions to the
-appropriate unit based on a flag in the instruction. Each row in the SRAMs for
-the register file and data cache carries a precision flag that controls the
-voltage sent to the row; instructions control the precision of each line
-dynamically by setting this flag.
 
-To evaluate the Truffle design,
-we reused the simulation infrastructure from the EnerJ evaluation and paired
-it with a extension of a standard architectural energy model~\cite{mcpat}.
-Results ranged from a 5\% energy efficiency \emph{loss} to a 43\%
-consumption reduction.
+To expose the two voltages to software, we
+designed an ISA extension that includes a notation of abstract approximation.
+The code can choose dynamically to enable approximation
+per instruction, per register, and per cache line.
+A key challenge in the design was supporting an ISA that could efficiently
+support an EnerJ-like programming model, where the precise and approximate
+components of a program remain distinct but interleave at a fine grain.
 
+Our simulation of the Truffle design space yielded results ranging a 5\%
+energy consumption \emph{increase} to a 43\% reduction.
 These results emphasize the efficiency limits of very fine-grained
-approximation. Even in a maximally approximate program---in which every
+approximation (see the granularity principle in \secref{princ:granularity}).
+Even in a maximally approximate program---in which every
 arithmetic instruction and every byte of memory is marked as
 approximate---much of Truffle's energy is spent on precise work. Fetching
 code, scheduling instructions, indexing into SRAMs, computing addresses, and
-tracking precision state all must be performed reliably to avoid violating
-the semantics of the EnerJ-like ISA.
+tracking precision state all must be performed reliably.
 Modern processors spend as much energy on
 control as they do on computation itself, so any technique that optimizes only
 computation will quickly encounter Amdahl's law.
 
-Together, EnerJ and Truffle illustrate an essential shortcoming of
-fine-grained approximation: it conservatively avoids relaxing \emph{control}
-in terms of both the program (e.g., pointers and control flow) and the
-execution substrate (e.g., fetch and decode).
+The Truffle work in appears in the thesis of Hadi
+Esmaeilzadeh~\cite{hadi-thesis}.
 
-\TODO{cite \cite{hadi-thesis}}
 
 \subsection{Neural Acceleration}
 
-Neural Processing Units represent a hybrid compiler--accelerator approach to
-the problem of approximation granularity~\cite{npu}. The technique relaxes a
-pure-functional portion of a program---a pure C function, in our
-implementation---by observing its input/output behavior in a set of test runs.
-This empirical characterization of the function is used to train a function
-approximator based on an artificial neural network. Since neural networks have
+\emph{Neural acceleration} is a technique that explores the opposite end of
+the granularity spectrum~\cite{npu, snnap}.
+The idea is to use machine learning to imitate a portion of a computation by
+observing its input--output behavior.
+Then, we build a configurable hardware accelerator to efficiently execute the
+learned model in place of the original code.
+Our specific design uses neural networks:
+since neural networks have
 efficient hardware implementations, the transformed function can be much
-faster and lower-power than the original code. We designed a hardware neural
-network accelerators to unlock these potential gains in transformed programs.
+faster and lower-power than the original code.
 
-The NPU technique distinguishes itself from EnerJ and Truffle by applying
-approximation based on observed inputs and outputs rather than the structure
-of the code itself. This approach removes many practical restrictions on the
-granularity of approximation: any computation with well-defined inputs and
-outputs is a candidate for NPU-based relaxation. In our evaluation, we were
-able to transform code regions that contained complex control flow, memory
-allocation, and pointer arithmetic---all of which EnerJ and Truffle would have
-classified as precise. As a result, our simulations demonstrated a 3$\times$
-average energy reduction---far better than our results for Truffle.
-
+The coarse granularity pays off in efficiency: our simulations demonstrated a
+3$\times$ average energy reduction.
 But the coarser granularity comes at a cost of programmer visibility and
-control. Since the NPU technique treats the target code as a black box, the
+control.
+Since the NPU technique treats the target code as a black box, the
 programmer has no direct influence over the performance and accuracy of the
-resulting neural network. Instead, the programmer has to try applying the
-transformation to a variety of candidate functions and hope that some will
-yield a profitable accuracy--efficiency trade-off.
-This shortcoming demonstrates a tension in my work so far between
-programmability and efficiency.
+resulting neural network.
+These conflicting objectives demonstrate the need for techniques that bridge
+the granularity gap.
 
-\TODO{also cite \cite{snnap} \cite{hadi-thesis}}
+The original neural acceleration work also appears in Hadi Esmaeilzadeh's
+thesis~\cite{hadi-thesis}.
+I also worked on a recent extension of the idea for programmable
+logic~\cite{snnap}.
+
 
 \subsection{Monitoring and Debugging Quality}
 
@@ -503,6 +491,8 @@ dynamic techniques can directly observe and cope with nondeterministic events.
 
 \TODO{cite \cite{approxdebug} \cite{ringenburg-thesis}}
 
+The work on dynamic monitoring and debugging appears in the thesis of
+Michael F.\ Ringenburg~\cite{ringenburg-thesis}.
 
 
 \section{Organization}
