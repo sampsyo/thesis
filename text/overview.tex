@@ -320,37 +320,28 @@ abstractions.
 
 \subsubsection{Approximate Storage for Solid-State Memory Technologies}
 
-Recently, I worked on a project that exploits the unique properties of
-solid-state memory technologies, such as flash and phase-change memory,
-to provide approximate storage. Our techniques use two properties common to these memories:
-near-term wear-out and an underlying analog, continuous substrate. First, since
-failed cells are commonplace, we can store approximate data in the otherwise
-unusable regions of memory that contain these cells. Second, while memories
-necessarily expose a digital interface to the rest of the system, the
-underlying material---chalcogenide, in PCM's case---is intrinsically analog
-and probabilistic. Exposing a limited amount of the material's stochastic
-behavior enables savings in performance and power.
-We simulated systems that use approximate PCM both as main memory and as
-persistent, disk-like storage and demonstrated that our techniques can improve
-memory write performance and extend the useful life of a memory module.
+One system design exploits builds on trend in hardware technologies.
+It exploits unique properties of new solid-state memories,
+such as flash and phase-change memory,
+to implement two orthogonal resource--accuracy trade-offs.
 
-These designs are distinct from my other work in their focus on storage as
-opposed to computation. An important lesson from this project is the
-opportunity for reasoning about and controlling the probability distribution
-of nondeterministic approximation errors. In both techniques, the distribution
-of bit errors is decidedly nonuniform: the locations of failed bits is already
-tracked by the memory system and analog storage substrates exhibit error
-according to a distribution arising from the physical process. Because we have
-information about the pattern of errors that occur in the approximate
-memories, we were able to more effectively mitigate the errors' impact on the
-application.
+The first technique recognizes that the underlying material in these memory
+technologies is analog.
+Traditional designs build a clean digital abstraction on top of a
+fundamentally analog memory cell.
+Our technique addresses the cost of that digital abstraction by letting
+applications opt into stochastic data retention.
 
-Our implementation performs this mitigation in an mostly application-agnostic
-way: by prioritizing higher bits over lower ones, for example. But exposing
-distribution information at other levels of the system stack could yield
-further benefits. Exposing these properties to the programmer, for instance,
-contrasts with EnerJ's simplistic approach of completely obscuring error
-information but could enable more approximation opportunities.
+The second technique embraces resistive memory technologies' tendency to wear
+out.
+Ordinarily, architectures need to detect failed memory blocks and avoid
+storing data in them---limiting the memory module's useful lifetime.
+Instead, in the context of an error-resilient application, we can harvest the otherwise-unusable
+blocks and store approximate data in them.
+
+Both strategies need a new set of common CPU and operating-system interfaces
+to let software communicate error resilience and bit layout information.
+We develop these abstractions to match the structure and semantics of EnerJ.
 
 \subsubsection{ACCEPT: An Approximate Compiler}
 
