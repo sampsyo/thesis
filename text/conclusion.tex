@@ -36,8 +36,33 @@ Using a single technique for both would be less effective.
 Approximate computing is a cross-cutting concern.
 While both hardware and software techniques hold promise, a good rule of thumb
 is to \emph{never do hardware without software}.
-\TODO{justify that}
+Hardware techniques that work opaquely---without incorporating any information
+at all from the application---are easy to design but doomed to failure.
+An approximate memory (\chref{approxstorage}) that can flip any bit with any
+probability, for example,
+ignores the software's complex needs for different levels of reliability for
+different kinds of data.
+Researchers should always design hardware techniques with the programming
+abstraction in mind.
 
 \paragraph{Programming with Probabilistic Reasoning}
+Many of the best proposals for approximate-computing techniques are inherently
+probabilistic:
+an analog circuit~\cite{anpu} or a noisy memory write (\chref{approxstorage}),
+for example, are nondeterministic by nature.
+Even when approximation strategies themselves are deterministic, correctness
+criteria can often be best expressed using probabilities: the chance that a
+randomly selected input has high quality, or the chance that an individual
+pixel in an image is wrong.
+In both cases, approximation calls for programming languages to add constructs
+reflecting probability and statistics.
+\chref{decaf} develops a type-system approach to probabilistic reasoning,
+and \chref{passert} explores a new way for programmers to express
+general probabilistic bounds.
 
 \paragraph{Granularity of Approximation}
+\TODO{write this}
+
+\TODO{spacing, then}
+These principles should guide the next phase of research on new abstractions
+for approximation.
