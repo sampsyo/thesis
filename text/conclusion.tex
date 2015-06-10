@@ -6,7 +6,7 @@ It develops five principles for the design of approximation-aware
 abstractions:
 
 \paragraph{Application-Specific Result Quality}
-A broad spectrum of applications come with correctness constraints that are
+Applications from a broad spectrum of domains come with correctness constraints that are
 not binary:
 there are better outputs and worse outputs.
 But as with traditional correctness criteria, there is no single, universal
@@ -33,7 +33,7 @@ and constraint-solving numerical type inference is best suited for quality.
 Using a single technique for both would be less effective.
 
 \paragraph{Hardware--Software Co-Design}
-Approximate computing is a cross-cutting concern.
+Approximation is a cross-cutting concern.
 While both hardware and software techniques hold promise, a good rule of thumb
 is to \emph{never do hardware without software}.
 Hardware techniques that work opaquely---without incorporating any information
@@ -66,7 +66,7 @@ with a cheaper, less accurate counterpart.
 A critical dimension in these techniques is the \emph{granularity} of
 components they replace.
 Approaches that replace individual arithmetic operations~\cite{truffle} can be
-general and flexible, but their efficiency gains are usually small.
+general and flexible, but their efficiency gains tend to be small.
 Coarse-grained replacement techniques, such as neural acceleration~\cite{npu},
 can be more complex to apply
 but tend to offer larger gains.
@@ -74,6 +74,7 @@ The ACCEPT compiler framework in \chref{accept} represents a step toward
 unifying an intelligible fine-grained programming abstraction
 with powerful coarse-grained approximation strategies.
 
-\TODO{spacing, then}
+\vspace{\baselineskip}
+\noindent
 These principles should guide the next phase of research on new abstractions
 for approximation.
