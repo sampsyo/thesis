@@ -1,34 +1,85 @@
 The research on approximate computing during this decade
 has asked more questions than it has answered.
+To bring approximation mainstream, the community will need to address a swath
+of open problems.
 
 \paragraph{Composition}
-Unsolved. Passert is whole-program. ACCEPT is *really* whole-program.
+Most current tools for approximate programmability are stuck in a
+whole-program paradigm.
+ACCEPT's compiler analyses and auto-tuner machinery, from \chref{accept},
+assume that they can observe the entire application at once.
+Probabilistic assertions, from \chref{passert},
+fundamentally describe whole-program properties: they constrain a chance that
+an execution \emph{from program entry} has a certain property.
+This whole-program perspective on result quality prevents approximate
+computing from participating in some of the most powerful concepts in
+programming: local abstractions, separation of concerns, and libraries.
+A recent exception is Carbin \etal's Rely language~\cite{rely},
+where accuracy is a relationship between module inputs and module outputs.
+The next stage of research should continue to define what composition means in
+an approximate context.
 
 \paragraph{Connecting with everyday approximation}
-Approximation is not a new idea.
-It's fundamental in some disciplines.
-For example, DSP pipelines consist of many parameters that control accuracy.
-Most real-time graphics focuses on getting good-enough results more cheaply
-than a perfect algorithm.
-There is an entire subfield in theoretical computer science that designs
+Although the term is new, approximate computing is far from a new idea.
+Approximation is a fundamental in some domains of computer science.
+Digital signal processing pipelines incorporate accuracy parameters at every
+stage;
+work on real-time graphics gets good-enough results more cheaply than an ideal
+renderer;
+and there is an entire subfield in theoretical computer science that designs
 approximation algorithms for intractable problems.
-These are approximations, but they look very different from the kind of
-system-level approximations in this dissertation.
+All of these approaches are approximations, but they look very different from
+the kind of system-level approximations in this dissertation.
+Programming models for approximate computing can learn lessons from these more
+established disciplines.
+And the new techniques developed for approximate computing may also be
+portable in the opposite direction:
+they could help bring programmability to areas where approximation has
+traditionally been difficult to reason about.
 
 \paragraph{Fault tolerance in high-performance computing}
-Approximation techniques *should* intuitively be useful for tolerating errors
-in extremely large-scale computations where silent failures are a fact of
-life.
-But the workflow is extremely challenging to make work:
-how do we test for tolerance when the probabilities are so astronomically
-small?
+While approximate computing is not the same as fault tolerance, there are
+clear connections.
+High-performance computing infrastructures are often large enough that silent
+failures are a fact of life;
+and, meanwhile, many HPC applications can tolerate some errors.
+Approximate computing researchers should build a bridge to domain expertise in
+HPC\@.
+Ideally, approximate programming techniques could help
+express the latent tolerance in
+HPC systems while constraining the potential for numerical instability and
+other failure modes.
 
 \paragraph{Defining quality}
-What is quality?
+One of the principles of this research is that programs have
+application-specific quality metrics.
+Determining exactly what constitutes ``quality'' for a given application,
+however, can be deceptively difficult.
+Consider defects in images:
+how many pixels can be wrong, and by what amount, before the user notices?
+Are larger areas of slight discoloration better than smaller areas of more
+intense errors?
+What makes users care more about the quality of certain photographs than
+others?
+These questions are subjective, context sensitive, and poorly defined, but
+they are critical to determining whether an approximation is successful.
+For approximate computing to succeed, we need better methodologies for
+deriving quality metrics.
 
 \paragraph{Unifying with probabilistic programming}
-DECAF (\chref{decaf}) and probabilistic assertion checking (\chref{passert})
-are two such constructs,
-but there is far more work to be done.
-The programming-languages community has recently developed an interest in
-probabilistic programming, but the area currently focuses 
+Abstractions for approximate program usually need to incorporate probabilistic
+semantics.
+Recently, the programming languages research community has developed a focus
+another area that combines programming with probability:
+\emph{probabilistic programming languages} \TODO{cite something}.
+So far, this direction has assumed a relatively narrow focus:
+making it easier to express and work with machine-learning models.
+But the two research areas should cross-pollinate:
+techniques from one should apply to problems from the other.
+Researchers should seek fundamental ideas that underly the two sets of
+programmability challenges.
+
+\vspace{\baselineskip}
+\noindent
+Even with these remaining challenges unsolved, approximate computing \TODO{has
+an air of inevitability}.
