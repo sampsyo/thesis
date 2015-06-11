@@ -216,17 +216,75 @@ behavior of transistors as part of their ISA.
 Other preliminary efforts from MIT~\cite{batesmit, lyric, mansinghka-circuits} and
 Stanford~\cite{ersa} fall into the same category.
 
-While these designs have shown large efficiency gains on a restricted domain
-of problems, the challenge remains to develop a programming model that allows
-developers to efficiently express general applications. \emph{Probabilistic
-programming}, a separate effort in the machine learning community, helps
-express inference and learning algorithms by making probability a first-class
-concern~\cite{church}. Similarly, recent work has sought to express
+\section{Probabilistic Semantics}
+
+\TODO{this is now very disorganized}
+
+Researchers have proposed several languages and tools to
+help developers better reason about and describe real-world
+probabilistic data, computation, and models~\cite{BBGR13,
+  wingate-lightweight, church, chaganty, pfeffersample, pmonad,
+  infernet, probdsl,uncertaint}.
+The probability monad captures a variable's discrete probability
+distribution in functional programs~\cite{pmonad}.
+
+Sankaranarayanan et al.~\cite{sriram-pldi} check assertions in
+programs that produce probabilistic models using symbolic execution
+and polyhedral volume estimation. The \texttt{estimateProbability} construct
+queries the probability of an outcome, which resembles a probabilistic
+assertion's
+specification of the correct outcome.
+
+Statistical model checking bounds verification error on 
+problems where state-space explosion makes exact numerical
+verification intractable (see Legay and Delahaye's
+survey~\cite{legay10}).  Model checking~\cite{Clarke} provides formal guarantees,
+usually expressed in temporal logic for finite state
+based models, often of hardware. For example, the
+PRISM tool performs statistical verification of real-time
+systems~\cite{KNP11}. Our work borrows the idea of hypothesis
+testing to bound error in verification~\cite{Younes,Younes20061368}
+and
+relies on efficient sampling to avoid
+the need for exhaustive state space exploration.
+
+Similarly, recent work has sought to express
 uncertainties in the context of traditional, imperative programming
 languages~\cite{uncertaint}. These programming models incorporate algorithmic
 probabilities---such as those inherent in sensor readings or machine learning
 model parameters---but do not yet address the computational probabilities of
 techniques like PCMOS and stochastic processors.
+
+Kozen~\cite{kozen} recognizes the need for semantics for programs
+that use randomness during execution.
+That work provides two semantics for a simple probabilistic
+language---one that models sampling and one that computes on probability
+distributions directly---and proves them equivalent.
+Similarly, we prove equivalence between sampling an original program and
+sampling its extracted Bayesian network representation.
+Kozen predates the coinage and popularization of Bayesian networks, so
+the semantics in that work are very different from the graphical-model approach
+presented here.
+Our Bayesian-network representation enables statistical optimizations that
+make probabilistic assertion verification efficient.
+
+\subsection{Probabilistic Programming Languages}
+
+While these designs have shown large efficiency gains on a restricted domain
+of problems, the challenge remains to develop a programming model that allows
+developers to efficiently express general applications. \emph{Probabilistic
+programming}, a separate effort in the machine learning community, helps
+express inference and learning algorithms by making probability a first-class
+concern~\cite{church}.
+
+The field of \emph{probabilistic programming} seeks to enable efficient
+construction and querying of statistical models~\cite{BBGR13, wingate-lightweight,
+  church, chaganty, pfeffersample, probdsl, koller}.  Experts write
+generative models as programs and then inference algorithms answer questions
+about the model's parameters. The canonical probabilistic programming example
+answers, ``given that the grass is wet, was it due to rain or the sprinkler?''
+
+
 
 
 \section{Robustness Analysis}
