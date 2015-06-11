@@ -1476,87 +1476,24 @@ In no case, however, does an application as we annotated it do
 \emph{more} computation than the pristine version.
 
 
-\section{Related Work}
-\label{enerj:sec:rel}
-
-Space constraints preclude a discussion of the vast body of compiler
-or hybrid hardware/software work to improve energy efficiency.
-Instead, we focus on work we are aware of that exploits approximate
-computing to improve energy.
-
-Many studies have shown that a variety of applications have a high
-tolerance to transient faults \cite{dekruijf-selse09, li07, ersa,
-  softcomputing, wong-selse06, qosprof}. However, certain parts of
-programs are typically more fault-tolerant than others. Our work
-exploits this property by allowing the programmer to distinguish
-critical from non-critical computation.
-
-Our work at the language level was influenced by previous work on
-techniques for trading off correctness for power
-savings. Flikker~\cite{flikker} proposes a programming model for
-reducing the DRAM refresh rate on certain heap data via low-level
-program annotations. Besides being limited to heap storage, Flikker does not
-provide any safety guarantees. Relax~\cite{relax} is an architecture
-that exposes timing faults to software as opposed to providing error
-recovery automatically in hardware; its goal is to improve error
-tolerance with lower power by exploiting portions of code that are
-tolerant to error. While Relax focuses on error
-recovery and hardware design simplicity, EnerJ emphasizes
-energy-efficiency over error detectability and supports a wider range
-of power-saving approximations. Moreover, Relax explores a
-\emph{code-centric} approach, in which blocks of code are marked for
-failure and recovery while EnerJ employs \emph{data-centric} type
-annotations.
-
-Work by Rinard et al.
-proposes approximate code transformations in the compiler
-\cite{perforationtr, qosprof, rinard-onward}.
-Relatedly,
-EnerJ's support for algorithmic approximation, the ability to write an
-approximate implementation and a precise implementation of the same
-functionality, bears some similarity to the Green programming
-model~\cite{green}. However, Green primarily concerns itself with
-online monitoring of application QoS; EnerJ's guarantees are entirely
-static. Overall, EnerJ's type system makes approximation-based
-approaches to energy savings general (it supports approximate
-operations, storage, and algorithms) and safe (it provides static
-isolation guarantees).
-
-Using types to achieve fine-grained isolation of program
-components is inspired by work on information flow types for secure
-programming~\cite{infflow-survey,jif}. That body of work also influenced
-the \emph{endorsement} construct for explicitly violating
-non-interference.
-
-Work by Perry et al. also focuses on static verification of fault tolerance
-\cite{perry-pldi,perry-sas}. That work focuses on detection and
-recovery rather than exposing transient faults.
-
-
-
-\section{Conclusion}
+\section{Discussion}
 \label{enerj:sec:conc}
 
-Approximate computing is a very promising way of saving energy in
-large classes of applications running on a wide range of systems, from
-embedded systems to mobile phones to servers. We propose to use
-a type system based on information-flow tracking ideas: variables and
-objects can be declared as approximate or precise; approximate data can
-be processed more cheaply and less reliably; and we can statically
-prove that approximate data does not unexpectedly affect the precise
-state of a program.
-Our type system provides a general way of using approximation:
-we can use approximate storage by mapping data to cheaper memory,
-cache, and registers; we can use approximate operations by generating
-code with cheaper, approximate instructions; and we can use method
-overloading and class parameterization to enable algorithmic
-approximation.
+EnerJ is a language for enforcing \emph{safety} in approximate programing.
+The key observation is that approximate programs tend to intermix
+error-resilient and error-vulnerable work within the same program.
+The former makes up the bulk of the computation and data, while the latter
+provides critical structure and control.
+EnerJ's brand of approximate safety protects the control components while
+allowing errors in most of the program.
+It borrows ideas from information-flow tracking for enforcing security to
+isolate the critical data from the corrupting effects of approximation.
 
-We implement our type system on top of Java and experiment with
-several applications, from scientific computing to image processing to
-games. Our results show that annotations are easy to insert:
-only a fraction of declarations must be annotated and endorsements are
-rare. Once a program is annotated for approximation, the runtime
-system or architecture can choose several approximate execution
-techniques. Our hardware-based model shows potential energy savings
-between 7\% and 38\%.
+The rest of this part of the dissertation shifts focus from enforcing safety
+to controlling quality.
+The systems described next all benefit from the separation of concerns that
+EnerJ offers: they only need to analyze the approximate component of the
+program.
+EnerJ's focus on simpler safety properties makes
+it a foundation for the more sophisticated abstractions necessary for
+reasoning about quality.
