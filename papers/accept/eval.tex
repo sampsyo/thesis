@@ -10,7 +10,9 @@
 }
 
 \begin{table}
+\footnotesize
 \centering
+\makebox[\textwidth][c]{%
 \begin{tabular}{l l l r r r}
 \toprule
 
@@ -81,6 +83,7 @@ Classification rate &
 
 \bottomrule
 \end{tabular}
+}
 \caption{The approximate applications used in our evaluation. The
 final two columns show source code annotation counts.}
 \label{accept:table:apps}
@@ -192,6 +195,8 @@ averaged the running times.
 \label{accept:sec:results}
 
 \begin{figure}[t]
+\centering
+\makebox[\textwidth][c]{%
 \begin{subfigure}[b]{2.35in}
 \input{plots/speedup-all.tex}\vspace{1.5ex}
 \caption{Main results (all optimizations)}
@@ -212,6 +217,8 @@ averaged the running times.
 \caption{Neural acceleration}
 \label{accept:fig:speedup-npu}
 \end{subfigure}
+}
+\vspace{0.1ex}
 \caption{Speedup for each application, including all
 optimizations (a) and each optimization in isolation (b--d).}
 \label{accept:fig:performance}
@@ -219,6 +226,7 @@ optimizations (a) and each optimization in isolation (b--d).}
 
 \begin{table}
 \centering
+\footnotesize
 \begin{tabular}{l r r r r r r}
 \toprule
 Application & Sites & Composites & Total & Optimal & Error & Speedup \\
