@@ -1,19 +1,16 @@
-\section{Conclusion}
+\section{Discussion}
 
-For approximate computing to be successful,
-programmers need better tools for program relaxation that are safer than
-manual reasoning but more practical than opaque automatic transformation.
-\sysname is a compiler framework for approximate programming that
-balances automation with programmer insight.
-It supports a wide range of approximate code transformations, including
-both pure-software relaxations and offloading to hardware accelerators.
-\sysname can yield substantial
-end-to-end performance benefits with little quality degradation.
+\sysname differs from the other projects in this dissertation in its focus on a
+robust, open-source, end-to-end implementation.
+The goal is to demonstrate that a common compiler infrastructure can address
+the common concerns for a wide variety of realistic approximation
+techniques---in the same way that a classical compiler infrastructure like
+LLVM provides all the tools that an intrepid compiler hacker needs to build
+new optimizations.
+This level of generality required that we solve two common challenges:
+balancing programmer insight with automation,
+and bridging the gap between fine-grained annotations and coarse-grained
+optimizations.
 
-Approximate computing research is in its infancy and needs more tools for
-prototyping and evaluating ideas.
-The \sysname framework can simplify the implementation and evaluation of new
-ideas in approximate computing, from superoptimization to hardware accelerator
-design.
-We hope to support \sysname as common, open-source infrastructure for
-approximate computing research.
+The \sysname source code and documentation is available online at: \\
+\url{http://sampa.cs.washington.edu/accept}

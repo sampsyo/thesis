@@ -139,7 +139,7 @@ identifying and adjusting parameters that control output
 quality~\cite{dynamicknobs}, randomizing portions of deterministic
 programs~\cite{zhu-popl12, sasa-sas11}, dynamically choosing between
 different programmer-provided implementations of the same
-specification~\cite{green, virus, petabricks, taco-soc}, and replacing pure computations with invocations
+specification~\cite{green, virus, petabricks, taco-soc, ansel-autotuning}, and replacing pure computations with invocations
 of a trained neural network~\cite{benchnn, temam-isca, emeuro}.
 
 Central to each of these program transformation techniques are the questions
@@ -183,8 +183,8 @@ and space or operation cost.
 
 Program-level transformations can also help detect egregious errors while
 allowing small, inconsequential disruptions~\cite{lwc, approxdebug}.
-A variety of techniques propose mechanisms for run-time feedback to adapt
-approximation parameters~\cite{dynamicknobs, green, approxit}.
+A variety of techniques propose mechanisms for run-time or profiling feedback to adapt
+approximation parameters~\cite{dynamicknobs, green, approxit, ansel-autotuning}.
 
 
 \section{Exploiting Resilience in Other Systems}
