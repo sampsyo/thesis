@@ -54,7 +54,7 @@ verification complexity.
 
 Since floating-point operations are both expensive and inexact, they make a
 profitable target for this research direction. Researchers have designed units
-that dynamically adapt mantissa width~\cite{bitwidthred}, ``fuzzily'' memoize
+that dynamically adapt mantissa width~\cite{bitwidthred, hierarchfpu}, ``fuzzily'' memoize
 similar arithmetic computations~\cite{fuzzymemo}, or tolerate timing
 errors~\cite{palem-adders, impact, kumarhpca, hizli, adder-metrics}.
 Conversely, fault-tolerant functional units can help avoid catastrophic
@@ -103,7 +103,7 @@ Recent work has proposed system organizations that apply approximation at a
 coarser grain.
 Yetim et al., for instance,
 describe a technique that uses coarse-grained quality techniques to
-allow errors even in processor control logic~\cite{martonosi-date}.
+allow errors even in processor control logic~\cite{martonosi-date, commguard}.
 Duwe~\cite{duwe-thesis} proposes run-time coalescing of approximate and
 precise computations to reduce the overhead of switching between modes.
 Other work allocates approximation among the lanes of a SIMD
@@ -177,6 +177,7 @@ floating-point widths, which amount to a trade-off between numerical accuracy
 and space or operation cost.
 
 \TODO{cite stoke-fp, maybe herbie}
+\TODO{\cite{npu, anpu, snnap, neuralgpu}}
 
 
 \section{Dynamically Controlling Approximation}
