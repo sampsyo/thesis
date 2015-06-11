@@ -37,8 +37,13 @@ evaluates the distribution specified in a \passert by
 combining techniques from static verification,
 symbolic execution, and dynamic testing.
 
-\paragraph*{Probabilistic Assertions} 
-Programmers write \code{passert e, p, cf}
+\paragraph*{Probabilistic Assertions}
+Programmers write:
+%
+\begin{lstlisting}
+passert e, p, cf
+\end{lstlisting}
+%
 to check the probability that the Boolean expression \code{e} holds in
 a given execution of the program is at least \code{p} with confidence
 \code{cf}. The parameters \code{p} (defaults to 0.5) and \code{cf}
@@ -46,7 +51,7 @@ a given execution of the program is at least \code{p} with confidence
 that \code{e} is true, bounds any error in that estimate, and determines
 whether that
 estimate is significantly different from
-\code{p}. 
+\code{p}.
 For example, consider the following function, which adds
 Gaussian noise to users' true locations to protect their privacy.
 %
@@ -72,7 +77,7 @@ chance of adding any amount of noise, some executions will make
 traditional verification must conclude that the assertion does not hold.
 
 \paragraph*{Probabilistic Evaluation} Probabilistic evaluation
-verifies the probabilistic logical statement over random variables
+checks the probabilistic logical statement over random variables
 expressed by the \passert. It first performs \emph{distribution extraction},
 which is a symbolic execution that builds a Bayesian
 network, a directed, acyclic graphical model. Nodes
@@ -171,7 +176,7 @@ lagging.  By harnessing randomness, our approach introduces new and
 effective abstractions for correctness, optimization, and
 verification of probabilistic programs.
 
-%%% Local Variables: 
+%%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "paper"
-%%% End: 
+%%% End:
