@@ -416,7 +416,10 @@ Similarly, $\oplus$ without a probability denotes an inferred operator.
 \lang uses a constraint-based type inference approach to determine operation
 reliabilities and unspecified types.
 While constraint-based type inference is nothing new, our type system poses a
-unique challenge in that its types are \emph{continuous}.
+distinct challenge in that its types are \emph{continuous}.
+The situation is similar to Chlorophyll's spatial-scheduling type
+system~\cite{chlorophyll}, where a type assignment incurs a computational cost
+that needs to be minimized.
 We use an SMT solver to find real-valued type assignments given
 constraints in the form of inequalities.
 
@@ -991,8 +994,9 @@ designs.
 We implemented a simulation
 infrastructure that emulates such a machine with tunable instruction
 reliability.  The
-simulator is based on the freely available implementation used by
-\citet{enerj}, which uses a
+simulator is based on the freely available implementation from EnerJ
+(\chref{enerj}),
+which uses a
 source-to-source translation of Java code to invoke a run-time library that
 injects errors and collects execution statistics.  To facilitate simulation,
 three pieces of data are exported at compile time and imported when the runtime
@@ -1404,82 +1408,19 @@ two benchmarks mentioned above that scale poorly and eventually time out:
 
 
 
-\section{Related Work}
+\section{Discussion}
 
-Programming systems for approximate computing have recently become an area of
-interest for programming languages research.
-This work's primary distinctions are its focus on types for annotation
-flexibility,
-exploitation of recent multi-level architectures,
-and integration of static and dynamic tracking.
+DECAF is a quality-focused complement to EnerJ.
+The basic idea is simple: generalize EnerJ's all-or-nothing approximation
+binary to a continuum of accuracy levels.
+Type inference, code specialization, and optional dynamic typing all extend
+the core idea to make the full system ergonomic.
 
-Some approaches to approximate programming, including Relax~\cite{relax}
-and EnerJ~\cite{enerj}, focus primarily on \emph{safety} properties:
-preventing bugs where approximation contaminates pointers or causes wild
-control flow.
-These proposals have focused on deciding which parts of a computation may be
-subject to error.
-Our work addresses the related but distinct issue of \emph{quality}, which
-concerns the degree of error allowable in a program.
-
-\lang is most closely related to other systems for inferring operator
-reliabilities to meet program\-mer-specified correctness bounds.
-Chisel~\cite{chisel} uses an integer linear programming formulation
-to choose which operations in a function should be made approximate to
-meet a bound on the function's return value.
-Similarly, ExpAX~\cite{expax-tr} uses a data-flow analysis combined with a
-genetic algorithm to determine which operations in a program to approximate
-based on an overall quality bound for the entire application.
-\lang's type-based approach is new in four important ways:
-(1) Where prior work assumes a single level of hardware approximation, \lang
-is the first language we are aware of that targets approximate architectures
-with multiple probabilities.
-We show empirically that multi-level architectures can offer applications
-better efficiency for the same output reliability than simpler single-level
-approximation.
-(2) \lang shows how to augment static guarantees with run-time monitoring.
-(3) \lang can specialize functions according to quality demands in calling
-contexts.
-(4) Probability type qualifiers admit flexible annotation that scales with
-programmer effort.
-
-Probabilistic assertions~\cite{passert} express statistical program
-properties: for example, output quality requirements in approximate programs.
-The verifier supports arbitrary accuracy metrics, but it cannot produce
-conservative bounds or infer partially-specified approximations.
-Similarly, Bornholt et~al.'s \mbox{Uncertain\textless{T}\textgreater}~\cite{uncertaint} uses a library-based approach to
-compose probability distributions at run time, a process that resembles \lang's
-dynamic probability tracking.
-
-\lang also relates to systems for optimizing precision in floating-point
-code.
-Precimonious~\cite{precimonious} chooses bitwidths to meet an output precision
-bound, and \citet{stoke-fp} design a superoptimizer that
-takes an accurate kernel and
-synthesizes new implementations that approximate the original
-behavior.
-
-While type inference typically reconstructs types so that any solution leads
-to the same program semantics, \lang's inference determines the
-program's probabilistic behavior.
-Similarly,
-Chlorophyll uses type inference to assign data and computations to processing
-elements to minimize communication~\cite{chlorophyll}.
-That work also uses an SMT solver to optimize an objective function.
-
-
-\section{Conclusion}
-
-Approximate programming models need tools that help developers decide how much
-reliability is necessary throughout an algorithm.
-Especially when probabilistic operation is involved, manual reasoning about
-individual operator reliabilities can be tedious and error-prone.
-On the other hand, fully automatic approaches are also problematic: since
-approximation has broad implications for software correctness, programmers
-sometimes need fine-grained control over its effects.
-An opaque auto-tuner sacrifices programmer visibility and control.
-\lang's solver-aided type inference offers an intermediate solution that lets programmers
-write constraints only where they are most relevant.
-Combined with code specialization and dynamic tracking, \lang gives
-programmers flexible control over the efficiency--accuracy trade-offs offered
-by approximate hardware.
+DECAF's type-inference approach in particular holds an important lesson for
+convenient quality control mechanisms:
+programmers should be able to \emph{choose} where to control quality
+explicitly
+and, conversely, where to leave the details up to the compiler.
+The next chapter, on probabilistic assertions, departs from a type-based
+paradigm but preserves the same philosophy:
+it lets programmers constrain quality where it makes the most sense.
