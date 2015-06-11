@@ -31,14 +31,14 @@ more nuanced \emph{quality} properties dictate how accurate an output
 must be or how likely a value is to deviate from its reliable equivalent~\cite{passert, rely}.
 
 We propose \lang (\textbf{D}ECAF, an \textbf{E}nergy-aware \textbf{C}ompiler
-to make \textbf{A}pproximation \textbf{F}lexible), a type-based approach
+to make \textbf{A}pp\-rox\-im\-ation \textbf{F}lexible), a type-based approach
 to controlling quality in approximate programs.
 \lang's goal is to let programmers specify important quality constraints while
 leaving the details to the compiler.
 Its design explores five critical research questions in approximate
 programming:
 
-\textbf{How can programmers effectively use complex hardware with many
+\textit{How can programmers effectively use complex hardware with many
 available degrees of approximation?}
 Current languages for approximate programming assume that approximation
 will be an all-or-nothing affair~\cite{enerj, rely, chisel}.
@@ -51,7 +51,7 @@ about individual operators to compose reliable software.
 Its probability type system constrains the likelihood that any expression in
 the relaxed program differs from its equivalent in a reliable execution.
 
-\textbf{How can automated tuning interact with programmer control?}
+\textit{How can automated tuning interact with programmer control?}
 Compiler assistance can help reduce the annotation burden of
 approximate programming~\cite{paraprox, expax-tr, chisel}.
 But fully automated approaches impede programmers from bringing intuition
@@ -63,7 +63,7 @@ Programmers in early development phases can opt to rely more heavily on
 inference, while later-stage optimization work can exert total control over
 any type in the program.
 
-\textbf{When static reasoning is insufficient, how can a program safely
+\textit{When static reasoning is insufficient, how can a program safely
 opt into to dynamic tracking?}
 Purely static systems for reasoning about approximation can be overly
 conservative when control flow is dynamic~\cite{rely} while dynamic
@@ -74,7 +74,7 @@ We prove a soundness theorem that shows that \lang's hybrid system of static
 types, dynamic tracking, and run-time checks conservatively bounds the chance
 of errors.
 
-\textbf{How should compilers re-use approximate code in contexts
+\textit{How should compilers re-use approximate code in contexts
 with different accuracy demands?}
 An approximate program can invoke a single function in some contexts
 that permit more approximation and others with stricter reliability
@@ -84,7 +84,7 @@ therefore be conservative.
 \lang's type inference can automatically synthesize specialized
 versions of approximate functions at multiple levels of reliability.
 
-\textbf{What do language-level constraints imply for the design of approximate
+\textit{What do language-level constraints imply for the design of approximate
 hardware?}
 Approximate hardware designs remain in the research stage.
 As designs mature, architectures will need to choose approximation parameters
@@ -145,7 +145,7 @@ reliability of each arithmetic operator and determine the overall reliability
 of the output.
 
 In \lang, the programmer can instead specify only the reliability of the
-output---here, the return value.
+output: here, the return value.
 For other values, where the ``right'' reliability levels are less obvious, the
 programmer can leave the probability inferred.
 The programmer decides only which variables may tolerate \emph{some} degree of
@@ -273,8 +273,8 @@ qualifier---\code{@Approx(1.0)}---is the default, so programmers can
 incrementally annotate reliable code to safely enable approximation.
 
 \paragraph{Information flow and subtyping}
-\lang preserves soundness by permitting data flow high probabilities
-to lower probabilities while preventing low-to-high flow:
+For soundness, \lang's type system permits data flow from high probabilities
+to lower probabilities but prevents low-to-high flow:
 %
 \begin{lstlisting}
 @Approx(0.9) int x = ...;
@@ -293,8 +293,9 @@ other types with lower probability:
          \prec \ApproxN{p'} \> \tau}
 \]
 %
-We control implicit flows by enforcing that only fully reliable types---i.e.,
-\code{@Approx(1.0) $\tau$}---may appear in conditions in \code{if} and
+We control implicit flows by enforcing that only fully reliable types,
+of the form
+\code{@Approx(1.0) $\tau$}, may appear in conditions in \code{if} and
 \code{while} statements.
 (Appendix~\ref{decaf:app:semantics} gives the full type type system.)
 
@@ -456,7 +457,7 @@ profiling or static heuristics, to future work.
 \lang generates the constraints for a program and invokes the Z3 SMT
 solver~\cite{z3} to solve them and to minimize the objective function.
 The compiled binary, including reliability values for each operator, may
-be run on an approximate-hardware simulator to observe energy usage.
+be run on a hardware simulator to observe energy usage.
 
 \subsection{Function Specialization}
 \label{decaf:sec:cloning}
@@ -482,7 +483,7 @@ lead to an exponential explosion in code size.
 
 Instead, we use constraint solving to specialize functions a constant number of
 times according to calling contexts.
-The approach resembles procedure cloning~\cite{procedurecloning} but exploits
+The approach resembles traditional procedure cloning~\cite{procedurecloning} but exploits
 \lang's SMT formulation to automatically identify optimal
 specializations.
 % Each specialized version of a function can operate at a different level of
@@ -549,7 +550,7 @@ producing dead function variants and reducing their operator probabilities to
 zero.
 
 The compiler also detects recursive calls that lead to cyclic dependencies
-among inferred function types and emits an error.
+and emits an error.
 Recursion requires that parameter and return types be specified explicitly.
 
 
@@ -577,7 +578,7 @@ while (fitness(result) > epsilon)
 %
 In this example, the \code{result} variable flows into itself.
 A conservative static approach, such as our type inference, would need to infer
-the type \code{@Approx(0.0) float} for \code{result}.
+the degenerate type \code{@Approx(0.0) float} for \code{result}.
 Fundamentally, since the loop's trip count is data-dependent, purely static
 solutions are unlikely to determine an appropriate reliability level for
 \code{result}.
@@ -635,7 +636,7 @@ Section~\ref{decaf:sec:eval} gives more details on the placement and overhead of
 \code{@Dyn} qualifier.
 
 \paragraph{Interaction with inference}
-Like explicitly parameterized types, inferred static types can interact bidirectionally
+Like explicitly parameterized types, \lang's inferred static types can interact bidirectionally
 with the \code{@Dyn}-qualified types.
 When a value with an inferred type flows into a dynamic type, as in:
 %
@@ -693,7 +694,7 @@ variable to be 0.0 or \emph{forces} a probability to 1.0.
 Each case indicates a situation that warrants developer attention.
 
 An inferred probability of 0.0 indicates that a variable is unconstrained---no
-chain of dependencies connects the value to an explicit annotation.
+dependency chain connects the value to an explicit annotation.
 Unconstrained types can indicate dead code, but they can also signal some
 legitimate uses that require additional annotation.
 If an inferred variable flows only into endorsements and \code{@Dyn}
@@ -767,7 +768,7 @@ completeness, we will prove a property for programs having only \emph{checked}
 endorsements. Unchecked endorsements are an unsound escape hatch.)
 
 The core language also includes one expression that is unnecessary in the
-programmer-facing
+full
 version of \lang: \code{track($p$, $e$)}. This expression is a cast from any static type
 $\ApproxN{p'} \> \tau$ to its dynamically-tracked equivalent, $\Dyn \> \tau$.
 At run time, it initializes the dynamic probability field for the expression.
@@ -897,6 +898,8 @@ constraints for hardware research.
 
 \begin{table}
     \centering
+    \footnotesize
+    \makebox[\textwidth][c]{%
     \begin{tabular}{l l r r r r r r r}
         \toprule
         Application & Description &
@@ -919,6 +922,7 @@ constraints for hardware research.
 
         \bottomrule
     \end{tabular}
+    }
     \caption{Benchmarks used in the evaluation. The middle set of columns show
     the static density of \lang annotations in the Java source code. The final
     two columns show the dynamic proportion of operations in the program that
@@ -1122,7 +1126,7 @@ Figure~\ref{decaf:fig:spark} compares the two approaches, denoted \emph{solving}
 \emph{rounding},
 for two of
 our benchmarks on \mbox{two-,} \mbox{three-,} and four-level machines.
-Hardware-constrained solving shifts the distribution toward lower
+Constrained solving shifts the distribution toward lower
 probabilities in each of the three machines.
 When \bench{mc} runs on a three-level machine, for example, the simple
 rounding strategy rarely uses the lowest $p=0.99$ reliability level;
@@ -1156,8 +1160,11 @@ cheaper rounding strategy.
 \paragraph{Probability granularity}
 
 \begin{figure}
-    \hspace{-3ex}
-    \input{plots/levelbreakdown}
+    \makebox[\textwidth][c]{%
+        \centering
+        \input{plots/levelbreakdown}
+        \hspace{-10em}
+    }
     \caption{Operator probability breakdowns. Each bar shows a hardware
     configuration with a different number of levels.
     Darker shades indicate lower probabilities and correspondingly higher
@@ -1215,7 +1222,7 @@ could make larger level counts more tractable.
 \paragraph{Comparison to ideal}
 
 \begin{figure}
-    \hspace{-3ex}
+    \centering
     \input{plots/idealhist}
     \caption{Approximate operation probabilities on an ideal continuous
     machine. The gray boxes show the probability range accommodated by
@@ -1252,7 +1259,8 @@ suffices to capture most of the flexibility offered by an ideal machine.
 
 
 \paragraph{Example energy model}
-This evaluation measures error probabilities with the goal of allowing
+The goal of measuring error probabilities in this evaluation
+is to allow
 hardware designers to plug in energy models.
 (We intend to make the raw data available in full after publication.)
 To give a sense of the potential savings, we apply a simple energy model
@@ -1261,10 +1269,10 @@ energy savings over a precise operation, $p=10^{-4}$ saves 20\%, $p=10^{-6}$
 saves 10\%, and other levels are interpolated.
 More optimistic hardware proposals exist (e.g., \citet{quora}), but EnerJ's
 conservative CPU-based model serves as a useful point of comparison.
-On an eight-level machine, the total operation energy saved for each
-benchmark is:
-%
+On an eight-level machine, the total operation energy saved is:
+
 \begin{center}
+\footnotesize
 \input{results/energy}
 \begin{tabular}{l r r}
 \toprule
@@ -1281,7 +1289,8 @@ Benchmark & Rounded & Solved \\
 \bottomrule
 \end{tabular}
 \end{center}
-%
+
+\noindent
 The table shows the modeled energy reduction for both the hardware-oblivious
 rounding strategy and the platform-specific solving strategy (except where the
 solver timed out).
@@ -1442,9 +1451,10 @@ Similarly, Bornholt et~al.'s \mbox{Uncertain\textless{T}\textgreater}~\cite{unce
 compose probability distributions at run time, a process that resembles \lang's
 dynamic probability tracking.
 
-\lang also relates to systems for optimizing floating-point precision.
+\lang also relates to systems for optimizing precision in floating-point
+code.
 Precimonious~\cite{precimonious} chooses bitwidths to meet an output precision
-bound, while \citet{stoke-fp} design a superoptimizer that
+bound, and \citet{stoke-fp} design a superoptimizer that
 takes an accurate kernel and
 synthesizes new implementations that approximate the original
 behavior.
