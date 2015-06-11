@@ -407,22 +407,6 @@ subscripts. That is, in the expression \ilcode{a[i]}, the value \ilcode{i} must
 be precise. This makes it easier for the programmer to
 prevent out-of-bounds errors due to approximation.
 
-% WMD thinks it is necessary, at least for accesses to precise arrays,
-% as it would create an information flow.
-% The requirement is not,
-% however, necessary for soundness as Java's bounds checking still prevents
-% arbitrary memory access.
-
-% \TODO{WMD moved the above paragraph from the implementation section
-%   here. I think it's nicer to have all the discussion of arrays in one
-%   place.
-%   Also, why is an approximate index not a hidden control flow
-%   dependency, like for an if-statement? By approximating the array
-%   index, we would change the result of the precise array.
-%   Therefore, for isolation, I think we always need to forbid
-%   approximate array indices.}
-
-
 \section{Formal Semantics}
 \label{enerj:semantics}
 To study the formal semantics of EnerJ, we define the minimal language
@@ -1076,10 +1060,6 @@ While reference types may be annotated as \ilcode{@Approx}, this only affects
 the meaning of \ilcode{@Context} annotations in the class definition and
 method binding on the receiver. Our implementation never
 approximates pointers.
-% \TODO{Don't we already say that somewhere? It seems strange here.}
-% ALDS: It's an important implementation point that we never simulate any
-% approximate storage or computation of pointers. It's implied by what's
-% mentioned earlier, but it bears repeating here.
 
 
 \subsection{Simulator}
@@ -1161,14 +1141,6 @@ entire processor/memory system. For this, we consider a server-like setting,
 where DRAM accounts for 45\% of the power and CPU 55\% \cite{googlepower}. Note
 that in a mobile setting, memory consumes only 25\% of power so power savings in
 the CPU will be more important \cite{carroll2010}.
-% \TODO{At the end of Section 4 we have ``In a smartphone, CPU and
-%  memory account for about 20\%'' and cite the same paper. This is
-%  inconsistent or confusing.}
-% ALDS: The earlier numbers were for CPU/memory relative to the full system.
-% The current numbers are for memory relative to CPU/memory. I think this is
-% pretty clear from the context (although admittedly not if you put the
-% sentences side-by-side) -- but if you still think it needs clarifying, we can
-% do something about it.
 
 \section{Results}
 \label{enerj:sec:res}

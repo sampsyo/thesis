@@ -4,7 +4,7 @@ To bring approximation mainstream, the community will need to address a swath
 of open problems.
 
 \paragraph{Composition}
-Most current tools for approximate programmability are stuck in a
+Current tools for approximate programmability are stuck in a
 whole-program paradigm.
 ACCEPT's compiler analyses and auto-tuner machinery, from \chref{accept},
 assume that they can observe the entire application at once.
@@ -19,8 +19,8 @@ where accuracy is a relationship between module inputs and module outputs.
 The next stage of research should continue to define what composition means in
 an approximate context.
 
-\paragraph{Connecting with everyday approximation}
-Although the term is new, approximate computing is far from a new idea.
+\paragraph{Everyday approximation}
+Although the buzzword is new, approximate computing is far from a new idea.
 Approximation is a fundamental in some domains of computer science.
 Digital signal processing pipelines incorporate accuracy parameters at every
 stage;
@@ -37,8 +37,8 @@ portable in the opposite direction:
 they could help bring programmability to areas where approximation has
 traditionally been difficult to reason about.
 
-\paragraph{Fault tolerance in high-performance computing}
-While approximate computing is not the same as fault tolerance, there are
+\paragraph{High-performance computing \& fault tolerance}
+Approximate computing is not the same as fault tolerance, but there are
 clear connections.
 High-performance computing infrastructures are often large enough that silent
 failures are a fact of life;
@@ -66,12 +66,17 @@ they are critical to determining whether an approximation is successful.
 For approximate computing to succeed, we need better methodologies for
 deriving quality metrics.
 
-\paragraph{Unifying with probabilistic programming}
-Abstractions for approximate program usually need to incorporate probabilistic
+\paragraph{Connections to probabilistic programming}
+Languages for app\-roximate program\-ming usually need to incorporate probabilistic
 semantics.
 Recently, the programming languages research community has developed a focus
 another area that combines programming with probability:
-\emph{probabilistic programming languages} \TODO{cite something}.
+\emph{probabilistic programming languages}~\cite{BBGR13, wingate-lightweight,
+  church, chaganty, pfeffersample, probdsl, koller}.%
+\footnote{%
+    For general background on probabilistic programming, see
+    \href{http://probabilistic-programming.org/}{\texttt{probabilistic-programming.org}}.%
+}
 So far, this direction has assumed a relatively narrow focus:
 making it easier to express and work with machine-learning models.
 But the two research areas should cross-pollinate:
