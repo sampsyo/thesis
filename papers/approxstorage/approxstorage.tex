@@ -234,6 +234,9 @@ resources to minimize the magnitude of errors when they occur.
 \label{approxstorage:sec:amlc}
 
 \begin{figure}
+    \centering
+    \makebox[\textwidth][c]{%
+    \hspace{-4ex}
     \begin{subfigure}{0.5\columnwidth}
         \centering
         \includegraphics[scale=0.8]{figs/mlc-precise.pdf}
@@ -246,6 +249,7 @@ resources to minimize the magnitude of errors when they occur.
         \caption{Approximate MLC}
         \label{approxstorage:fig:mlc-approx}
     \end{subfigure}
+    }
     \caption{
         The range of analog values in a precise (a) and approximate (b) four-level cell. The shaded areas are
         the target regions for writes to each level (the parameter $T$ is half
@@ -294,7 +298,7 @@ Figure~\ref{approxstorage:fig:mlc} illustrates this idea.
 
 \begin{figure}
     \centering
-    \includegraphics[scale=0.9]{figs/mlc-step}
+    \includegraphics[scale=1.1]{figs/mlc-step}
     \caption{
         A single step in an iterative program-and-verify write. The value
         starts at $v_1$ and takes a step. The curve shows the probability
@@ -502,18 +506,22 @@ error---when the cell stores $l-1$ or $l+1$ after attempting to write
 $l$---corresponds to a integer error of $1$ in the stored value.
 
 \begin{figure}
-    \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \makebox[\textwidth][c]{%
+    \begin{subfigure}{0.6\columnwidth}
         \centering
-        \includegraphics[scale=0.65]{figs/coding-chunk}
+        \includegraphics[scale=0.7]{figs/coding-chunk}
         \caption{Concatenation code}
         \label{approxstorage:fig:coding-chunk}
     \end{subfigure}
-    \begin{subfigure}{0.5\columnwidth}
+    \hspace{-1ex}
+    \begin{subfigure}{0.6\columnwidth}
         \centering
-        \includegraphics[scale=0.65]{figs/coding-stripe}
+        \includegraphics[scale=0.7]{figs/coding-stripe}
         \caption{Striping code}
         \label{approxstorage:fig:coding-stripe}
     \end{subfigure}
+    }
     \caption{
         Two codes for storing 16-bit numbers in four
         4-bit cells. Each color indicates a different cell.
@@ -979,22 +987,26 @@ case~\cite{pcm-dram-alt,flash-retention-relax}.
 \paragraph{Approximate main memory}
 
 \begin{figure}
+    \centering
+    \makebox[\textwidth][c]{%
     \begin{subfigure}[b]{0.5\columnwidth}
         \centering
         \input{plots/qos_mlc-stripe}
         \caption{
-            Main-memory applications with approximate MLC.
+            Main memory with approximate MLC.
         }
         \label{approxstorage:fig:qos-mlc}
     \end{subfigure}
+    \hspace{4ex}
     \begin{subfigure}[b]{0.5\columnwidth}
         \centering
         \input{plots/nv_qos_mlc-stripe}
         \caption{
-            Persistent data sets with approximate MLC.
+            Persistent data with approximate MLC.
         }
         \label{approxstorage:fig:nv-qos-mlc}
     \end{subfigure}
+    }
     \caption{
         Output degradation for each benchmark using the approximate
         MLC technique.
@@ -1137,14 +1149,17 @@ density increase should only be used with certain applications.
 \paragraph{Impact of drift}
 
 \begin{figure}
+    \centering
+    \makebox[\textwidth][c]{%
     \begin{subfigure}[b]{0.5\columnwidth}
         \centering
         \input{plots/drift}
         \caption{
-            Drift impact for main-memory applications.
+            Drift for main-memory applications.
         }
         \label{approxstorage:fig:mm-drift}
     \end{subfigure}
+    \hspace{4ex}
     \begin{subfigure}[b]{0.5\columnwidth}
         \centering
         \input{plots/nv_drift}
@@ -1153,6 +1168,7 @@ density increase should only be used with certain applications.
         }
         \label{approxstorage:fig:nv-drift}
     \end{subfigure}
+    }
     \caption{
         Application output quality over time using the approximate MLC
         technique using 2.1 cycles per write.
@@ -1271,14 +1287,17 @@ their precise data or quality drops below a threshold.
 \end{figure}
 
 \begin{figure}
+    \centering
+    \makebox[\textwidth][c]{%
     \begin{subfigure}[b]{0.5\columnwidth}
         \centering
         \input{plots/qos_persistent-tbec2}
         \caption{
-            Main-memory applications using failed blocks.
+            Main memory using failed blocks.
         }
         \label{approxstorage:fig:qos-p-tb}
     \end{subfigure}
+    \hspace{4ex}
     \begin{subfigure}[b]{0.5\columnwidth}
         \centering
         \input{plots/nv_qos_a-tbec2}
@@ -1287,6 +1306,7 @@ their precise data or quality drops below a threshold.
         }
         \label{approxstorage:fig:nv-qos-tb}
     \end{subfigure}
+    }
     \caption{
         Output quality degradation for each benchmark when using the
         failed-block recycling technique. The horizontal axis is the number of
