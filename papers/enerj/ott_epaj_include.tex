@@ -692,8 +692,8 @@
 }}
 
 \newcommand{\ottdefnqcombqrules}[1]{\begin{ottdefnblock}[#1]{$ \ottnt{q} \, \rhd\,  \ottnt{q'} \ \  \textsf{=} \ \  \ottnt{q''} $}{\ottcom{combining two precision qualifiers}}
-\ottusedrule{\ottdruleqcqXXcontext{}}
-\ottusedrule{\ottdruleqcqXXlost{}} \\
+\ottusedrule{\ottdruleqcqXXcontext{}} \\[1ex]
+\ottusedrule{\ottdruleqcqXXlost{}} \\[1ex]
 \ottusedrule{\ottdruleqcqXXfixed{}}
 \end{ottdefnblock}}
 
@@ -931,14 +931,14 @@
 \ottusedrule{\ottdruletrXXsubsum{}}
 \ottusedrule{\ottdruletrXXnull{}}
 \ottusedrule{\ottdruletrXXliteral{}}
-\ottusedrule{\ottdruletrXXvar{}}
+\ottusedrule{\ottdruletrXXvar{}} \\[2ex]
 \ottusedrule{\ottdruletrXXnew{}}
-\ottusedrule{\ottdruletrXXread{}}
+\ottusedrule{\ottdruletrXXread{}} \\[2ex]
 \ottusedrule{\ottdruletrXXwrite{}}
 \ottusedrule{\ottdruletrXXcallOne{}}
-\ottusedrule{\ottdruletrXXcallTwo{}} \\
+\ottusedrule{\ottdruletrXXcallTwo{}} \\[2ex]
 \ottusedrule{\ottdruletrXXcallThree{}}
-\ottusedrule{\ottdruletrXXcast{}}
+\ottusedrule{\ottdruletrXXcast{}} \\[2ex]
 \ottusedrule{\ottdruletrXXprimop{}}
 \ottusedrule{\ottdruletrXXcond{}}
 \end{ottdefnblock}}
@@ -1181,7 +1181,7 @@
 }}
 
 \newcommand{\ottdefnupdate}[1]{\begin{ottdefnblock}[#1]{$ \ottnt{h} \!\left[  \iota \texttt{.} \ottmv{f} \  := \  v  \right]\  \textsf{=} \  \ottnt{h'} $}{\ottcom{field update in heap}}
-\ottusedrule{\ottdrulehupXXrefT{}} \\
+\ottusedrule{\ottdrulehupXXrefT{}} \\[2ex]
 \ottusedrule{\ottdrulehupXXprimT{}}
 \end{ottdefnblock}}
 
@@ -1472,15 +1472,15 @@
 \newcommand{\ottdefnsemantics}[1]{\begin{ottdefnblock}[#1]{$ \mathit{ {^r}\!\Gamma} \  \textsf{$\vdash$} \  \ottnt{h} ,  \ottnt{e} \ \leadsto\  \ottnt{h'} ,  v $}{\ottcom{big-step operational semantics}}
 \ottusedrule{\ottdruleosXXnull{}}
 \ottusedrule{\ottdruleosXXliteral{}}
-\ottusedrule{\ottdruleosXXvar{}}
+\ottusedrule{\ottdruleosXXvar{}} \\[2ex]
 \ottusedrule{\ottdruleosXXnew{}}
-\ottusedrule{\ottdruleosXXread{}}
-\ottusedrule{\ottdruleosXXwrite{}} \\
-\ottusedrule{\ottdruleosXXcall{}} \\
+\ottusedrule{\ottdruleosXXread{}} \\[2ex]
+\ottusedrule{\ottdruleosXXwrite{}} \\[2ex]
+\ottusedrule{\ottdruleosXXcall{}} \\[2ex]
 \ottusedrule{\ottdruleosXXcast{}}
-\ottusedrule{\ottdruleosXXprimop{}} \\
+\ottusedrule{\ottdruleosXXprimop{}} \\[2ex]
 \ottusedrule{\ottdruleosXXcondXXt{}}
-\ottusedrule{\ottdruleosXXcondXXf{}}
+\ottusedrule{\ottdruleosXXcondXXf{}} \\[2ex]
 \ottusedrule{\ottdruleosXXapprox{}}
 \end{ottdefnblock}}
 
@@ -1628,14 +1628,14 @@
 \newcommand{\ottdefncheckedsemantics}[1]{\begin{ottdefnblock}[#1]{$ \mathit{ {^r}\!\Gamma} \  \textsf{$\vdash$} \  \ottnt{h} ,  \ottnt{e} \ \leadsto_{c}\  \ottnt{h'} ,  v $}{\ottcom{checked big-step operational semantics}}
 \ottusedrule{\ottdrulecosXXnull{}}
 \ottusedrule{\ottdrulecosXXliteral{}}
-\ottusedrule{\ottdrulecosXXvar{}}
+\ottusedrule{\ottdrulecosXXvar{}} \\[2ex]
 \ottusedrule{\ottdrulecosXXnew{}}
-\ottusedrule{\ottdrulecosXXread{}} \\
-\ottusedrule{\ottdrulecosXXwrite{}} \\
-\ottusedrule{\ottdrulecosXXcall{}} \\
+\ottusedrule{\ottdrulecosXXread{}} \\[2ex]
+\ottusedrule{\ottdrulecosXXwrite{}} \\[2ex]
+\ottusedrule{\ottdrulecosXXcall{}} \\[2ex]
 \ottusedrule{\ottdrulecosXXcast{}}
-\ottusedrule{\ottdrulecosXXprimop{}} \\
-\ottusedrule{\ottdrulecosXXcondXXt{}} \\
+\ottusedrule{\ottdrulecosXXprimop{}} \\[2ex]
+\ottusedrule{\ottdrulecosXXcondXXt{}} \\[2ex]
 \ottusedrule{\ottdrulecosXXcondXXf{}}
 \end{ottdefnblock}}
 
