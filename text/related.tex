@@ -112,8 +112,6 @@ unit~\cite{tabsh}.
 Near-threshold voltage domains also present a new opportunity for embracing
 unpredictable circuit operation~\cite{soft-ntc}.
 
-\TODO{cite chisel, expax}
-
 
 
 
@@ -175,9 +173,16 @@ optimize for energy.
 Precimonious~\cite{precimonious} addresses the problem of choosing appropriate
 floating-point widths, which amount to a trade-off between numerical accuracy
 and space or operation cost.
+Similarly, STOKE's floating-point extension~\cite{stoke-fp} synthesizes new
+versions of floating-point functions from scratch to meet different accuracy
+requirements with optimal efficiency.
 
-\TODO{cite stoke-fp, maybe herbie}
-\TODO{\cite{npu, anpu, snnap, neuralgpu}}
+Neural acceleration is a recent technique treading code as a black box and
+transforming it to a neural-network representation.
+It is, at its core, an algorithmic transformation, but it integrates tightly
+with hardware support: a digital accelerator, analog circuits, FPGAs, or
+GPUs~\cite{npu, anpu, snnap, neuralgpu}.
+See \secref{npu} for a more detailed overview of neural acceleration.
 
 
 \section{Dynamically Controlling Approximation}
@@ -186,6 +191,23 @@ Program-level transformations can also help detect egregious errors while
 allowing small, inconsequential disruptions~\cite{lwc, approxdebug}.
 A variety of techniques propose mechanisms for run-time or profiling feedback to adapt
 approximation parameters~\cite{dynamicknobs, green, approxit, ansel-autotuning}.
+
+\section{Languages for Expressing Approximation}
+
+Recently, language constructs that express and constrain
+approximation have become a focus in the programming-languages research
+community.
+Relax~\cite{relax} is a language with ISA support for tolerating architectural
+faults in software.
+Rely~\cite{rely} uses specifications that relate the reliability of the input
+to an approximate region of code to its outputs.
+
+A related set of recent approximate-programming tools attempt to \emph{adapt}
+a program to meet accuracy demands while using as few resources as possible.
+Chisel~\cite{chisel} is an extension to Rely that searches for the subset of
+operations in a program that can safely be made approximate.
+ExpAX~\cite{expax-tr} finds safe-to-approximate operations automatically and
+uses a metaheuristic to find which subset of them to actually approximate.
 
 
 \section{Exploiting Resilience in Other Systems}
@@ -221,8 +243,6 @@ Other preliminary efforts from MIT~\cite{batesmit, lyric, mansinghka-circuits} a
 Stanford~\cite{ersa} fall into the same category.
 
 \section{Probabilistic Semantics}
-
-\TODO{this is now very disorganized}
 
 Researchers have proposed several languages and tools to
 help developers better reason about and describe real-world
@@ -274,13 +294,6 @@ make probabilistic assertion verification efficient.
 
 \subsection{Probabilistic Programming Languages}
 
-While these designs have shown large efficiency gains on a restricted domain
-of problems, the challenge remains to develop a programming model that allows
-developers to efficiently express general applications. \emph{Probabilistic
-programming}, a separate effort in the machine learning community, helps
-express inference and learning algorithms by making probability a first-class
-concern~\cite{church}.
-
 The field of \emph{probabilistic programming} seeks to enable efficient
 construction and querying of statistical models~\cite{BBGR13, wingate-lightweight,
   church, chaganty, pfeffersample, probdsl, koller}.  Experts write
@@ -306,6 +319,3 @@ components~\cite{asac}.
 Finally, Cong and Gururaj describe a technique for automatically
 distinguishing between critical and non-critical instructions for the purpose
 of selective fault tolerance~\cite{cong-iccad}.
-
-\TODO{cite rely/chisel}
-\TODO{cite expax}
