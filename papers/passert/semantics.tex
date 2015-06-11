@@ -216,6 +216,8 @@ suggest quotation or suspended evaluation.
 Figure~\ref{passert:sem:symbolic} lists the full set of rules.
 
 \begin{figure}[p]
+\centering
+\makebox[\textwidth][c]{%
 \begin{mathpar}
   \inferrule[plus]{(H, e_1) \judge_s x_1 \\ (H, e_2) \judge_s x_2}{(H, e_1 +
     e_2) \judge_s \{x_1 + x_2\}} \and
@@ -239,7 +241,7 @@ Figure~\ref{passert:sem:symbolic} lists the full set of rules.
   \inferrule[assign]{(H, e) \judge_s \{ x \}}{(n, H, v := e) \to_s (n, (v \mapsto
     \{ x \}):H, \mathbf{skip})} \and
   \inferrule[sample]{ }{(\{ n \}, H, v \leftarrow d) \to_s (\{ n + 1 \}, (v \mapsto
-    \{ \langle d, n \rangle \}):H, \mathbf{skip})}
+    \{ \langle d, n \rangle \}):H, \mathbf{skip})} \and
   \inferrule[progn]{(n, H, s_1) \to_s (n', H', s_1')}{(n, H, s_1;s_2)
     \to_s (n', H', s_1'\:;\:s_2)} \and
   \inferrule[prog1]{ }{(n, H, \mathbf{skip};s_2) \to_s (n, H, s_2)} \and
@@ -264,6 +266,7 @@ Figure~\ref{passert:sem:symbolic} lists the full set of rules.
   \inferrule{H_t(v) = a \\ H_f(v) = b \\ a = b}
     {\mathtt{merge}(H_t, H_f, \{x\})(v) = a}
 \end{mathpar}
+}
 \caption{The symbolic semantics produce
   an expression tree.  We use a big-step style for conditions
   and expressions, and small-step style for statements.  Each big step
