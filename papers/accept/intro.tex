@@ -1,16 +1,12 @@
 \section{Introduction}\label{accept:sec:intro}
 
-The term \emph{approximate computing} includes a diverse spectrum of
+Approximate computing encapsulates a diverse spectrum of
 implementation techniques, spanning both hardware and software:
-everything from adjusting numerical representations~\cite{precimonious}
-to exploiting analog circuits~\cite{anpu}.
-These proposals share an important distinction
-from traditional program optimizations:
-they have subtle and broad-ranging effects on safety, reliability, and output
-quality.
+everything from adjusting numerical representations
+to exploiting analog circuits.
 Some work relies on programmers for manual reasoning to control
-these
-effects~\cite{npu, flikker, races-ibm, perforation},
+approximation's
+the potential effects~\cite{npu, flikker, races-ibm, perforation},
 while other work proposes automated transformation based on code
 patterns or exhaustive search~\cite{green, paraprox, sage}.
 Manual code editing can be tedious and error-prone, especially since
@@ -20,7 +16,7 @@ visibility and control.
 Programmers must trust the automated system; they have no recourse when
 opportunities are missed or invariants are broken.
 
-We propose \sysname
+This chapter describes \sysname
 (an Approximate C Compiler for Energy and Performance Trade-offs),
 a framework for approximation that balances automation with programmer
 guidance.
