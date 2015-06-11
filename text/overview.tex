@@ -322,7 +322,13 @@ The technique is based on a new language construct called a
 \emph{probabilistic assertion}.
 The construct is analogous to a traditional assertion: \code{assert $e$}
 expresses that the expression $e$ must always be true.
-A probabilistic assertion \code{passert $e$, $p$, $c$} indicates that $e$ must
+A probabilistic assertion:
+%
+\begin{lstlisting}
+passert $e$, $p$, $c$
+\end{lstlisting}
+%
+indicates that $e$ must
 be true with at least probability $p$, and the system has to prove the
 property at confidence level $c$.
 These assertions can encode important quality properties in approximate
@@ -508,7 +514,7 @@ programmers.
 The tool identifies and blames specific approximation decisions in a large
 codebase when they are responsible for too much quality degradation.
 
-The work on dynamic monitoring and debugging appears in the thesis of
+The work on dynamic quality analysis appears in the thesis of
 Michael F.\ Ringenburg~\cite{ringenburg-thesis}.
 
 
@@ -519,6 +525,7 @@ trade-offs.
 Historical context is particularly important to this dissertation because the
 fundamental idea of exchanging accuracy for returns in efficiency is so old:
 analog computers and floating-point numbers, for example, are prototypical
+examples of
 approximate-computing strategies.
 
 Parts~\ref{part:programming} and~\ref{part:systems} form the core of the

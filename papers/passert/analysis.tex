@@ -96,7 +96,8 @@ write the unconditional distribution $\prob{B}$ as:
 \begin{align*}
     \prob{B} &= \sum_a \prob{B\;|\; A = a} \prob{A = a} \\
            &= \prob{B \;|\; A = \mathrm{true}} \cdot \prob{A = \mathrm{true}}
-            + \prob{B \;|\; A = \mathrm{false}} \cdot \prob{A = \mathrm{false}} \\
+    \\
+    & \> \> \> + \prob{B \;|\; A = \mathrm{false}} \cdot \prob{A = \mathrm{false}} \\
            &= \prob{C} \cdot \prob{A=\mathrm{true}}
             + \prob{D} \cdot (1 - \prob{A=\mathrm{true}})
 \end{align*}

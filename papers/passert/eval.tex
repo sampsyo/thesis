@@ -61,6 +61,8 @@ operations over point-mass distributions.
 
 \begin{table}[t!]
     \centering
+    \footnotesize
+    \makebox[\textwidth][c]{%
     \begin{tabular}{l
     >{\raggedright\arraybackslash} p{2.7in}
     r r r
@@ -82,6 +84,7 @@ operations over point-mass distributions.
         \input{results/benchtable.tex}
         % \bottomrule
     \end{tabular}
+    }
     \caption{
         Programs used in the evaluation.
         The \passert for each application describes a probabilistic
@@ -272,10 +275,9 @@ long as the strawman checker, for a speedup of
 
 
 \begin{figure}
-    \begin{centering}
-    \includegraphics[width=8.5cm]{results/performance}
-    \end{centering}
-    \vspace{-2ex}
+    \centering
+    \includegraphics[width=9.5cm]{results/performance}
+    \vspace{-1ex}
     \caption{\tool reduces testing time.  We normalize to B: the baseline
       stress-testing technique with 74147 samples. N is \tool without 
       optimizations and O is \tool with optimizations, divided into
