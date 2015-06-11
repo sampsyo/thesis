@@ -1438,95 +1438,25 @@ increasing the ECP budget.
 % for MM: 45% (2.06 -> 3.00)
 
 
-\section{Related Work}
-\label{approxstorage:sec:related}
-
-Approximate storage builds on three broad categories of related work:
-approximate computing, optimizing accesses to storage
-cells, and tolerating failures in solid-state memories.
-
-Approximate computing is an area of research that seeks to optimize the
-execution of error-tolerant programs using both
-hardware~\cite{flikker,truffle,npu,relax,pcmos,stochasticproc} and software~\cite{green,perforation,dynamicknobs} techniques. Programmers control the impact of approximate execution using language features, analyses, or program
-logics~\cite{enerj,relax,carbin_pldi12,rely}. While much of the work on
-approximate computing has focused on computation itself---optimizing algorithms
-or processor logic---some recent work has proposed to lower the refresh rate of
-DRAM~\cite{flikker} or the supply voltage of
-SRAM~\cite{truffle,hybridsram,sramerrors}. This work, in contrast, explores techniques that take advantage
-of the unique properties of \emph{non-volatile} solid-state storage
-technologies like PCM and Flash: wear-out and multi-level configurations.
-Unlike prior work on SRAM and DRAM, we evaluate approximate storage for both
-transient (main memory) and persistent (filesystem or database) data.
-
-Prior work has also explored techniques for optimizing accesses to PCM and
-Flash~\cite{writecancel,improvingwrites} or architecting systems to
-efficiently use PCM as main
-memory~\cite{durable-pcm-mm,pcm-dram-alt,ecp,drm,qureshi-pcm-mm}. In particular, half-wits~\cite{halfwits} and
-power fade~\cite{powerfade} use low-voltage, error-prone
-Flash operations to reduce power and energy.
-Similarly, retention relaxation uses less-precise program-and-verify parameters to
-speed up writes to MLC Flash cells when data has a short
-lifetime~\cite{flash-retention-relax}. Approximate MLCs complement these
-techniques by allowing even faster writes when bit errors are tolerable. A
-system can, for example, combine retention relaxation and approximate storage
-by ``underestimating'' the necessary retention time of approximate data.
-%
-Previous work has also proposed adapting the density of SLC and MLC cells in main
-memory~\cite{morphablepcm} and persistent storage~\cite{adams} deployments.
-While these systems trade off density for performance, energy, and endurance,
-data is always stored precisely. This work proposes MLC
-configurations that permit storage errors but improve density or access
-efficiency beyond what is possible in precise configurations.
-
-% Finally, some previous work has explored MLC PCM cells that support multiple
-% densities, offering a trade-off between performance and capacity~\cite{adams,
-% morphablepcm}. Approximate MLCs represent an opportunity to improve
-% performance for a fixed density or improve density with a fixed latency when
-% data can tolerate some errors.
-
-Our failed-block recycling technique extends prior work on low-overhead
-techniques for hiding failures in memories that experience
-wear-out~\cite{ecp,safer,payg,zombie}.
-Recent work has also considered letting applications relax
-consistency demands on writes to persistent storage in exchange for performance~\cite{mempersistency,optfs}.
-A number of studies have examined empirical error rates in hard disks, flash,
-and DRAM~\cite{diskmttf,googledisk,flasherror,flasherrors};
-future research could apply approximate storage techniques to
-these widespread technologies.
-
-Approximate storage resembles techniques for lossy compression: both improve
-resource usage at the cost of some lost information. But by exploiting the
-characteristics of the underlying storage technology, approximate storage
-differs from traditional compression in two important ways. First, whereas
-lossy compression deterministically discards data, approximate storage
-techniques exhibit probabilistic data retention. This difference makes
-approximate storage more suited to applications where random errors are
-tolerable, such as in neural networks. Second, failed block recycling unlocks
-more usable bytes of memory that are not available to traditional compression.
-For example, a system that compresses data in precise blocks but stores
-uncompressed data in blocks with failures can conserve more space than either
-technique allows independently.
-Composing approximation with compression on the same data, however, can lead
-to poor results because each bit represents a larger amount of data.
-(Encryption has a similar effect.)
-
-\section{Conclusion}
+\section{Discussion}
 \label{approxstorage:sec:conclusion}
 
-Solid-state, non-volatile storage technologies such as PCM and Flash are
-becoming increasingly important components of the modern computing landscape.
+Approximate storage exposes new efficiency--accuracy trade-offs in a system
+component that other work on system-level approximation steers around:
+main memory and persistent storage.
 As DRAM scaling begins to falter, PCM and other resistive memories will become
-crucial to satisfying increasing memory needs in mobile and server settings
-alike. But these technologies present new challenges due to wear-out and slow
-writes, especially in multi-level cell configurations. For many applications,
-however, perfect data retention is not always necessary---the time and space
-spent on ensuring correct operation is wasted for some data. \emph{Approximate
-storage}, via approximate MLCs and failed-block recycling, represents an
-opportunity to exploit this error tolerance to improve performance, energy, and
-capacity. Our results for write acceleration and lifetime extension suggest
-that approximate storage can mitigate the drawbacks of these solid-state,
-non-volatile memories in exchange for reduced output accuracy.
-As PCM and similar technologies gain adoption, developers and users will need
-to decide whether ``perfect'' precision is always worth its costs in
-performance, energy, density, and lifetime---or whether approximation is a
-good trade-off for better storage efficiency.
+crucial to satisfying increasing memory needs.
+The two techniques in this chapter offer one way to work around these new
+technologies' novel quirks:
+wear-out and slow
+writes, especially in multi-level cell configurations.
+
+This work also poses one important unsolved problem (see
+Section~\ref{approxstorage:sec:coding}):
+how should we encode approximate data for approximate channels?
+The vast body of work on coding theory for error correction tends to assume
+that we need to recover the data exactly---or, more generally, that every bit
+in a message is equally important.
+Encoding data to minimize the \emph{numerical} error in the decoded values
+remains an important, and unexplored, counterpoint to traditional
+error correction.
