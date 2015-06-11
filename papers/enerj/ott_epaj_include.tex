@@ -597,7 +597,7 @@
 
 \newcommand{\ottdefnsubclassing}[1]{\begin{ottdefnblock}[#1]{$ \ottnt{C} \ \textsf{$\sqsubseteq$}\  \ottnt{C'} $}{\ottcom{subclassing}}
 \ottusedrule{\ottdrulescXXdef{}}
-\ottusedrule{\ottdrulescXXrefl{}}
+\ottusedrule{\ottdrulescXXrefl{}} \\
 \ottusedrule{\ottdrulescXXtrans{}}
 \end{ottdefnblock}}
 
@@ -693,7 +693,7 @@
 
 \newcommand{\ottdefnqcombqrules}[1]{\begin{ottdefnblock}[#1]{$ \ottnt{q} \, \rhd\,  \ottnt{q'} \ \  \textsf{=} \ \  \ottnt{q''} $}{\ottcom{combining two precision qualifiers}}
 \ottusedrule{\ottdruleqcqXXcontext{}}
-\ottusedrule{\ottdruleqcqXXlost{}}
+\ottusedrule{\ottdruleqcqXXlost{}} \\
 \ottusedrule{\ottdruleqcqXXfixed{}}
 \end{ottdefnblock}}
 
@@ -936,7 +936,7 @@
 \ottusedrule{\ottdruletrXXread{}}
 \ottusedrule{\ottdruletrXXwrite{}}
 \ottusedrule{\ottdruletrXXcallOne{}}
-\ottusedrule{\ottdruletrXXcallTwo{}}
+\ottusedrule{\ottdruletrXXcallTwo{}} \\
 \ottusedrule{\ottdruletrXXcallThree{}}
 \ottusedrule{\ottdruletrXXcast{}}
 \ottusedrule{\ottdruletrXXprimop{}}
@@ -1181,7 +1181,7 @@
 }}
 
 \newcommand{\ottdefnupdate}[1]{\begin{ottdefnblock}[#1]{$ \ottnt{h} \!\left[  \iota \texttt{.} \ottmv{f} \  := \  v  \right]\  \textsf{=} \  \ottnt{h'} $}{\ottcom{field update in heap}}
-\ottusedrule{\ottdrulehupXXrefT{}}
+\ottusedrule{\ottdrulehupXXrefT{}} \\
 \ottusedrule{\ottdrulehupXXprimT{}}
 \end{ottdefnblock}}
 
@@ -1300,7 +1300,7 @@
 }}
 
 \newcommand{\ottdefnsmbodyc}[1]{\begin{ottdefnblock}[#1]{$ \mathrm{MBody}\!\left( \ottnt{C} ,  \ottnt{m} ,  \ottnt{q} \right)\  \textsf{=} \  \ottnt{e} $}{\ottcom{look up most-concrete body of $\ottnt{m}$, $\ottnt{q}$ in class $\ottnt{C}$ or a superclass}}
-\ottusedrule{\ottdrulesmbcXXfound{}}
+\ottusedrule{\ottdrulesmbcXXfound{}} \\
 \ottusedrule{\ottdrulesmbcXXinh{}}
 \end{ottdefnblock}}
 
@@ -1331,8 +1331,8 @@
 }}
 
 \newcommand{\ottdefnrmbody}[1]{\begin{ottdefnblock}[#1]{$ \mathrm{MBody}\!\left( \ottnt{h} ,  \iota ,  \ottnt{m} \right)\  \textsf{=} \  \ottnt{e} $}{\ottcom{look up most-concrete body of method $\ottnt{m}$ at $\iota$}}
-\ottusedrule{\ottdrulermbXXcallOne{}}
-\ottusedrule{\ottdrulermbXXcallTwo{}}
+\ottusedrule{\ottdrulermbXXcallOne{}} \\
+\ottusedrule{\ottdrulermbXXcallTwo{}} \\
 \ottusedrule{\ottdrulermbXXcallThree{}}
 \end{ottdefnblock}}
 
@@ -1475,10 +1475,10 @@
 \ottusedrule{\ottdruleosXXvar{}}
 \ottusedrule{\ottdruleosXXnew{}}
 \ottusedrule{\ottdruleosXXread{}}
-\ottusedrule{\ottdruleosXXwrite{}}
-\ottusedrule{\ottdruleosXXcall{}}
+\ottusedrule{\ottdruleosXXwrite{}} \\
+\ottusedrule{\ottdruleosXXcall{}} \\
 \ottusedrule{\ottdruleosXXcast{}}
-\ottusedrule{\ottdruleosXXprimop{}}
+\ottusedrule{\ottdruleosXXprimop{}} \\
 \ottusedrule{\ottdruleosXXcondXXt{}}
 \ottusedrule{\ottdruleosXXcondXXf{}}
 \ottusedrule{\ottdruleosXXapprox{}}
@@ -1630,12 +1630,12 @@
 \ottusedrule{\ottdrulecosXXliteral{}}
 \ottusedrule{\ottdrulecosXXvar{}}
 \ottusedrule{\ottdrulecosXXnew{}}
-\ottusedrule{\ottdrulecosXXread{}}
-\ottusedrule{\ottdrulecosXXwrite{}}
-\ottusedrule{\ottdrulecosXXcall{}}
+\ottusedrule{\ottdrulecosXXread{}} \\
+\ottusedrule{\ottdrulecosXXwrite{}} \\
+\ottusedrule{\ottdrulecosXXcall{}} \\
 \ottusedrule{\ottdrulecosXXcast{}}
-\ottusedrule{\ottdrulecosXXprimop{}}
-\ottusedrule{\ottdrulecosXXcondXXt{}}
+\ottusedrule{\ottdrulecosXXprimop{}} \\
+\ottusedrule{\ottdrulecosXXcondXXt{}} \\
 \ottusedrule{\ottdrulecosXXcondXXf{}}
 \end{ottdefnblock}}
 
