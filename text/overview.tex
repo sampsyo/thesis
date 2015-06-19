@@ -64,7 +64,7 @@ The principles are:
 \item Result quality is an application-specific property.
 \item Approximate abstractions should distinguish between safety properties
     and quality properties.
-\item Hardware and software need to collaborate to reach realize the best
+\item Hardware and software need to collaborate to reach the best
     potential of approximate computing.
 \item Approximate programming models need to incorporate probability and
     statistics.
@@ -187,7 +187,7 @@ individual words of memory (e.g., Truffle~\cite{truffle});
 and coarse-grained approximations that holistically transform entire
 algorithms (e.g., neural acceleration~\cite{npu}).
 
-An technique's granularity affects its
+A technique's granularity affects its
 generality and its efficiency potential.
 A fine-grained approximation can be very general:
 an approximate multiplier unit, for example, can potentially apply to any
@@ -247,7 +247,7 @@ semantics.
 EnerJ lets programmers enforce a separation between critical and non-critical
 components.
 It uses a type system that
-borrows from static data
+borrows from static information
 flow systems for security~\cite{jif, infflow-survey} to provide a static
 noninterference guarantee for precise data.
 EnerJ extends Java with two type qualifiers, \code{@Approx} and
@@ -287,8 +287,8 @@ correctness probabilities.
 
 DECAF's added sophistication over EnerJ's simple two-level system comes at a
 cost in complexity:
-a type system that requires probability annotations on every expression,
-however, would quickly become infeasible for programmers.
+a type system that requires probability annotations on every expression
+would quickly become infeasible for programmers.
 To mitigate annotation overhead, DECAF adds type inference.
 Sparse probability annotations on the inputs and outputs of coarse-grained
 subcomputations are typically enough for DECAF's inference system to determine
@@ -359,7 +359,7 @@ abstractions.
 
 \subsubsection{Approximate Storage for Solid-State Memory Technologies}
 
-One system design, detailed in \chref{approxstorage}, exploits builds on trend in hardware technologies.
+One system design, detailed in \chref{approxstorage}, builds on a trend in hardware technologies.
 It exploits unique properties of new solid-state memories,
 such as flash and phase-change memory,
 to implement two orthogonal trade-offs between resource and accuracy.
@@ -411,12 +411,12 @@ Fully manual approximation can be tedious and error prone,
 but fully automatic systems can also frustrate developers by isolating them
 from decisions that can break their code.
 ACCEPT relies on the distinction between quality and safety (see
-\secref{princ:safety}) reconcile the extremes.
+\secref{princ:safety}) to reconcile the extremes.
 Type annotations resembling EnerJ's enforce safety, but programmers are kept
 in the loop with an interactive optimization workflow to rule out unexpected
 quality effects.
 Together, the systems leverage the best of both factors:
-programmer insight for preserving application-specific properties,
+programmer insight for preserving application-specific properties
 and automatic compiler reasoning for identifying obscure data flows.
 
 \section{Other Work}
@@ -443,7 +443,7 @@ A key challenge in the design was supporting an ISA that could efficiently
 support an EnerJ-like programming model, where the precise and approximate
 components of a program remain distinct but interleave at a fine grain.
 
-Our simulation of the Truffle design space yielded results ranging a 5\%
+Our simulation of the Truffle design space yielded results ranging from a 5\%
 energy consumption \emph{increase} to a 43\% reduction.
 These results emphasize the efficiency limits of very fine-grained
 approximation (see the granularity principle in \secref{princ:granularity}).
@@ -456,7 +456,7 @@ Modern processors spend as much energy on
 control as they do on computation itself, so any technique that optimizes only
 computation will quickly encounter Amdahl's law.
 
-The Truffle work in appears in the thesis of Hadi
+The Truffle work in appears in the dissertation of Hadi
 Esmaeilzadeh~\cite{hadi-thesis}.
 
 
@@ -485,7 +485,7 @@ These conflicting objectives demonstrate the need for techniques that bridge
 the granularity gap.
 
 The original neural acceleration work also appears in Hadi Esmaeilzadeh's
-thesis~\cite{hadi-thesis}.
+dissertation~\cite{hadi-thesis}.
 I also worked on a recent extension of the idea for programmable
 logic~\cite{snnap}.
 
@@ -504,18 +504,18 @@ The goal is to raise an exception whenever the program produces a ``bad''
 output.
 While the ideal monitoring system would directly measure the quality
 degradation of every output,
-perfect measurement is infeasible expensive for run-time deployment.
+perfect measurement is too expensive for run-time deployment.
 Our framework provides a range of techniques for specific scenarios where we
 can make monitoring cheap enough to be feasible.
 
 The second system is a debugging tool.
-The idea is that certain subcomputations can be more critical to important to
+The idea is that certain subcomputations can be more important to
 quality than others, but that this difference is not necessarily obvious to
 programmers.
 The tool identifies and blames specific approximation decisions in a large
 codebase when they are responsible for too much quality degradation.
 
-The work on dynamic quality analysis appears in the thesis of
+The work on dynamic quality analysis appears in the dissertation of
 Michael F.\ Ringenburg~\cite{ringenburg-thesis}.
 
 
@@ -578,7 +578,8 @@ In Programming Language Design and Implementation (PLDI), 2011.
 \item \chref{decaf}:
 \textit{Probability Type Inference for Flexible Approximate Programming.}
 Brett Boston, Adrian Sampson, Dan Grossman, and Luis Ceze.
-To appear in OOPSLA 2015.
+To appear in Object-Oriented Programming, Systems, Languages, and Applications
+(OOPSLA), 2015.
 \cite{decaf}
 
 \item \chref{passert}:

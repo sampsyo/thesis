@@ -144,7 +144,7 @@ Central to each of these program transformation techniques are the questions
 of automation and quality. For a relaxation to be generally useful, it should
 be applicable automatically with only minimal programmer involvement but
 should still result in transformed code that the programmer is happy with.
-Recently, a set of techniques have been proposed to help constrain the space
+Recently, a set of techniques has been proposed to help constrain the space
 of possible transformations to those that result in a profitable
 quality trade-off. Quality of service profiling~\cite{qosprof} uses many
 executions to identify parts of a program that are likely to be good
@@ -191,6 +191,7 @@ Program-level transformations can also help detect egregious errors while
 allowing small, inconsequential disruptions~\cite{lwc, approxdebug}.
 A variety of techniques propose mechanisms for run-time or profiling feedback to adapt
 approximation parameters~\cite{dynamicknobs, green, approxit, ansel-autotuning}.
+\TODO{describe these in a little more detail}
 
 \section{Languages for Expressing Approximation}
 
@@ -251,6 +252,7 @@ probabilistic data, computation, and models~\cite{BBGR13,
   infernet, probdsl,uncertaint}.
 The probability monad captures a variable's discrete probability
 distribution in functional programs~\cite{pmonad}.
+\TODO{this one specific call-out is awkward}
 
 Sankaranarayanan et al.~\cite{sriram-pldi} check assertions in
 programs that produce probabilistic models using symbolic execution
@@ -291,6 +293,7 @@ the semantics in that work are very different from the graphical-model approach
 presented here.
 Our Bayesian-network representation enables statistical optimizations that
 make probabilistic assertion verification efficient.
+\TODO{this paragraph has dangling references to the passert paper}
 
 \subsection{Probabilistic Programming Languages}
 
