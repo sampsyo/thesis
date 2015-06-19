@@ -2,22 +2,17 @@
 
 \section{Introduction}
 
-Many studies have shown that a variety of applications are resilient
-to hardware and software errors during execution
-  \cite{li07, ersa, softcomputing,
+Studies repeatedly show that approximate applications consist of both
+\emph{critical} and \emph{non-critical} components~\cite{li07, ersa, softcomputing,
   dekruijf-selse09, flikker, qosprof, relax, wong-selse06,
-  perforationtr, rinard-onward}. Importantly, these studies
-universally show that applications have portions that are more
-resilient and portions that are ``critical'' and must be protected
-from error.
+  perforationtr, rinard-onward}.
 For example, an image renderer can tolerate errors in the pixel
 data it outputs---a small number of erroneous pixels may be acceptable
 or even undetectable. However, an error in a jump table could lead to
 a crash, and even small errors in the image file format might make the
 output unreadable.
 
-While approximate computation can save a significant amount of
-energy, distinguishing
+Distinguishing
 between the critical and non-critical portions of a program is
 difficult. Prior
 proposals have used annotations on code blocks (e.g., \cite{relax}) and
@@ -182,17 +177,19 @@ supertype of \ilcode{@Approx} and \ilcode{@Precise} types.
 \paragraph{Semantics of approximation}
 EnerJ takes an all-or-nothing approach to approximation.
 Precise values carry traditional guarantees of correctness; approximate
-values have no guarantees. A more complex system could provide
-multiple levels of approximation and guaranteed error bounds, but we
-find that this simple system is sufficiently expressive for a wide range
-of applications.
-
+values have no guarantees.
 The language achieves generality by leaving approximation patterns
 unspecified, but programmers can informally expect approximate data to
 be ``mostly correct'' and adhere to normal execution semantics except
-for occasional errors. The degree of precision is an orthogonal concern;
-a separate system could tune the frequency and intensity of errors in
-approximate data.
+for occasional errors.
+
+An approximate program's result quality is an orthogonal concern (see
+\secref{princ:safety}).
+Separate systems should complement EnerJ by tuning the frequency and intensity
+of errors in approximate data.
+The next two chapters in this part of the dissertation, on probability types
+and probabilistic assertions, propose systems that address the output-quality
+question.
 
 \subsection{Endorsement}
 \label{enerj:endorsement}
@@ -313,6 +310,7 @@ Note that precise class types are not subtypes of their approximate
 counterparts, as is the case with primitive types (Section~\ref{enerj:types});
 such a subtyping relationship would be fundamentally unsound for the
 standard reasons related to mutable references.
+\TODO{explain this reason}
 
 \subsubsection{Contextual Data Types}
 \label{enerj:context}
@@ -545,8 +543,8 @@ method calls,
 casts,
 binary primitive operations, and
 conditionals.
-For brevity, the discussion below presents only the
-rules for field reads, field writes, and conditionals.
+We present the representative rules for
+field reads, field writes, and conditionals.
 
 
 \paragraph{Subtyping}
@@ -703,8 +701,8 @@ lack of guarantees for approximate values.
 \subsection{Properties}
 
 We prove two properties about FEnerJ: type soundness and
-non-interference. The full proofs are listed in the accompanying
-technical report \cite{EnerJ-TR}.
+non-interference.
+Appendix~\ref{app:enerj} proves these theorems.
 
 The usual type soundness property expresses that, for a well-typed
 program and corresponding static and runtime environments, we know
@@ -790,6 +788,8 @@ Also, note that algorithmic approximation
 execution substrate.
 This section describes our hardware model, the ISA extensions
 used for approximation, and how the extensions enable energy savings.
+
+\TODO{pointers to quality projects}
 
 % We end with a power model we used in our experiments.
 
@@ -1120,6 +1120,7 @@ Our model omits overheads of implementing or switching to approximate hardware.
 For example, we do not model any latency in scaling the voltage on the logic
 units. For this reason, our results can be considered optimistic; future work
 should model approximate hardware in more detail.
+\TODO{refer to Truffle}
 
 To estimate the savings for instruction execution, we assign abstract energy
 units to arithmetic operations. Integer operations take 37 units and floating point
@@ -1202,22 +1203,24 @@ Naturally, we focused our effort on code where most of the
 time is spent.
 % ALDS: Past tense is appropriate for procedural descriptions.
 
-Three of the authors ported the applications used in our
+Three students involved in the project
+ported the applications used in our
 evaluation. In every case, we were unfamiliar with the codebase
 beforehand, so our annotations did not depend on extensive domain
 knowledge. The annotations were not labor intensive.
 
 
-\paragraph{QoS metrics} For each application, we measure the
+\paragraph{Quality metrics} For each application, we measure the
 degradation in output quality of approximate executions with respect
 to the precise executions. To do so, we define application-specific
-quality of service (QoS) metrics. Defining our own ad-hoc QoS metrics
+quality metrics. Defining our own \emph{ad hoc} quality metrics
 is necessary to compare output degradation across applications.
 A number of similar studies of
 application-level tolerance to transient faults have also taken this
 approach \cite{qosprof, green, dekruijf-selse09, ersa, wong-selse06,
   softcomputing}. The third column in
 Table~\ref{enerj:table:applications} shows our metric for each application.
+\TODO{refer to app-specific quality principle}
 
 Output error ranges from $0$ (indicating output identical to the
 precise version) to $1$ (indicating completely meaningless output). For
@@ -1273,7 +1276,7 @@ exception with a significant fraction of integer approximation; this is
 because it uses integers to represent pixel values, which are amenable
 to approximation.
 
-DRAM and SRAM approximation is quantified the proportion of byte-seconds in
+DRAM and SRAM approximation is quantified by the proportion of byte-seconds in
 the execution.
 The data shows that
 both storage types are frequently used in approximate
@@ -1344,7 +1347,7 @@ Raytracer). Not only do floating-point instructions offer more energy savings
 potential in our model, but applications that use them are typically resilient
 to their inherent imprecision.
 
-\subsection{Quality-of-Service Tradeoff}
+\subsection{Result Quality Trade-off}
 \begin{figure}
 \center
 \sffamily
@@ -1356,7 +1359,7 @@ together. Each bar represents the mean error over 20 runs.}
 
 Figure~\ref{enerj:fig:sensitivity} presents the sensitivity of each
 annotated application to the full suite of approximations
-explored. This quality-of-service reduction is the tradeoff for the
+explored. This output quality reduction is the tradeoff for the
 energy savings shown in Figure~\ref{enerj:fig:energy}.
 
 While most applications show negligible error for the Mild level of
@@ -1367,7 +1370,7 @@ very little output degradation under any configuration whereas FFT and SOR lose
 significant output fidelity even under the Medium configuration.
 This variation suggests that an approximate execution substrate for EnerJ
 could benefit from tuning to the characteristics of each application,
-either offline via profiling or online via continuous QoS measurement
+either offline via profiling or online via continuous quality measurement
 as in Green \cite{green}.
 However, even the
 conservative Mild configuration offers significant energy savings.
@@ -1382,14 +1385,14 @@ precise one.
 We also measured the relative impact of various approximation
 strategies by running our benchmark suite with each optimization enabled in
 isolation. The DRAM errors we modeled have a nearly negligible impact on application output;
-floating-point bit width reduction similarly results in at most 12\% QoS loss
+floating-point bit width reduction similarly results in at most 12\% quality loss
 in the Aggressive configuration. SRAM write errors are much more detrimental to
 output quality than read upsets. Functional unit voltage reduction had the
 greatest impact on correctness. We considered three possibilities for error
 modes in
 functional units: the output has a single bit flip; the last value computed is
 returned; or a random value is returned. The former two models resulted in
-significantly less QoS loss than the random-value model (25\% vs.~40\%).
+significantly less quality loss than the random-value model (25\% vs.~40\%).
 However, we consider the random-value model to be the most realistic, so we use it for
 the results shown in Figure~\ref{enerj:fig:sensitivity}.
 
@@ -1489,7 +1492,7 @@ allowing errors in most of the program.
 It borrows ideas from information-flow tracking for enforcing security to
 isolate the critical data from the corrupting effects of approximation.
 
-The rest of this part of the dissertation shifts focus from enforcing safety
+The next two chapters shift focus from enforcing safety
 to controlling quality.
 The systems described next all benefit from the separation of concerns that
 EnerJ offers: they only need to analyze the approximate component of the
