@@ -37,15 +37,14 @@ evaluates the distribution specified in a \passert by
 combining techniques from static verification,
 symbolic execution, and dynamic testing.
 
-\paragraph*{Probabilistic Assertions}
-Programmers write:
+A probabilistic assertion:
 %
 \begin{lstlisting}
 passert e, p, cf
 \end{lstlisting}
 %
-to check the probability that the Boolean expression \code{e} holds in
-a given execution of the program is at least \code{p} with confidence
+means that the probability that the Boolean expression \code{e} holds in
+a given execution of the program should be at least \code{p} with confidence
 \code{cf}. The parameters \code{p} (defaults to 0.5) and \code{cf}
 (defaults to 95\%) are optional. Our analysis estimates the likelihood
 that \code{e} is true, bounds any error in that estimate, and determines
@@ -148,9 +147,11 @@ optimizes the Bayesian-network
 representation using statistical properties and then either
 evaluates the network directly or performs sampling.
 
-We implement case
-studies from three application domains: sensors, data obfuscation, and
-approximate computing.  We show that \passerts express their
+We implement case studies that check the accuracy of approximate programs.
+We also explore domains beyond approximate computing where probabilistic
+correctness is also important:
+using data from sensors and obfuscating data for user privacy.
+We show that \passerts express their
 correctness properties and that \mayhap offers an average speedup of
 \perfdata{o-speedup-harmmean-sample} over stress testing with rote
 sampling.
@@ -169,14 +170,3 @@ code. Third, our approach either directly evaluates the \passert or derives
 a number of samples sufficient for statistical significance.
 It thereby provides statistical guarantees
 on the results of sampling that blind stress testing does not guarantee.
-
-Although programs that compute with probabilistic data are already
-ubiquitous, abstractions and tools to help their developers are
-lagging.  By harnessing randomness, our approach introduces new and
-effective abstractions for correctness, optimization, and
-verification of probabilistic programs.
-
-%%% Local Variables:
-%%% mode: latex
-%%% TeX-master: "paper"
-%%% End:

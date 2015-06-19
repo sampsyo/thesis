@@ -20,6 +20,7 @@ Programmers need a way to easily maximize the efficiency of fine-grained
 operations while controlling the impact of unreliability on overall accuracy
 properties.
 
+\TODO{Fit with principles; back-reference to EnerJ.}
 Previous languages for approximate computing
 have demonstrated that programmers can apply efficient-but-unreliable hardware components using a high-level
 language~\cite{rely, energytypes}
@@ -30,7 +31,7 @@ of approximate computing's programmability challenge:
 more nuanced \emph{quality} properties dictate how accurate an output
 must be or how likely a value is to deviate from its reliable equivalent~\cite{passert, rely}.
 
-We propose \lang (\textbf{D}ECAF, an \textbf{E}nergy-aware \textbf{C}ompiler
+This chapter presents \lang (\textbf{D}ECAF, an \textbf{E}nergy-aware \textbf{C}ompiler
 to make \textbf{A}pp\-rox\-im\-ation \textbf{F}lexible), a type-based approach
 to controlling quality in approximate programs.
 \lang's goal is to let programmers specify important quality constraints while
@@ -64,7 +65,7 @@ inference, while later-stage optimization work can exert total control over
 any type in the program.
 
 \textit{When static reasoning is insufficient, how can a program safely
-opt into to dynamic tracking?}
+opt into dynamic tracking?}
 Purely static systems for reasoning about approximation can be overly
 conservative when control flow is dynamic~\cite{rely} while dynamic
 monitoring incurs run-time overhead~\cite{approxdebug}.
@@ -74,7 +75,7 @@ We prove a soundness theorem that shows that \lang's hybrid system of static
 types, dynamic tracking, and run-time checks conservatively bounds the chance
 of errors.
 
-\textit{How should compilers re-use approximate code in contexts
+\textit{How should compilers reuse approximate code in contexts
 with different accuracy demands?}
 An approximate program can invoke a single function in some contexts
 that permit more approximation and others with stricter reliability
@@ -104,8 +105,9 @@ probability of correctness, a type inference and code specialization mechanism
 based on an SMT solver, and an optional dynamic type.
 We begin with an overview of \lang and its goals before detailing each
 component in turn.
-We formalize a core language to prove its soundness,
-and we report on our implementation and empirical findings.
+We formalize a core language, prove its soundness in
+Appendix~\ref{app:decaf},
+and report on its implementation and our empirical findings.
 
 
 \section{Language Overview}
@@ -160,7 +162,7 @@ control flow.
 The programmer never needs to annotate the
 operators \code{-}, \code{*}, and \code{+}; these reliabilities are inferred.
 More simply, the programmer places annotations where she can make sense of
-them and relies on inference where she can not.
+them and relies on inference where she cannot.
 Sections~\ref{decaf:sec:types} and~\ref{decaf:sec:inference} describe the type system and
 inference.
 
@@ -263,7 +265,7 @@ where $p$ is the chance that the operation produces a correct answer
 output, although this assumption can be conservative---for example, when
 multiplying an incorrect value by zero.)
 
-The language generalizes EnerJ~\cite{enerj}, where types are either
+The language generalizes the EnerJ language from the previous chapter, where types are either
 completely precise or completely approximate (providing no guarantees).
 In \lang, there is no distinct ``precise'' qualifier---instead, the
 \code{@Precise} annotation is syntactic sugar for \code{@Approx(1.0)}.
@@ -396,7 +398,7 @@ each \code{+}, \code{*}, and \code{float}.
 If a programmer wants to experiment with different overall output reliabilities
 for the \code{distance} function, she should not need to manually adjust the
 individual operators and the \code{sqrt} call to meet a new requirement.
-Instead, the programmer should only express important output correctness
+Instead, the programmer should express only important output correctness
 requirements while letting the compiler infer the details.
 
 We extend \lang to make probability annotations optional on both types and
@@ -487,7 +489,7 @@ lead to an exponential explosion in code size.
 Instead, we use constraint solving to specialize functions a constant number of
 times according to calling contexts.
 The approach resembles traditional procedure cloning~\cite{procedurecloning} but exploits
-\lang's SMT formulation to automatically identify optimal
+\lang's SMT formulation to automatically identify the best set of
 specializations.
 % Each specialized version of a function can operate at a different level of
 % reliability.
@@ -1011,17 +1013,17 @@ variants to look up the reliabilities specialized functions.
 
 Performance statistics were collected on a 4-core, 2.9~GHz Intel Xeon machine
 with 2-way SMT and 8~GB RAM running Linux.
-We used OpenJDK 1.7.0's HotSpot VM and version Z3 version 4.3.1.
+We used OpenJDK 1.7.0's HotSpot VM and Z3 version 4.3.1.
 
 \subsection{Benchmarks and Annotation}
 
-We evaluate a set of Java benchmarks shown in previous work to be amenable to
-approximate execution~\cite{enerj, approxstorage}.
+We evaluate 8 of the Java benchmarks from the evaluation of EnerJ (see
+Section~\ref{enerj:sec:res}).
 Table~\ref{decaf:table:bench} lists the applications and statistics about their
 source code and annotations.
 
-The benchmarks came with an initial set of simple annotations that distinguish
-approximation-tolerant variables from reliable variables (the default).
+The benchmarks' original EnerJ annotations distinguish
+approximation-tolerant variables (using EnerJ's \code{@Approx}) from reliable variables (the default).
 To adapt the programs for \lang, we left most of these type annotations as the
 inferred \code{@Approx} annotation.
 On the output of each benchmark and on a few salient boundaries between software components, we placed concrete
@@ -1065,9 +1067,6 @@ Key findings (detailed below) include:
 %
 These conclusions reflect the characteristics of our benchmarks and their
 annotations, which in turn are based on recent work on approximate computing.
-We also plan to make our implementation and result data available for future work to help
-inform
-the design of approximate hardware.
 
 \subsection{Sensitivity to Hardware Reliability Levels}
 
@@ -1195,7 +1194,7 @@ single-probability machines like Truffle~\cite{truffle}.
 The exceptions are \code{imagefill}, \code{lu}, and \code{smm}, where a single
 probability level seems to suffice for the majority of operations.
 
-Most of our benchmarks exhibit a diminishing returns after a certain number of
+Most of our benchmarks exhibit diminishing returns after a certain number of
 levels.
 For example, \bench{mc} increases its amount of approximation up to four levels
 but does not benefit from higher level counts.
@@ -1266,7 +1265,6 @@ suffices to capture most of the flexibility offered by an ideal machine.
 The goal of measuring error probabilities in this evaluation
 is to allow
 hardware designers to plug in energy models.
-(We intend to make the raw data available in full after publication.)
 To give a sense of the potential savings, we apply a simple energy model
 based on EnerJ~\cite{enerj}: a correctness probability of 0.99 yields 30\%
 energy savings over a precise operation, $p=10^{-4}$ saves 20\%, $p=10^{-6}$

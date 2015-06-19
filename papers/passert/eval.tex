@@ -106,12 +106,14 @@ Conditionals appear as branches in LLVM IR.
 symbolically executing both sides of the branch and merging the resulting heap
 updates. When the analysis encounters a branch, it finds the immediate post-dominator
 (ipdom) in the control-flow graph---intuitively, the join point---and begins by taking
-the branch. In this phase, it buffers all heap writes in a hash table.
+the branch. In this phase, it buffers all heap writes in a (scoped) hash table.
 Then, when the ipdom is reached, control returns to the
-branch and follows the not-taken direction. Writes in this phase are not
-buffered. When the ipdom is reached the second time, the buffered writes are
-merged into the heap using conditional nodes.
-\tool supports nested conditions using a scoped hash table.
+branch and follows the not-taken direction.
+Writes in this phase do not go into the scope for the current conditional:
+they propagate to the global heap or, if execution is in a nested outer
+conditional, to the enclosing hash table scope.
+When the ipdom is reached the second time, the buffered writes are
+merged into the outer heap using conditional nodes.
 
 \paragraph{Probabilistic Pointers}
 
@@ -213,12 +215,12 @@ employees
 and computes their average.\footnote{Source: \url{http://fiscal.wa.gov/}}
 The program obfuscates each salary by adding a normal distribution ($\sigma^2
 = 3000$) to simulate a situation where each employee is unwilling to divulge
-their exact salary. The \passert checks whether the obfuscated average is
+his or her exact salary. The \passert checks whether the obfuscated average is
 within 25 dollars of the true average.
 We also evaluate a version of the program, \bench{salary-abs}, where the input
 salaries are drawn from a uniform distribution instead of read from a file.
 This variant highlights a scenario where specific inputs are unavailable and
-we instead want to check a \passert given a input probability distribution.
+we instead want to check a \passert given an input probability distribution.
 
 The final class of applications is drawn from prior work on
 approximate computing: \bench{kmeans}, \bench{sobel}, \bench{hotspot}, and
@@ -246,8 +248,8 @@ there is no ``ground truth'' to compare against.
 For the
 purposes of this evaluation, we manually extended the programs to compute both
 results. A simple ``desugaring'' step could help perform this transformation
-automatically by duplicating the code, remove randomization from one
-copy, and return both results.
+automatically by duplicating the code, removing randomization from one
+copy, and returning both results.
 
 \subsection{Performance}
 
