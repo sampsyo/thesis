@@ -20,16 +20,15 @@ Programmers need a way to easily maximize the efficiency of fine-grained
 operations while controlling the impact of unreliability on overall accuracy
 properties.
 
-\TODO{Fit with principles; back-reference to EnerJ.}
-Previous languages for approximate computing
-have demonstrated that programmers can apply efficient-but-unreliable hardware components using a high-level
-language~\cite{rely, energytypes}
-and that a type system can ensure that approximation never corrupts essential
+The EnerJ language in the previous chapter demonstrates
+that a type system can ensure that approximation never corrupts essential
 program state~\cite{enerj}.
-But safety properties, such as freedom from pointer corruption, are only part
-of approximate computing's programmability challenge:
-more nuanced \emph{quality} properties dictate how accurate an output
-must be or how likely a value is to deviate from its reliable equivalent~\cite{passert, rely}.
+But as the \emph{safety vs.~quality} principle from \secref{princ:safety}
+emphasizes, safety properties
+are only part
+of approximate computing's programmability challenge.
+More nuanced \emph{quality} properties dictate how much an output
+can deviate from its precise equivalent.
 
 This chapter presents \lang (\textbf{D}ECAF, an \textbf{E}nergy-aware \textbf{C}ompiler
 to make \textbf{A}pp\-rox\-im\-ation \textbf{F}lexible), a type-based approach

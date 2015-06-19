@@ -779,19 +779,22 @@ precise data, it does not define the particular approximation strategies
 that are applied to the program. (In fact, one valid execution is to ignore all
 annotations and execute the code as plain Java.) An approximation-aware
 execution substrate is needed to take advantage of EnerJ's annotations.
-We choose to examine approximation at the architecture level.
-Alternatively, a runtime system on top of commodity hardware can also
-offer approximate execution features (e.g., lower floating point
-precision, elision of memory operations, etc.).
-Also, note that algorithmic approximation
-(see Section~\ref{enerj:objects}) is independent of the
-execution substrate.
+We examine approximation mechanisms at the architecture level that work at
+granularity of individual instructions and individual memory
+locations~\cite{truffle, quora}.
 This section describes our hardware model, the ISA extensions
 used for approximation, and how the extensions enable energy savings.
+The Truffle paper~\cite{truffle} explores the ISA
+design and microarchitectural mechanisms for approximation in more detail.
 
-\TODO{pointers to quality projects}
-
-% We end with a power model we used in our experiments.
+As a complement to the approximate hardware considered here, a compiler or runtime system on top of commodity hardware can also
+offer approximate execution features: lower floating point
+precision, elision of memory operations, etc.
+(Algorithmic approximation, from
+Section~\ref{enerj:objects}, is independent of the
+execution substrate.)
+The ACCEPT compiler infrastructure in \chref{accept} exploits this
+category of approximations using an annotation language similar to EnerJ.
 
 \subsection{Approximation-Aware ISA Extensions}
 \label{enerj:sec:isa}
@@ -1109,9 +1112,9 @@ three components to the system's energy consumption: instruction execution,
 SRAM storage (registers and cache), and DRAM storage.
 Our model omits overheads of implementing or switching to approximate hardware.
 For example, we do not model any latency in scaling the voltage on the logic
-units. For this reason, our results can be considered optimistic; future work
-should model approximate hardware in more detail.
-\TODO{refer to Truffle}
+units.
+For this reason, our results can be considered optimistic;
+the Truffle paper~\cite{truffle} models approximate hardware in more detail.
 
 To estimate the savings for instruction execution, we assign abstract energy
 units to arithmetic operations. Integer operations take 37 units and floating point
@@ -1201,17 +1204,13 @@ beforehand, so our annotations did not depend on extensive domain
 knowledge. The annotations were not labor intensive.
 
 
-\paragraph{Quality metrics} For each application, we measure the
+\paragraph{Quality metrics}
+For each application, we measure the
 degradation in output quality of approximate executions with respect
 to the precise executions. To do so, we define application-specific
-quality metrics. Defining our own \emph{ad hoc} quality metrics
-is necessary to compare output degradation across applications.
-A number of similar studies of
-application-level tolerance to transient faults have also taken this
-approach \cite{qosprof, green, dekruijf-selse09, ersa, wong-selse06,
-  softcomputing}. The third column in
+quality metrics following the principle in \secref{princ:appspecific}.
+The third column in
 Table~\ref{enerj:table:applications} shows our metric for each application.
-\TODO{refer to app-specific quality principle}
 
 Output error ranges from $0$ (indicating output identical to the
 precise version) to $1$ (indicating completely meaningless output). For
