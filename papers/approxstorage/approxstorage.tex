@@ -11,12 +11,12 @@ present in a broad range of application domains, from server software to
 mobile applications.
 
 Meanwhile, the semiconductor industry is beginning to encounter limits to
-further scaling of common memory technologies like DRAM and Flash. As a
+further scaling of common memory technologies like DRAM and flash memory. As a
 result, new memory technologies and techniques are emerging. Multi-level cells,
 which pack more than one bit of information in a single cell,
 are already commonplace and phase-change memory (PCM) is imminent.
 But both
-PCM and Flash wear out over time as cells degrade and become unusable. Furthermore, multi-level cells
+PCM and flash wear out over time as cells degrade and become unusable. Furthermore, multi-level cells
 are slower to write due to the need for tightly
 controlled iterative programming.
 
@@ -47,7 +47,7 @@ data stored in main memory.
 We explore the techniques in the context of PCM, which may be used for
 persistent storage (replacing hard disks) or as main memory
 (replacing DRAM)~\cite{pcm-dram-alt,durable-pcm-mm,qureshi-pcm-mm},
-but the techniques generalize to other technologies such as Flash.
+but the techniques generalize to other technologies such as flash memory.
 We simulate main-memory benchmarks and
 persistent-storage datasets and find that our techniques improve write
 latencies by \result{mlc-stripe-mean-speedup} or extend device lifetime by
@@ -147,7 +147,7 @@ precision flag as in the Truffle ISA~\cite{truffle}.
 \subsection{Approximate Persistent Storage}
 
 While DRAM and SRAM are typically limited to transient storage,
-both Flash and emerging technologies like PCM can be used for
+both flash and emerging technologies like PCM can be used for
 persistent, disk-like storage. 
 Interfaces to persistent storage include
 filesystems, database management systems (DBMSs),
@@ -309,7 +309,7 @@ Figure~\ref{approxstorage:fig:mlc} illustrates this idea.
 \end{figure}
 
 The basis for MLC storage is an underlying analog value (e.g., resistance for
-PCM or charge for Flash).
+PCM or charge for flash memory).
 We consider this value to be
 continuous: while the memory quantizes the value to expose digital
 storage externally, the internal value is conceptually
@@ -364,7 +364,7 @@ performance, density, or both.
 
 A single programming pulse typically has poor
 precision due to process variation and nondeterministic material
-behavior. As a result, MLC designs for both Flash and PCM adopt iterative
+behavior. As a result, MLC designs for both flash and PCM adopt iterative
 program-and-verify (P\&V) mechanisms~\cite{morphablepcm,mlcflash}.
 In PCM, each P\&V iteration adjusts the cell's resistance and then reads it
 back to check whether the
@@ -421,7 +421,7 @@ systems.
 
 Each constituent write pulse in an PCM write can either increase or decrease
 resistance~\cite{mlcprogalgo,mlcibm,mlcmodelchar}.
-Flash write pulses, in contrast, are unidirectional, so writes
+Flash memory write pulses, in contrast, are unidirectional, so writes
 must be more conservative to avoid costly RESET operations
 in the case of overprogramming~\cite{ispp}.
 
@@ -638,7 +638,7 @@ evaluation, in Section~\ref{approxstorage:sec:eval}, does not quantify these cir
 \section{Using Failed Memory Cells}
 \label{approxstorage:sec:recycling}
 
-PCM, along with Flash and other upcoming memory technologies, suffers from cell
+PCM, along with flash memory and other upcoming memory technologies, suffers from cell
 failures during a device's deployment---it ``wears out.'' Thus, techniques for hiding failures from
 software are critical to providing a useful lifespan for a
 memory~\cite{pcm-dram-alt}.
@@ -747,7 +747,7 @@ to correct in an approximate block; however, this selection happens rarely
 because it need only occur when new failures arise.
 Finally, to correctly allocate new memory, the OS must maintain a pool of
 failed blocks and avoid using them for precise storage.
-This block tracking is analogous to the way that Flash translation
+This block tracking is analogous to the way that flash translation
 layers (FTLs) remap bad blocks.
 
 
@@ -837,7 +837,7 @@ rates.
 For a baseline (precise) MLC PCM cell, we need a configuration where
 errors are improbable but not impossible. We choose a conservative
 baseline raw bit error rate (RBER) of $10^{-8}$, which comports with
-RBERs observed in Flash memory today~\cite{flasherror,flasherrors}.
+RBERs observed in flash memory today~\cite{flasherror,flasherrors}.
 
 We first select parameters for the read model in Section~\ref{approxstorage:sec:mlcmodel},
 which incorporates the probabilistic effects of read noise and drift.
