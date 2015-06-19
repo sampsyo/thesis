@@ -1081,15 +1081,6 @@ floating-point division by zero returns the NaN value;
 approximate integer divide-by-zero returns zero.
 
 
-% Maybe move this to future work.
-% Aside from evaluating the feasibility of our system, this simulator would be
-% useful as a testing tool for EnerJ applications. Because it simulates faults in
-% software, it could (for instance) be used to test the limits of an application's
-% error resilience by injecting faults far more frequently than would be
-% realistic. The same technique could be applied to debugging for approximate
-% applications. Similarly, the system could be used to prototype the tradeoffs
-% involved in a proposed new hardware approximation.
-
 \subsection{Approximations}
 Our simulator implements the set of approximation techniques enumerated in
 Section~\ref{enerj:strategies}. Table~\ref{enerj:table:approximations} summarizes the
@@ -1359,7 +1350,7 @@ together. Each bar represents the mean error over 20 runs.}
 
 Figure~\ref{enerj:fig:sensitivity} presents the sensitivity of each
 annotated application to the full suite of approximations
-explored. This output quality reduction is the tradeoff for the
+explored. This output quality reduction is the trade-off for the
 energy savings shown in Figure~\ref{enerj:fig:energy}.
 
 While most applications show negligible error for the Mild level of
