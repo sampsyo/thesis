@@ -211,6 +211,21 @@
 
 @string{nips = {Conference on Neural Information Processing Systems (NIPS)}}
 
+@string{cacm = {Communications of the ACM}}
+
+@string{toplas = {{ACM} Transactions on Programming Languages and Systems
+    (TOPLAS)}}
+
+@string{tvlsi = {{IEEE} Transactions on Very Large Scale Integration (VLSI)
+    Systems}}
+
+@string{tit = {{IEEE} Transactions on Information Theory}}
+
+@string{jssc = {{IEEE} Journal of Solid-State Circuits}}
+
+@string{taco = {{ACM} Transactions on Architecture and Code Optimization
+    (TACO)}}
+
 
 % Actual entries
 
@@ -332,7 +347,7 @@
 @article{pcmos-cacm,
  author = {Anthes, Gary},
  title = {Inexact design: beyond fault-tolerance},
- journal = {Communications of the ACM},
+ journal = cacm,
  issue_date = {April 2013},
  volume = {56},
  number = {4},
@@ -442,7 +457,7 @@ year={2010},
 @article{yeh,
  author = {Yeh, Thomas Y. and Reinman, Glenn and Patel, Sanjay J. and Faloutsos, Petros},
  title = {Fool me twice: Exploring and exploiting error tolerance in physics-based animation},
- journal = {ACM Trans. Graph.},
+ journal = {ACM Transactions on Graphics},
  issue_date = {December 2009},
  volume = {29},
  number = {1},
@@ -497,7 +512,7 @@ year={2010},
 
 @ARTICLE{hybrid-sram,
 author={Ik Joon Chang and Mohapatra, D. and Roy, K.},
-journal={IEEE Trans. Circuits and Systems for Video Technology},
+journal={IEEE Transactions on Circuits and Systems for Video Technology},
 title={A Priority-Based 6T/8T Hybrid SRAM Architecture for Aggressive Voltage Scaling in Video Applications},
 year={2011},
 volume={21},
@@ -515,7 +530,7 @@ year={2011},
 @article{unequal-protection,
  author = {Karakonstantis, Georgios and Mohapatra, Debabrata and Roy, Kaushik},
  title = {Logic and Memory Design Based on Unequal Error Protection for Voltage-scalable, Robust and Adaptive DSP Systems},
- journal = {J. Signal Process. Syst.},
+ journal = {Journal of Signal Processing Systems},
  volume = {68},
  number = {3},
  month = sep,
@@ -552,7 +567,7 @@ year={2010},
 
 @ARTICLE{chung90,
 author={Chung, J. -Y and Liu, J. W -S and Kwei-Jay Lin},
-journal={IEEE Trans. Comput.},
+journal=toc,
 title={Scheduling periodic jobs that allow imprecise results},
 year={1990},
 volume={39},
@@ -860,7 +875,7 @@ year={2012},
 @article{adder-metrics,
     author = {Jinghang Liang and Jie Han and Fabrizio Lombardi},
     title = {New Metrics for the Reliability of Approximate and Probabilistic Adders},
-    journal ={IEEE Trans. Comput.},
+    journal = toc,
     volume = {99},
     year = {2012},
 }
@@ -984,7 +999,7 @@ year={2012},
 
 @article{IgarashiEA01,
 	Author = {A. Igarashi and B. C. Pierce and P. Wadler},
-	Journal = {TOPLAS},
+	Journal = toplas,
 	Number = 3,
 	Title = {{F}eatherweight {J}ava: a minimal core calculus for {J}ava and {GJ}},
 	Volume = 23,
@@ -1017,7 +1032,7 @@ year={2012},
 
 @article{fuzzymemo,
 	Author = {Alvarez, Carlos and Corbal, Jesus and Valero, Mateo},
-	Journal = {IEEE Trans. Comput.},
+	Journal = toc,
 	Number = {7},
 	Title = {Fuzzy Memoization for Floating-Point Multimedia Applications},
 	Volume = {54},
@@ -1025,7 +1040,7 @@ year={2012},
 
 @article{bitwidthred,
 	Author = {Tong, Jonathan Ying Fai and Nagle, David and Rutenbar, Rob. A.},
-	Journal = {IEEE Trans. VLSI Syst.},
+	Journal = tvlsi,
 	Number = {3},
 	Title = {Reducing power by optimizing the necessary precision/range of floating-point arithmetic},
 	Volume = {8},
@@ -1050,6 +1065,13 @@ year={2012},
 	Title = {Information flow inference for free},
 	Volume = {35},
 	Year = {2000}}
+
+@inproceedings{flowproofs,
+ author = {Pottier, Fran\c{c}ois and Conchon, Sylvain},
+ title = {Information Flow Inference for Free},
+ booktitle = icfp,
+ year = {2000},
+}
 
 @inproceedings{rinard-onward,
 	Author = {Rinard, Martin and Hoffmann, Henry and Misailovic, Sasa and Sidiroglou, Stelios},
@@ -1287,7 +1309,8 @@ year={2010},
 
 @ARTICLE{separability,
 author={van Zanten, A.J. and I Nengah Suparta},
-journal={IEEE Transactions on Information Theory}, title={The separability of standard cyclic N-ary Gray codes},
+journal=tit,
+title={The separability of standard cyclic N-ary Gray codes},
 year={2003},
 volume={49},
 number={2},
@@ -1297,7 +1320,7 @@ ISSN={0018-9448},}
 @article{dpc,
  author = {Preparata, F. and Nievergelt, J.},
  title = {Difference-preserving codes},
- journal = {IEEE Trans. Inf. Theor.},
+ journal = tit,
  issue_date = {September 1974},
  volume = {20},
  number = {5},
@@ -1319,7 +1342,8 @@ ISSN={0018-9448},}
 
 @ARTICLE{mlcflash,
 author={Takeuchi, K. and Tanaka, T. and Tanzawa, T.},
-journal={IEEE Journal of Solid-State Circuits}, title={A multipage cell
+journal=jssc,
+title={A multipage cell
     architecture for high-speed programming multilevel {NAND} flash memories},
 year={1998},
 volume={33},
@@ -1329,7 +1353,7 @@ ISSN={0018-9200},}
 
 @ARTICLE{ispp,
 author={Suh, Kang-Deog and Suh, Byung-Hoon and Lim, Young-Ho and Kim, Jin-Ki and Choi, Young-Joon and Koh, Yong-Nam and Lee, Sung-Soo and Kwon, Suk-Chon and Choi, Byung-Soon and Yum, Jin-Sun and Choi, Jung-Hyuk and Kim, Jang-Rae and Lim, Hyung-Kyu},
-journal={IEEE Journal of Solid-State Circuits},
+journal=jssc,
 title={A 3.3 {V} 32 {Mb} {NAND} flash memory with incremental step pulse programming scheme},
 year={1995},
 volume={30},
@@ -1406,10 +1430,10 @@ year={2012},
     year={2012},
 }
 
-@article{mlcmodelchar,
+@inproceedings{mlcmodelchar,
   title={Multilevel Phase Change Memory Modeling and Experimental Characterization},
   author={Pantazi, A. and Sebastian, A. and Papandreou, N. and Breitwisch, MJ and Lam, C. and Pozidis, H. and Eleftheriou, E.},
-  journal={EPCOS},
+  booktitle={European Phase Change and Ovonics Symposium (EPCOS)},
   year={2009}
 }
 
@@ -1512,25 +1536,23 @@ ISSN={},}
 }
 
 
-@article{KNP11,
+@inproceedings{KNP11,
 author={M. Kwiatkowska and G. Norman and D. Parker},
 title={{PRISM} 4.0: Verification of Probabilistic Real-time Systems},
-journal={CAV},
+booktitle=cav,
 year=2011,
-pages={585--591},
-publisher={Springer},
-series={LNCS},
 }
 
 
 @article{Younes20061368,
-title = "Statistical probabilistic model checking with a focus on time-bounded properties ",
-journal = "Information and Computation ",
+title = {Statistical probabilistic model checking with a focus on time-bounded
+    properties},
+journal = {Information and Computation},
 volume = 204,
 number = 9,
-pages = "1368--1409",
+pages = {1368--1409},
 year = 2006,
-author = "Håkan L.S. Younes and Reid G. Simmons",
+ author = {Younes, H{\aa}kan L. S. and Simmons, Reid G.},
 }
 
 
@@ -1900,7 +1922,7 @@ year={2013},
 @article{procedurecloning,
  author = {Cooper, Keith D and Hall, Mary W and Kennedy, Ken},
  title = {A Methodology for Procedure Cloning},
- journal = {Comput. Lang.},
+ journal = {Computer Languages},
  volume = {19},
  number = {2},
  month = apr,
@@ -1991,7 +2013,7 @@ year={2013},
   author     = {Aamodt, Tor M. and Chow, Paul},
   title      = {Compile-time and instruction-set methods for improving
                 floating- to fixed-point conversion accuracy},
-  journal    = {ACM TECS},
+  journal    = tecs,
   issue_date = {April 2008},
   volume     = {7},
   number     = {3},
@@ -2018,7 +2040,7 @@ year={1994},
 @article{taco-soc,
  author = {Fang, Shuangde and Du, Zidong and Fang, Yuntan and Huang, Yuanjie and Chen, Yang and Eeckhout, Lieven and Temam, Olivier and Li, Huawei and Chen, Yunji and Wu, Chengyong},
  title = {Performance Portability Across Heterogeneous SoCs Using a Generalized Library-Based Approach},
- journal = {ACM TACO},
+ journal = taco,
  volume = {11},
  number = {2},
  month = jun,
@@ -2123,7 +2145,7 @@ year={1994},
 
 @article{fjava,
 	Author = {A. Igarashi and B. C. Pierce and P. Wadler},
-	Journal = {TOPLAS},
+	Journal = toplas,
 	Number = 3,
 	Title = {{F}eatherweight {J}ava: a minimal core calculus for {J}ava and {GJ}},
 	Volume = 23,
