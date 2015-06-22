@@ -4,7 +4,8 @@
                 american,%
                 ]{scrreprt}
 
-\usepackage[square,numbers,sort&compress]{natbib}
+\usepackage[backend=biber,natbib=true,style=numeric-comp,%
+            maxbibnames=99]{biblatex}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{xspace} % to get the spacing after macros right
@@ -139,6 +140,10 @@
 \newcommand{\secref}[1]{Section~\ref{sec:#1}}
 \newcommand{\figref}[1]{Figure~\ref{sec:#1}}
 \newcommand{\tabref}[1]{Table~\ref{sec:#1}}
+
+% Using this instead of \addbibresource so that the Makefile picks up the
+% bib filename.
+\bibliography{thesis}
 
 
 \begin{document}
@@ -340,9 +345,8 @@
 \refstepcounter{dummy}
 \addtocontents{toc}{\protect\vspace{\beforebibskip}} % to have the bib a bit from the rest in the toc
 \addcontentsline{toc}{chapter}{\tocEntry{\bibname}}
-\bibliographystyle{plainnat}
 \label{app:bibliography}
-\bibliography{thesis}
+\printbibliography
 
 
 \appendix
