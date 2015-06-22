@@ -145,6 +145,13 @@
 % bib filename.
 \bibliography{thesis}
 
+% Disable ugly quotation marks around titles in bibliography.
+\DeclareFieldFormat
+  [article,inbook,incollection,inproceedings,patent,thesis,unpublished]
+  {title}{#1\isdot}
+
+% And for conferences, it should be "In *Foo*, 2015." not "In: *Foo*. 2015."
+\renewcommand*{\intitlepunct}{\space}
 
 \begin{document}
 \raggedbottom
