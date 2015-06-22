@@ -150,8 +150,13 @@
   [article,inbook,incollection,inproceedings,patent,thesis,unpublished]
   {title}{#1\isdot}
 
-% And for conferences, it should be "In *Foo*, 2015." not "In: *Foo*. 2015."
+% Don't use a colon after "In" before booktitle.
 \renewcommand*{\intitlepunct}{\space}
+
+% Use a comma between booktitle and year, not a dot.
+\DeclareFieldFormat
+  [inproceedings]
+  {booktitle}{\mkbibemph{#1}\addcomma}
 
 \begin{document}
 \raggedbottom
