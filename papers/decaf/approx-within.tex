@@ -118,7 +118,7 @@ Some proposals for approximate hardware, and our focus in this work, provide ``r
 have a high probability of yielding a correct output but a nonzero chance of
 producing arbitrarily wrong data~\cite{truffle}.
 Architectures that allow even a very small probability of error can conserve a
-large fraction of operation energy~\cite{kim-hpca, uva-adder}.
+large fraction of operation energy~\cite{soft-ntc, uva-adder}.
 Recently, \citet{quora} suggested that hardware with multiple
 reliability levels---i.e., multiple probabilities of correctness---could provide
 better efficiency by adapting to the specific demands of approximate software.
@@ -979,7 +979,7 @@ dynamic behavior by measuring dynamic executions.
 
 We consider an approximate processor architecture where arithmetic
 operations may have a probability of failure, mirroring recent work in
-hardware design~\cite{truffle, quora, kim-hpca, uva-adder}.
+hardware design~\cite{truffle, quora, soft-ntc, uva-adder}.
 Because architecture research on approximate computing is at an early stage,
 we do not model a specific CPU design: there is no consensus in the literature
 surrounding which reliability parameters are best or how error probabilities

@@ -5,7 +5,7 @@
 Studies repeatedly show that approximate applications consist of both
 \emph{critical} and \emph{non-critical} components~\cite{li07, ersa, li06,
   dekruijf-selse09, flikker, qosprof, relax, wong-selse06,
-  perforationtr, rinard-onward}.
+  perforation, rinard-onward}.
 For example, an image renderer can tolerate errors in the pixel
 data it outputs---a small number of erroneous pixels may be acceptable
 or even undetectable. However, an error in a jump table could lead to
@@ -408,7 +408,7 @@ prevent out-of-bounds errors due to approximation.
 \section{Formal Semantics}
 \label{enerj:semantics}
 To study the formal semantics of EnerJ, we define the minimal language
-FEnerJ. The language is based on Featherweight Java \cite{IgarashiEA01}
+FEnerJ. The language is based on Featherweight Java~\cite{fjava}
 and adds precision qualifiers and state. The formal language omits
 EnerJ's endorsements and thus can guarantee isolation of approximate and
 precise program components. This isolation property suggests that,
@@ -917,7 +917,7 @@ in Table~\ref{enerj:table:approximations}.
 \paragraph{Voltage scaling} Aggressive voltage
 scaling can result in over $30\%$ energy reduction with
 $\sim \! 1\%$ error rate~\cite{razor} and $22\%$ reduction with
-$\sim \! 0.01\%$ error rate.  Recent work~\cite{hpca10cam,relax} proposed to
+$\sim \! 0.01\%$ error rate.  Recent work~\cite{relax} proposed to
 expose the errors to applications that can tolerate it and saw similar
 results. In our model, we assume aggressive voltage scaling for the
 processor units executing approximate instructions,
@@ -1011,7 +1011,7 @@ all values for the Medium level are taken from the literature.}
 
 We implement EnerJ as an extension to the Java
 programming language based on the
-pluggable type mechanism proposed by Papi et al.~\cite{pap2008}.
+pluggable type mechanism proposed by Papi et al.~\cite{papi}.
 EnerJ is implemented using the
 Checker Framework\footnote{\url{http://types.cs.washington.edu/checker-framework/}}
 infrastructure,
