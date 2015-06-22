@@ -54,26 +54,9 @@ latencies by \result{mlc-stripe-mean-speedup} or extend device lifetime by
 \result{recycle-mean-all-ext} on
 average while trading off less than 10\% of each application's output quality.
 
-We begin by describing the programming models and hardware--software interfaces
-we assume for main-memory and persistent approximate storage. Next,
-Sections~\ref{approxstorage:sec:amlc} and~\ref{approxstorage:sec:recycling} describe our two
-approximate-storage techniques in detail. Section~\ref{approxstorage:sec:eval} describes our
-evaluation of the techniques using a variety of error-tolerant
-benchmarks and Section~\ref{approxstorage:sec:results} gives the results for these
-experiments. Finally, we enumerate related work on storage and approximate
-computing and conclude.
-
 \section{Interfaces for Approximate Storage}
 \label{approxstorage:sec:idea}
 
-% what we need: interface, mechanisms. interface needs as way to specific which bits matter more.
-% who keeps track of what is approximate: SW knows. HW does not keep track of that. simplifies bookkeeping.
-
-\emph{Approximate computing} lets programs
-eschew traditional guarantees of perfect precision when they are
-unnecessary. If a large portion of a program's work is
-error-tolerant, the hardware can operate more
-efficiently~\cite{flikker,truffle,pcmos,stochasticproc,relax}.
 While previous work has considered reducing the energy spent on DRAM
 and SRAM storage~\cite{flikker,enerj,truffle}, modern non-volatile
 memory technologies also exhibit properties that make them candidates
@@ -92,13 +75,12 @@ may occur with non-negligible probability.
 
 This work examines the potential for approximate storage in
 PCM and other solid-state, non-volatile memories.
-These technologies have the potential to provide persistent mass storage
-and to serve as main memory.
-For either use case, the application must determine which data can
-tolerate errors and which data needs ``perfect'' fidelity. As with
-previous work that exposes approximation to software, we assume that
-programmers need to make this decision---approximating data
-indiscriminately can lead to broken systems~\cite{enerj,relax,green,truffle,npu}.
+For either main-memory or persistent-storage data,
+the application must determine which data can
+tolerate errors and which data needs ``perfect'' fidelity.
+Following EnerJ's example, we assume that safety constraints need to be part
+of the programming model, since approximating data indiscriminately can easily
+lead to broken systems (see \secref{princ:safety}).
 
 The next sections describe the approximation-aware programming
 models for main memory and persistent mass storage along with
@@ -115,14 +97,16 @@ data. Additionally, the interface may also allow
 software to convey the relative importance of bits within a block, enabling
 more significant bits to be stored with higher accuracy.
 
-Prior work on approximate computing has suggested that different applications
-can tolerate different error rates~\cite{enerj,truffle} and our experimental
-results (Section~\ref{approxstorage:sec:results}) corroborate this. However, rather than
-providing interfaces to control precision levels at a fine grain, we apply a
+As the evaluation of EnerJ in \chref{enerj} found, different applications can
+tolerate different error rates.
+And while applications could likely exploit approximation most effectively
+by using specific error rates for specific data items, as in DECAF
+(\chref{decaf}), we explore a simpler hardware--software interface
+that applies a
 uniform policy to all approximate data in the program.
-Empirically, we find 
+Empirically, we find
 that this level of control is sufficient to achieve good quality trade-offs for
-a variety of applications.
+the applications we evaluate.
 
 \subsection{Approximate Main Memory}
 
@@ -146,10 +130,7 @@ precision flag as in the Truffle ISA~\cite{truffle}.
 
 \subsection{Approximate Persistent Storage}
 
-While DRAM and SRAM are typically limited to transient storage,
-both flash and emerging technologies like PCM can be used for
-persistent, disk-like storage. 
-Interfaces to persistent storage include
+We also consider interfaces that play the role of persistent storage:
 filesystems, database management systems (DBMSs),
 or, more recently, flat address spaces~\cite{nvheaps,mnemosyne}.
 
@@ -339,9 +320,7 @@ Traditional (fully precise) cells are designed to minimize the
 likelihood that write imprecision, read noise, or drift cause storage
 errors in the digital domain. That is, given any digital value, a
 write followed by a read recovers the same digital value with
-high probability. In approximate storage, the goal is to increase
-density or performance at the cost of occasional digital-domain
-storage errors.
+high probability.
 
 Put more formally, let $v$ be a cell's internal analog value. A
 write operation for a digital value $d$ first determines
@@ -353,12 +332,8 @@ Similarly, a read operation recovers a perturbed analog value $r(v)$ and
 quantizes it to obtain a digital output.
 
 The number of levels, $n$, and the access error functions, $w$ and
-$r$, determine the performance, density, and reliability of the cell.
-Current designs trade off performance
-for density---a dense cell with many levels requires tighter error
-functions and is slower than sparser cells. Approximate
-storage cells trade off the third dimension, reliability, to gain in
-performance, density, or both.
+$r$, determine the trade-off space of performance, density, and reliability
+for the cell.
 
 \paragraph{Write error function}
 
@@ -394,8 +369,8 @@ determine the average number of iterations required to write the cell.
 def $w$($v_t$):
   $v$ = 0
   while $|v_t - r(v)| > T$:
-    size = $v_t - v$
-    $v$ += $N(\mathrm{size}, P \cdot \mathrm{size})$
+    step = $v_t - v$
+    $v$ += $N($step$, P \cdot $step$)$
   return $v$
 \end{lstlisting}
     \end{minipage}
@@ -419,7 +394,7 @@ Section~\ref{approxstorage:sec:errorparams} describes our methodology for
 calibrating the algorithm's parameters to reflect realistic PCM
 systems.
 
-Each constituent write pulse in an PCM write can either increase or decrease
+Each constituent write pulse in a PCM write can either increase or decrease
 resistance~\cite{mlcprogalgo,mlcibm,mlcmodelchar}.
 Flash memory write pulses, in contrast, are unidirectional, so writes
 must be more conservative to avoid costly RESET operations
@@ -757,10 +732,10 @@ layers (FTLs) remap bad blocks.
 Approximate storage trades off precision for performance, durability, and density.
 To understand this trade-off in the context of real-world approximate data, we
 simulate both of our techniques and examine their effects on the quality of
-data sets and application outputs. As with previous work on approximate
-computing~\cite{enerj,npu,perforation}, we use
+data sets and application outputs.
+We use
 application-specific metrics to quantify quality
-degradation.
+degradation (see \secref{princ:appspecific}).
 
 We first describe the main-memory and persistent-data benchmarks used in our
 evaluation. We then detail the MLC model parameters that dictate performance
@@ -771,30 +746,22 @@ technique.
 \subsection{Applications}
 
 We use two types of benchmarks in our evaluation: main-memory applications and
-persistent data sets. The main-memory applications are Java programs annotated
-using the EnerJ~\cite{enerj} approximation-aware type system, which marks some
-data as approximate and leaves other data precise. The persistent-storage
+persistent data sets. The main-memory applications are programs that mix some
+approximate data and some precise control data.
+The persistent-storage
 benchmarks are static data sets that can be stored 100\% approximately.
 
 For the main-memory applications, we adapt the annotated benchmarks
-from the evaluation of EnerJ. An in-house simulator intercepts
-loads and stores to collect access statistics and inject errors. The
-applications are chosen from a broad range of domains for their tolerance to
-imprecision. We examine a 3D triangle intersection kernel from a game engine
-(\textsf{jmeint}), a ray tracing image renderer (\textsf{raytracer}), a visual
-bar code recognizer for mobile phones (\textsf{zxing}), and five scientific
-kernels from the SciMark2 benchmark suite (\textsf{fft}, \textsf{lu},
+from the evaluation of EnerJ in \chref{enerj}. An in-house simulator based on the one used in
+EnerJ's evaluation (Section~\ref{enerj:sec:res}) intercepts
+loads and stores to collect access statistics and inject errors.
+We examine eight of the EnerJ-annotated benchmarks:
+\textsf{jmeint}, \textsf{raytracer},
+\textsf{zxing}), and the SciMark2 kernels (\textsf{fft}, \textsf{lu},
 \textsf{mc}, \textsf{smm}, and \textsf{sor}).
-For the benchmarks with vector or matrix
-output, the error metric is the mean pointwise entry difference. For the
-benchmarks with all-or-nothing output correctness, \textsf{jmeint} and
-\textsf{zxing}, the metric is the proportion of correct decisions. For
-\textsf{raytracer}, the metric is the mean pixel value difference.
-The evaluation of EnerJ~\cite{enerj}
-contains more details on the annotation and quality assessment of these
-benchmarks.
+We use the same output-quality metrics as in the EnerJ evaluation.
 
-For persistent storage, we examine four sets of approximate data. The first,
+For persistent storage, we examine four new sets of approximate data. The first,
 \textsf{sensorlog}, consists of a log of mobile-phone sensor readings from an
 accelerometer, thermometer, photodetector, and hydrometer. The data is used in
 a decision tree to infer the device's context, so our quality metric is the
@@ -943,7 +910,7 @@ As an example, Figure~\ref{approxstorage:fig:hist} depicts the error rate distri
 wear stage at which 50\% of the memory's blocks have at least one failure that
 is uncorrectable using ECP$_2$---i.e.,
 half the blocks are approximate. In this stage,
-most the of the blocks have only a few uncorrectable failures: 39\% of the
+most of the blocks have only a few uncorrectable failures: 39\% of the
 approximate blocks have exactly one such failure and only 1.7\% have
 six or more.
 

@@ -56,7 +56,7 @@ words, whether it is \emph{pure with respect to precise data}.
 \Precisepurity is the key criterion for whether a relaxation can
 apply.  In
 \sysname, every relaxation strategy consults the \precisepurity
-analysis and only optimizes
+analysis and optimizes only
 \precisepure code.
 %
 A region is \precisepure if it:
@@ -67,6 +67,8 @@ variables that may be read outside the region;
 \item does not include an unbalanced synchronization statement (locking without
 unlocking or vice versa).
 \end{itemize}
+\TODO{possibly head off the question about printf, etc., which we define as
+not approximatable a priori}
 The analysis begins with the conservative
 assumption that the region is not \precisepure and asserts otherwise only if it
 can prove \precisepurity.
@@ -83,12 +85,12 @@ code region. External code may, however, read the variable \lil{a} since it is
 marked as approximate.
 %
 Together with the information-flow type system, the \precisepurity restriction
-ensures that code transformations only influence approximate data.
+ensures that code transformations influence only approximate data.
 Since only the approximate value \lil{a} escapes the \precisepure block above,
 dependent code must also be marked as \lil{APPROX} to obey the typing rules:
 any code that treats \lil{a} as precise is a type error.
-Optimizations that only affect \precisepure code uphold \sysname's
-contract with the programmer: that approximation must only affect variables
+Optimizations that affect only \precisepure code uphold \sysname's
+contract with the programmer: that approximation must affect only variables
 explicitly marked as approximate.
 
 We implement the core \precisepurity analysis
@@ -240,8 +242,8 @@ do not require specialized neural hardware.
 \subsubsection{Other Client Relaxations}
 The three optimizations above demonstrate \sysname's breadth as a
 framework for realizing ideas from approximate-computing research.
-Though we omit details for space, we have also prototyped
-two other optimizations using \sysname:
+We have also used \sysname to prototype
+two other optimizations, not described here:
 an approximate alias analysis that unlocks secondary compiler optimizations such as
 loop-invariant code motion and vectorization for approximate data, and
 approximate strength reduction that aggressively replaces expensive arithmetic

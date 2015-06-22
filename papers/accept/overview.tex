@@ -34,13 +34,12 @@ feedback loops make \sysname's optimizations both controlled and practical.
 %\sysname's workflow comprises three main components:
 
 \paragraph{Safety constraints and feedback}
-Because program relaxations can have outsize effects on program behavior,
+Because program relaxations can have outsized effects on program behavior,
 programmers need \emph{visibility} into---and \emph{control} over---the
 transformations the compiler applies.
 %
 To give the programmer fine-grained control over relaxations, \sysname extends
-an existing lightweight annotation system for approximate computing based on
-type qualifiers~\cite{enerj}.
+EnerJ's lightweight annotation system (see \chref{enerj}).
 %
 \sysname gives programmers visibility into the relaxation process via feedback
 that identifies which transformations can be applied and which annotations are

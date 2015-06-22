@@ -2,7 +2,7 @@
 \label{accept:sec:annotation-feedback}
 
 This section describes \sysname's annotations and feedback,
-which helps programmers balance safety with approximation.
+which help programmers balance safety with approximation.
 Rather than proving theoretical accuracy guarantees for restricted programming
 models as in other work~\cite{sasa-sas11, zhu-popl12, passert},
 \sysname's workflow extends mainstream development practices: it combines
@@ -14,56 +14,31 @@ approximation to general code.
 
 The programmer uses annotations to communicate to the compiler which parts of
 a program are safe targets for program relaxation.
-\sysname adapts the type system of EnerJ, a language for approximate computing
-that was originally developed for bounding the effects of unreliable hardware
-components~\cite{enerj}.
-As in EnerJ, all types in \sysname are qualified as either \emph{approximate} or
-\emph{precise}, with precise being the default.
+\sysname adapts the type system of EnerJ from \chref{enerj}.
+We originally designed EnerJ to bound the effects of unreliable hardware
+components that introduce errors at a fine grain;
+here, we extend the idea to coarse-grained compiler transformations.
+This way, \sysname follows the best-of-both-worlds principle in
+Section~\ref{sec:princ:granularity}: it combines a fine-grained programming model with
+coarse-grained approximation techniques.
 
 \paragraph{Information flow and endorsement}
-\sysname's type system uses a standard information-flow
-approach to prevent approximate data from affecting precise data.
-%
-Precise types are strict subtypes of their approximate counterparts, so
-variables annotated as approximate cannot be assigned to precise ones without
-explicit programmer intervention.  (The opposite direction, wherein precise data
-affects approximate data, is permitted.)
-%
-\sysname's type system is directly derived from EnerJ's~\cite{enerj}, for which
-its authors prove a noninterference property ensuring that precise data stays
-precise.  The same noninterference guarantee applies to \sysname's
+\sysname's information-flow type system is directly derived from EnerJ's.
+The noninterference property from \chref{enerj} applies
+to \sysname's
 type-qualifier extension for type-safe subsets of C and C++.
 Undefined behavior in C and C++ remains undefined in \sysname:
 programs that violate type safety can also violate \sysname's guarantees.
 
-Strict information flow can be too constraining.
-For example, a program may need to
-compute an approximate value, where relaxations can apply, but then check the
-resulting output for integrity while treating it as precise:
-%
-\begin{lstlisting}
-APPROX int a = expensiveCall();
-cheapChecksumPrecise(a); // illegal
-\end{lstlisting}
-%
-To permit this pattern, \sysname provides an \emph{endorsement} expression
-that acts as a cast from an approximate type to its precise equivalent.
-The above program fails to typecheck, but using \lil{ENDORSE(a)} as the argument
-is legal:
-\begin{lstlisting}
-APPROX int a = expensiveCall();
-cheapChecksumPrecise(ENDORSE(a));
-\end{lstlisting}
-Endorsements give programmers explicit control over information flow
-when dealing with approximate values.
+The annotations consist of an \lil{APPROX} keyword, a type qualifier marking
+approximate values, and an \lil{ENDORSE} keyword, which casts from an
+approximate type to its precise equivalent. See
+Section~\ref{enerj:sec:typesys} for background on these two constructs.
 
 \paragraph{Pointer types}
-For basic, non-reference types, \sysname's dialect of C allows unidirectional
-information flow: precise values can be assigned into approximate variables
-but not vice-versa. For pointers and references, however,
-even precise-to-approximate flow is unsound since
-it creates aliases for the same data that disagree on its type.
-Pointer types are therefore invariant in the referent type.
+As outlined in Section~\ref{enerj:objects}, covariant reference types can
+lead to unsoundness.
+As with object types in EnerJ, therefore, pointer and C++ reference types in \sysname are invariant in the referent type.
 The language does not permit approximate pointers---i.e., addresses must be
 precise.
 
