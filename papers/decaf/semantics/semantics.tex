@@ -253,7 +253,7 @@ The probability $S(v)$ is the chance that the variable does not hold $\Box$.
 \end{mathpar}
 
 \paragraph{Endorsements}
-Unchecked (unsound) endorsements only apply to statically-tracked values and
+Unchecked (unsound) endorsements apply only to statically-tracked values and
 do not affect the correctness probability.
 \begin{mathpar}
     \inferrule[endorse]
@@ -719,4 +719,4 @@ Two lemmas show that replacing $S$ with $S'$ in the expression judgments leads
 to the same result value $V$ and, in the dynamically-tracked case, the same
 tracking probability $p_d$.
 Finally, structural induction on the small-step statement judgment shows that,
-in every rule, the expression probability only affects $S$ itself.
+in every rule, the expression probability affects only $S$ itself.

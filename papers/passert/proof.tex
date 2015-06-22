@@ -35,9 +35,6 @@ We examine each of five cases individually.
   $(\Sigma, x_2) \judge_o v_2$.  Then by the definition of $\judge_o$,
   $(\Sigma, x) = (\Sigma, x_1 + x_2) \judge_o v_1 + v_2 = v$.  Thus
   this case is established.
-\item[$e_1 * e_2$] Analogous to $e_1 + e_2$.
-\item[$e_1 \div e_2$] Analogous to $e_1 + e_2$.
-\item[$e_1 \div e_2$] Analogous to $e_1 + e_2$.
 \item[$r$] $(H_s, r) \judge_s \{ r \}$ and $(\Sigma, r) \judge_c r$;
   on the other hand, $(H_c, r) \judge_c r$.  Thus this case is
   established.
@@ -45,6 +42,9 @@ We examine each of five cases individually.
   H_c(v)$.  But by hypothesis, $(\Sigma, H_s(v)) \judge_e H_c(a)$, so
   this case is established.
 \end{itemize}
+
+The cases for $e_1 * e_2$, $e_1 \div e_2$, and $e_1 \div e_2$ are all
+analogous to the addition expression, $e_1 + e_2$.
 
 These are all the cases present in the definition of $E$, so the lemma
 is complete.
@@ -67,7 +67,7 @@ individually.
   v_2$, so that $b = [v_1 < v_2]$.  By lemma~\ref{passert:lem:expr}, $(\Sigma,
   x_1) \judge_o v_1$ and $(\Sigma, x_2) \judge_o v_2$, so $(\Sigma, x)
   \judge_o [v_1 < v_2] = b$.  Thus this case is established.
-\item[$e_1 = e_2$] Analogous to $e_1 < e_2$.
+\item[$e_1 = e_2$] This case is analogous to $e_1 < e_2$.
 \item[$c_1 \wedge c_2$] Let $(H_s, c_1) \judge_s \{ x_1 \}$ and $(H_s,
   c_2) \judge_s \{ x_2 \}$. Also let $(H_c, c_1) \judge_c b_1$ and
   $(H_c, c_2) \judge_c b_2$, so that $(H_c, c_1 \wedge c_2) \judge_c
@@ -76,7 +76,7 @@ individually.
   $(\Sigma, x_1) \judge_o b_1$ and $(\Sigma, x_2) \judge_o b_2$.  Then
   by the definition of $\judge_o$, $(\Sigma, x) = (\Sigma, x_1 \wedge
   x_2) \judge_o b_1 + b_2 = b$.  Thus this case is established.
-\item[$c_1 \vee c_2$] Analogous to $c_1 \wedge c_2$.
+\item[$c_1 \vee c_2$] This case is analogous to $c_1 \wedge c_2$.
 \item[$\neg c_1$] Let $(H_s, c_1) \judge_s \{ x_1 \}$ and $(H_c, c_1)
   \judge_c b_1$, so that $(H_c, \neg c_1) \judge_c \neg b_1$.  By the
   definition of $\judge_s$, $(H_s, \neg c_1) \judge_s \{ \neg x_1 \}$,
@@ -229,8 +229,10 @@ do not contain \textbf{while} loops.
     that $\Sigma' = \sigma_1:\dotsb\sigma_k:\Sigma'$ where
     $(\Sigma, m) = (\Sigma, \mathbf{if}\:x_s\:m_t\:m_f) \judge_o k$.
     Similarly, since $H_s' = \mathtt{merge}(H_{sf}, H_{st}, x_s)$,
-    we know that for all variable $v$,
-    $(\Sigma, H_s'(v)) = (\Sigma, \mathtt{merge}(H_{st}, H_{sf}, x_s)(v))$
+    we know that for all variables $v$:
+    %
+    $$(\Sigma, H_s'(v)) = (\Sigma, \mathtt{merge}(H_{st}, H_{sf}, x_s)(v))$$
+    %
     This is equal to either $(\Sigma, \mathbf{if}\:x_s\:(H_{st}(v))\:(H_{sf}(v)))$
     or $(\Sigma, H_{st}(v))$, both of which evaluate to $H_{ct}(v) = H_c'(v)$
     because $x_s$ evaluates to $b$ which is true, and because

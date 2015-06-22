@@ -30,7 +30,7 @@ Subclassing is standard:
 \vspace{2.0ex}
 
 
-Subtyping combines these two and add a special case for primitives:
+Subtyping combines these two and adds a special case for primitives:
 
 \vspace{0.5ex}
 \ottdefnsubtyping{}
@@ -60,14 +60,14 @@ qualifier. If not, we use $ \texttt{\upshape{lost}\,\!} $.
 \vspace{2.0ex}
 
 
-To combine whole types, we just need to adapt the qualifiers:
+To combine whole types, we adapt the qualifiers:
 
 \vspace{0.5ex}
 \ottdefnqcombtrules{}
 \vspace{2.0ex}
 
 
-Same for methods:
+The same logic follows for methods:
 
 \vspace{0.5ex}
 \ottdefnqcombmsrules{}
@@ -94,8 +94,7 @@ For a qualified class type, we also need to adapt the type:
 
 Note that subsumption in the type rule will be used to get to the
 correct class that declares the field.
-
-Same for methods.
+Methods work similarly.
 
 \vspace{0.5ex}
 \ottdefnsmsigc{}
@@ -502,10 +501,10 @@ Therefore, the additional check passes.
 
 \subsection{Non-Interference}
 
-The express a non-interference property, we first define a relation $\cong$ on
+To express a non-interference property, we first define a relation $\cong$ on
 values, heaps, and environments. Intuitively, 
 $\cong$ denotes an equality that disregards approximate
-values. The relation only holds for values, heaps, and environments with
+values. The relation holds only for values, heaps, and environments with
 identical types.
 
 Where $v$ and $\tilde{v}$ are primitive values, $v \cong \tilde{v}$ iff the
