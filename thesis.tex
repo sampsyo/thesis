@@ -158,6 +158,11 @@
   [inproceedings]
   {booktitle}{\mkbibemph{#1}\addcomma}
 
+% Misc entries: minimal formatting.
+\DeclareFieldFormat
+  [misc]
+  {title}{#1\isdot}
+
 \begin{document}
 \raggedbottom
 \renewcommand*{\bibname}{References}
