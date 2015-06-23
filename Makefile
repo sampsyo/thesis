@@ -6,7 +6,7 @@ DRAFTFLAG := --no-pdf
 
 BIBTEX := biber
 ifneq ($(QUIET),)
-BIBERRFILTER := | grep '^\(WARN\|ERROR\|FATAL\)'
+BIBERRFILTER := | grep '^\(WARN\|ERROR\|FATAL\)' || true
 endif
 
 export TEXINPUTS := .:./fontspec:$(TEXINPUTS)
