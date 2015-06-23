@@ -65,7 +65,7 @@ Since floating-point operations are both expensive and inexact, they make a
 profitable target for this research direction. Researchers have designed units
 that dynamically adapt mantissa width~\cite{bitwidthred, hierarchfpu}, ``fuzzily'' memoize
 similar arithmetic computations~\cite{fuzzymemo}, or tolerate timing
-errors~\cite{kumarhpca, hizli}.
+errors~\cite{kumarhpca, hizli, metafunctions}.
 Alternative number
 representations work in tandem with relaxed functional units to bound the
 numerical error that can result from bit flips~\cite{stanleymarbell}.
@@ -91,9 +91,11 @@ powerfade, flash-retention-relax}.
 Spintronic memories exhibit similarly favorable trade-offs between access cost
 and error~\cite{spintronic-approx}.
 
-Some recent work has also proposed general techniques for making quality trade-offs
+A broad category of work has proposed general techniques for making quality trade-offs
 when synthesizing and optimizing general hardware
-circuits~\cite{lossysynthesis, palem-pruning, rahimi, axilog, miao-thesis}.
+circuits~\cite{lossysynthesis, palem-pruning, rahimi, axilog, miao-thesis, synthesis-date14, venkataramani-date13, venkataramani-dac12}.
+Other tools focus on analyzing approximate circuit
+designs~\cite{venkatesan-iccad11, tziantzioulis-dac15}.
 
 As a dual to adding errors in some circuits, some researchers have
 explored differential fault protection in the face of universally unreliable
@@ -155,7 +157,8 @@ algorithmic specifications---to explore practical relaxations.
 Transformations include removing portions of a program's dynamic execution
 (termed \emph{code perforation})~\cite{perforation}, unsound
 parallelization of serial programs~\cite{quickstep}, eliminating
-synchronization in parallel programs~\cite{dubstep, races-ibm, hogwild},
+synchronization in parallel programs~\cite{dubstep, races-ibm, hogwild,
+forgiving-parallel},
 identifying and adjusting parameters that control output
 quality~\cite{dynamicknobs}, randomizing portions of deterministic
 programs~\cite{zhu-popl12, sasa-sas11}, dynamically choosing between
@@ -274,8 +277,9 @@ Several research projects have proposed radically different models of
 computation that, rather than adapting existing software to expose its error
 resilience, are based exclusively on probabilistic reasoning. Most
 prominently, Probabilistic CMOS~\cite{pcmos, pcmos-cacm, palem-dac-position}
-and stochastic processors~\cite{stochasticproc} expose the probabilistic
+and stochastic processors~\cite{stochasticproc, storm} expose the probabilistic
 behavior of transistors as part of their ISA.
+\TODO{More detail on stochastic computing.}
 Other preliminary efforts from MIT~\cite{batesmit, lyric, mansinghka-circuits} and
 Stanford~\cite{ersa} fall into the same category.
 
