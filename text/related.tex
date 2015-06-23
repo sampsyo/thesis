@@ -65,12 +65,16 @@ Since floating-point operations are both expensive and inexact, they make a
 profitable target for this research direction. Researchers have designed units
 that dynamically adapt mantissa width~\cite{bitwidthred, hierarchfpu}, ``fuzzily'' memoize
 similar arithmetic computations~\cite{fuzzymemo}, or tolerate timing
-errors~\cite{palem-adders, impact, kumarhpca, hizli, adder-metrics}.
-Conversely, fault-tolerant functional units can help avoid catastrophic
-miscalculations while allowing occasional small errors~\cite{uva-adder}.
+errors~\cite{kumarhpca, hizli}.
 Alternative number
 representations work in tandem with relaxed functional units to bound the
 numerical error that can result from bit flips~\cite{stanleymarbell}.
+
+The VLSI community has paid particular attention to variable-accuracy adder
+designs, which are allowed to yield incorrect results for some minority of
+input combinations~\cite{uva-adder, palem-adders, impact, adder-metrics,
+configurable-adder, adder-iccad13, adder-tcad, adder-optimal, adder-dac12,
+adder-isic09, adder-date08}.
 
 SRAM
 structures spend significant static power on retaining data, so they represent
