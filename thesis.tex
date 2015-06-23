@@ -185,7 +185,6 @@
 
 \begin{document}
 \raggedbottom
-\renewcommand*{\bibname}{References}
 \pagenumbering{roman}
 \pagestyle{plain}
 
@@ -377,14 +376,22 @@
 
 
 % BIB
+\renewcommand*{\bibname}{References}
 \refstepcounter{dummy}
 % work-around to have small caps also here in the headline
 \manualmark
 \markboth{\spacedlowsmallcaps{\bibname}}{\spacedlowsmallcaps{\bibname}} % work-around to have small caps also
 %\phantomsection
+\pdfbookmark[-1]{\bibname}{references}
+
+% Temporarily disable PDF bookmarking while we create the un-numbered,
+% out-of-part chapter marking.
+\hypersetup{bookmarksdepth=-2}
 \addtocontents{toc}{\protect\vspace{\beforebibskip}} % to have the bib a bit from the rest in the toc
 \addcontentsline{toc}{chapter}{\tocEntry{\bibname}}
 \chapter*{\bibname}
+\hypersetup{bookmarksdepth}%back to tocdepth
+
 \label{app:bibliography}
 \printbibliography[heading=none]
 
