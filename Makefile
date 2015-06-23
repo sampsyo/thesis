@@ -3,7 +3,11 @@ include Makefile.include
 PDFLATEX := $(subst pdflatex,xelatex,$(PDFLATEX))
 EXTRACLEAN := $(TARGET).synctex.gz metadata.tex $(TARGET).thm $(TARGET).xdv
 DRAFTFLAG := --no-pdf
+
 BIBTEX := biber
+ifneq ($(QUIET),)
+BIBERRFILTER := | grep '^\(WARN\|ERROR\|FATAL\)'
+endif
 
 export TEXINPUTS := .:./fontspec:$(TEXINPUTS)
 
