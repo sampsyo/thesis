@@ -286,18 +286,22 @@
     --- Thomas Pynchon, \textit{The Crying of Lot 49}
 \end{center}
 
+\cleardoublepage
 
 % CONTENTS
 \renewcommand{\contentsname}{Contents}
 \pagestyle{scrheadings}
-%\phantomsection
 \refstepcounter{dummy}
-\pdfbookmark[1]{\contentsname}{tableofcontents}
 \setcounter{tocdepth}{1} % <-- 2 includes up to subsections in the ToC
 \setcounter{secnumdepth}{3} % <-- 3 numbers up to subsubsections
 \manualmark
 \markboth{\spacedlowsmallcaps{\contentsname}}{\spacedlowsmallcaps{\contentsname}}
+\phantomsection
+\pdfbookmark[1]{\contentsname}{tableofcontents}
+
 \tableofcontents
+
+% Resturn to ordinary header marks.
 \automark[section]{chapter}
 \renewcommand{\chaptermark}[1]{\markboth{\spacedlowsmallcaps{#1}}{\spacedlowsmallcaps{#1}}}
 \renewcommand{\sectionmark}[1]{\markright{\thesection\enspace\spacedlowsmallcaps{#1}}}
