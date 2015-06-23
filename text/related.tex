@@ -70,7 +70,9 @@ Conversely, fault-tolerant functional units can help avoid catastrophic
 miscalculations while allowing occasional small errors~\cite{uva-adder}.
 Alternative number
 representations work in tandem with relaxed functional units to bound the
-numerical error that can result from bit flips~\cite{stanleymarbell}. SRAM
+numerical error that can result from bit flips~\cite{stanleymarbell}.
+
+SRAM
 structures spend significant static power on retaining data, so they represent
 another opportunity for fidelity trade-offs~\cite{hybrid-sram, sramerrors,
 partially-forgetful}. Similarly,
@@ -82,6 +84,8 @@ lifetime~\cite{fang-pcm}.
 Similarly, low-power writes to memories like flash can exploit its
 probabilistic properties while hiding them from software~\cite{halfwits,
 powerfade, flash-retention-relax}.
+Spintronic memories exhibit similarly favorable trade-offs between access cost
+and error~\cite{spintronic-approx}.
 
 Some recent work has also proposed general techniques for making quality trade-offs
 when synthesizing and optimizing general hardware
@@ -197,8 +201,8 @@ transforming it to a neural-network representation.
 It is, at its core, an algorithmic transformation, but it integrates tightly
 with hardware support: a digital accelerator~\cite{npu}, analog
 circuits~\cite{anpu}, FPGAs~\cite{snnap},
-GPUs~\cite{neuralgpu}, or, recently, an analog substrate based on
-resistive memory~\cite{rram-approx}.
+GPUs~\cite{neuralgpu}, or, recently, new analog substrates using
+resistive memory~\cite{rram-npu} or memristors~\cite{memristor-npu}.
 See \secref{npu} for a more detailed overview of neural acceleration.
 
 
