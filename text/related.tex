@@ -43,6 +43,15 @@ studies focus on the kinds of applications that are typically implemented with
 application-specific circuits: media codecs, numerical kernels, and digital
 signal processing.
 
+Much of the work on application robustness tends to assume an existing,
+domain-specific notion of ``quality'' for each
+application.
+As the principle in \secref{princ:appspecific} suggests, these quality metrics
+need careful consideration: one quality metric is not necessarily just as good
+as another.
+Recent work has proposed guidelines for measuring quality
+rigorously~\cite{wddd-quality}.
+
 
 \section{Exploiting Resilience in Architecture}
 
@@ -63,7 +72,8 @@ Alternative number
 representations work in tandem with relaxed functional units to bound the
 numerical error that can result from bit flips~\cite{stanleymarbell}. SRAM
 structures spend significant static power on retaining data, so they represent
-another opportunity for fidelity trade-offs~\cite{hybrid-sram, sramerrors}. Similarly,
+another opportunity for fidelity trade-offs~\cite{hybrid-sram, sramerrors,
+partially-forgetful}. Similarly,
 DRAM structures can reduce the power spent on refresh cycles where bit flips
 are allowed~\cite{flikker, sparkk}.
 In persistent memories where storage cells can wear out, approximate systems
@@ -111,6 +121,11 @@ unit~\cite{tabsh}.
 
 Near-threshold voltage domains also present a new opportunity for embracing
 unpredictable circuit operation~\cite{soft-ntc}.
+
+Much of this work on hardware-level approximation work by exposing
+soft errors and other analog effects.
+Recent work in security and privacy has exploited these variability-related
+errors to fingerprint hardware and deanonymize users~\cite{deanondram}.
 
 
 
@@ -180,15 +195,23 @@ requirements with optimal efficiency.
 Neural acceleration is a recent technique treading code as a black box and
 transforming it to a neural-network representation.
 It is, at its core, an algorithmic transformation, but it integrates tightly
-with hardware support: a digital accelerator, analog circuits, FPGAs, or
-GPUs~\cite{npu, anpu, snnap, neuralgpu}.
+with hardware support: a digital accelerator~\cite{npu}, analog
+circuits~\cite{anpu}, FPGAs~\cite{snnap},
+GPUs~\cite{neuralgpu}, or, recently, an analog substrate based on
+resistive memory~\cite{rram-approx}.
 See \secref{npu} for a more detailed overview of neural acceleration.
 
 
 \section{Dynamically Controlling Approximation}
 
-Program-level transformations can also help detect egregious errors while
-allowing small, inconsequential disruptions~\cite{lwc, approxdebug}.
+As an alternative to statically bounding errors, dynamic techniques can
+monitor quality degradation at run time.
+The critical challenge for these techniques is balancing detection accuracy
+with the added cost, which takes away from the efficiency advantages of
+approximation.
+Some work has suggested that programmers can provide domain-specific checks on
+output quality~\cite{lwc, approxdebug}.
+Recent work has explored automatic generation of error detectors~\cite{rumba}.
 A variety of techniques propose mechanisms for run-time or profiling feedback to adapt
 approximation parameters~\cite{dynamicknobs, green, approxit, ansel-autotuning}.
 \TODO{describe these in a little more detail}
@@ -265,7 +288,7 @@ queries the probability of an outcome, which resembles a probabilistic
 assertion's
 specification of the correct outcome.
 
-Statistical model checking bounds verification error on 
+Statistical model checking bounds verification error on
 problems where state-space explosion makes exact numerical
 verification intractable (see Legay and Delahaye's
 survey~\cite{legay10}).  Model checking~\cite{Clarke} provides formal guarantees,
