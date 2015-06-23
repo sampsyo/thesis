@@ -218,6 +218,7 @@ Figure~\ref{passert:sem:symbolic} lists the full set of rules.
 \begin{figure}[p]
 \centering
 \makebox[\textwidth][c]{%
+\renewcommand{\MathparLineskip}{\lineskip=.6\baselineskip}
 \begin{mathpar}
   \inferrule[plus]{(H, e_1) \judge_s x_1 \\ (H, e_2) \judge_s x_2}{(H, e_1 +
     e_2) \judge_s \{x_1 + x_2\}} \and
@@ -266,6 +267,7 @@ Figure~\ref{passert:sem:symbolic} lists the full set of rules.
   \inferrule{H_t(v) = a \\ H_f(v) = b \\ a = b}
     {\mathtt{merge}(H_t, H_f, \{x\})(v) = a}
 \end{mathpar}
+\renewcommand{\MathparLineskip}{\mpr@lineskip}
 }
 \caption{The symbolic semantics produce
   an expression tree.  We use a big-step style for conditions
