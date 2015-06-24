@@ -501,7 +501,7 @@ and
 $\Gamma \vdash e_2 : \ApproxN{p_2} \> \tau_2$.
 
 By inversion on $H ; D ; S ; e \pjudge{p'} V$
-(in any of the cases \textsc{op}, \textsc{op-operator-incorrect}, or
+(in any of the three operator cases \textsc{op}, \textsc{op-operator-incorrect}, or
 \textsc{op-operands-incorrect}),
 $p' = p_1' \cdot p_2' \cdot p_\text{op}$
 where $H ; D ; S ; e_1 \pjudge{p_1'} V_1$
@@ -538,8 +538,8 @@ Therefore,
 $p_{d1} \cdot p_{d2} \cdot p_\text{op} \le p'_1 \cdot p'_2 \cdot p_\text{op}$
 and, by substitution, $p \le p'$.
 
-\paragraph{Case \textsc{const-int-types} and \textsc{const-float-types}}
-Here,
+\paragraph{Cases \textsc{const-int-types} and \textsc{const-float-types}}
+Here, we have that
 $\Gamma \vdash e : \ApproxN{p} \> \tau$
 where
 $\tau \in \{\text{int, float}\}$

@@ -39,7 +39,9 @@ We examine each of five cases individually.
   on the other hand, $(H_c, r) \judge_c r$.  Thus this case is
   established.
 \item[$v$] $(H_s, v) \judge_s H_s(v)$, while $(H_c, v) \judge_c
-  H_c(v)$.  But by hypothesis, $(\Sigma, H_s(v)) \judge_e H_c(a)$, so
+  H_c(v)$.  But by hypothesis, we have that
+  $(\Sigma, H_s(v)) \judge_e H_c(a)$,
+  so
   this case is established.
 \end{itemize}
 
@@ -154,7 +156,9 @@ do not contain \textbf{while} loops.
   \item[$v \leftarrow d$] Let $\Sigma = \sigma:\Sigma'$.  Then
     $(\Sigma, H_c, v \leftarrow d) \to_c (\Sigma', (v \mapsto d(\sigma)):H_c, \mathbf{skip})$
     On the other hand, in the symbolic semantics,
-    $(\{ n \}, H_s, v \leftarrow d) \to_s (\{ n+1 \}, (v \mapsto \langle d, n \rangle):H_s, \mathbf{skip})$
+    $(\{ n \}, H_s, v \leftarrow d) \to_s (\{ n+1 \}, (v \mapsto \langle d, n
+    \rangle):H_s, \mathbf{skip})$.
+
     We can see that
     if $(\Sigma, \{ n \}) \judge_o l$, then $(\Sigma, \{n + 1\}) \judge_o l + 1$,
     forcing $k = 1$. Indeed, $\Sigma = \sigma_1:\Sigma'$.  Furthermore, since
@@ -171,10 +175,10 @@ do not contain \textbf{while} loops.
     By induction, we also have
     $(\Sigma, H_c, s_1) \to_c^{*} (\Sigma'', H_c', s_1')$,
     with the expected properties relating $\Sigma'$ and $k$, and
-    $H_c'$ and $H_s'$.  But then since
-    $(n, H_s, s_1 ; s_2) \to_s (m', H_s', s_1' ; s_2)$
+    $H_c'$ and $H_s'$.  But then since:
+    $$(n, H_s, s_1 ; s_2) \to_s (m', H_s', s_1' ; s_2)$$
     and
-    $(\Sigma, H_c, s_1 ; s_2) \to_c^{*} (\Sigma'', H_c', s_1' ; s_2)$,
+    $$(\Sigma, H_c, s_1 ; s_2) \to_c^{*} (\Sigma'', H_c', s_1' ; s_2)$$
     this case is established with $m = m'$ and $\Sigma' = \Sigma''$.
     (We omit the lemma that
     $s_1 \to^{*} s_1'$ implies $s_1 ; s_2 \to^{*} s_1' ; s_2$,
@@ -194,14 +198,14 @@ do not contain \textbf{while} loops.
       to the same result as $y_f$.
 
     Now, depending on $b$,
-    either
-    $(\Sigma, H_c, \mathbf{if}\:c\:s_1\:s_2) \to (\Sigma', H_c', s_1)$
-    or
-    $(\Sigma, H_c, \mathbf{if}\:c\:s_1\:s_2) \to (\Sigma', H_c', s_2)$.
-    We know that
-    $(n, H_s, s_1) \to_s^{*} (m_t, H_{st}, \mathbf{skip})$
+    either:
+    $$(\Sigma, H_c, \mathbf{if}\:c\:s_1\:s_2) \to (\Sigma', H_c', s_1)$$
+    or:
+    $$(\Sigma, H_c, \mathbf{if}\:c\:s_1\:s_2) \to (\Sigma', H_c', s_2)$$
+    We know that:
+    $$(n, H_s, s_1) \to_s^{*} (m_t, H_{st}, \mathbf{skip})$$
     and
-    $(n, H_s, s_2) \to_s^{*} (m_f, H_{sf}, \mathbf{skip})$.
+    $$(n, H_s, s_2) \to_s^{*} (m_f, H_{sf}, \mathbf{skip})$$
     But then by induction, we know that
     $(\Sigma, H_c, s_1) \to_c^{*} (\Sigma_t, H_{ct}, \mathbf{skip})$
     or
@@ -275,6 +279,7 @@ We require that the symbolic evaluation terminate.
     $(\Sigma, H_c, s_1) \to_c^{*} (\Sigma'', H_c'', \mathbf{skip})$,
     with the usual relation between $\Sigma''$ and $n'$, and between
     $H_s''$ and $H_c''$.
+
     But then again by induction
     $(n', H_s'', s_2) \to_s^{*} (m, H_s', \mathbf{skip})$
     implies
@@ -299,6 +304,7 @@ We require that the symbolic evaluation terminate.
     $(H_c, c) \judge_c \mathbf{false}$.
     Then
     $(\Sigma, H_c, \mathbf{while}\:c\:s) \to^{*} (\Sigma, H_c, \mathbf{skip})$.
+
     But by assumption,
     $(n, H_s, \mathbf{while}\:c\:s) \to (n, H_s, \mathbf{skip})$,
     so the inductive statement holds.
