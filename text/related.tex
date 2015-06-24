@@ -34,7 +34,7 @@ the safety principle in \secref{princ:safety}:
 certain program components, especially those involved in control flow, need to
 be protected from all influence from approximation.
 
-Much of the work on application robustness tends to assume an existing,
+This work tends to assume an existing,
 domain-specific notion of ``quality'' for each
 application.
 As the principle in \secref{princ:appspecific} suggests, these quality metrics
@@ -46,9 +46,7 @@ rigorously~\cite{wddd-quality}.
 
 \section{Exploiting Resilience in Architecture}
 
-One category of techniques for approximation examines efficiency--accuracy
-trade-offs in hardware.
-These techniques can lead to gains in energy, performance, manufacturing
+Hardware techniques for approximation can lead to gains in energy, performance, manufacturing
 yield, or verification complexity.
 
 \subsection{Functional Units}
@@ -87,8 +85,8 @@ and error~\cite{spintronic-approx}.
 These memory approximation techniques typically
 work by exposing
 soft errors and other analog effects.
-Recent work in security and privacy has exploited these variability-related
-errors to fingerprint hardware and deanonymize users~\cite{deanondram}.
+Recent work in security has exploited patterns in these variability-related
+errors to deanonymize users~\cite{deanondram}.
 
 \subsection{Circuit Design}
 
@@ -119,10 +117,9 @@ resources~\cite{khudia-tolerance, shi-cal}.
 
 \subsection{Microarchitecture}
 
-Aside from designing fundamentally approximate circuits, a different direction
-introduces approximation by relaxing traditional microarchitectural
-mechanisms.
-Notably, ``soft coherence'' relaxes intercore
+Microarchitectural mechanisms can exploit different opportunities from
+circuit-level techniques.
+Specifically, ``soft coherence'' relaxes intercore
 communication~\cite{softcoherence},
 and load value approximation~\cite{lva-sanmiguel, lva-thwaites} approximates
 numerical values instead of fetching them from main memory on cache misses.
@@ -165,7 +162,7 @@ parallelization of serial programs~\cite{quickstep}, eliminating
 synchronization in parallel programs~\cite{dubstep, races-ibm, hogwild,
 forgiving-parallel},
 identifying and adjusting parameters that control output
-quality~\cite{dynamicknobs}, randomizing portions of deterministic
+quality~\cite{dynamicknobs}, randomizing deterministic
 programs~\cite{zhu-popl12, sasa-sas11}, dynamically choosing between
 different programmer-provided implementations of the same
 specification~\cite{green, virus, petabricks, taco-soc, ansel-autotuning,
@@ -221,8 +218,8 @@ is a database system that can respond to queries that include a required
 accuracy band on their output~\cite{blinkdb}.
 
 Uncertain{\textless}T{\textgreater}~\cite{uncertaint} and Lax~\cite{lax}
-propose to expose the approximate, probabilistic behavior of sensors at the
-language and API levels.
+propose to expose the probabilistic behavior of sensors to
+programs.
 
 In a distributed system or a supercomputer, approximation techniques can
 eschew redundancy and recovery for efficiency~\cite{dekruijf-icpp}.

@@ -75,7 +75,7 @@ chance of adding any amount of noise, some executions will make
 \code{d} greater than 10.  Since these infrequent outlier cases are possible,
 traditional verification must conclude that the assertion does not hold.
 
-\paragraph*{Probabilistic Evaluation} Probabilistic evaluation
+\emph{Probabilistic evaluation}
 checks the probabilistic logical statement over random variables
 expressed by the \passert. It first performs \emph{distribution extraction},
 which is a symbolic execution that builds a Bayesian
@@ -133,7 +133,6 @@ confidence level.  Programmers can adjust the confidence level to
 trade off between analysis time and verification accuracy.
 
 
-\paragraph*{Evaluation}
 We implement this approach in a tool called \tool that takes C and C++
 programs with \passerts as inputs. \tool emits either \emph{true},
 \emph{false}, or \emph{unverifiable} along with a confidence interval

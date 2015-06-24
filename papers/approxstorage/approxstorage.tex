@@ -75,7 +75,7 @@ may occur with non-negligible probability.
 
 This work examines the potential for approximate storage in
 PCM and other solid-state, non-volatile memories.
-For either main-memory or persistent-storage data,
+For both categories of data,
 the application must determine which data can
 tolerate errors and which data needs ``perfect'' fidelity.
 Following EnerJ's example, we assume that safety constraints need to be part
@@ -130,7 +130,7 @@ precision flag as in the Truffle ISA~\cite{truffle}.
 
 \subsection{Approximate Persistent Storage}
 
-We also consider interfaces that play the role of persistent storage:
+We also consider interfaces for persistent storage:
 filesystems, database management systems (DBMSs),
 or, more recently, flat address spaces~\cite{nvheaps,mnemosyne}.
 
@@ -549,7 +549,7 @@ We also define the average error of a code as a way to quantify the code's error
 power.
 
 
-Codes in this setting represent $b$-bit numbers (i.e., the first $2^b$ integers) using digits drawn from an alphabet of $n$ symbols. So a codeword $w = \langle v_1,
+Codes represent $b$-bit numbers (i.e., the first $2^b$ integers) using digits drawn from an alphabet of $n$ symbols. A codeword $w = \langle v_1,
 v_2, \dots, v_{b/\log n} \rangle$ is a vector of numbers $0 \le v < n$
 where $n$ is the number of levels per cell. Assuming $n$ is a power of
 two whose base divides $b$, there are $n ^ {b / \log n} = 2 ^ b$
@@ -575,7 +575,7 @@ An optimal code is one that minimizes this expected value when $i$
 is drawn from a
 uniform distribution (or some other sensible distribution).
 
-An exhaustive search for the optimal code by this definition would be
+An exhaustive search for the optimal code by this definition is
 intractable: there are $2^b!$ possible codes for $b$-bit numbers.
 Recent work~\cite{holcomb-wacas} has used a constraint formulation to search a
 subset of codes that reorder bits, but more sophisticated schemes
@@ -1351,7 +1351,7 @@ lifetime extension of \result{recycle-mean-all-ext}
 (\result{recycle-mean-qos-ext} for the main-memory benchmarks and
 \result{recycle-mean-nv-ext} for
 the persistent-storage data sets) when quality loss is limited to 10\%.
-Recent work has demonstrated PCM arrays that sustain a random write bandwidth of
+Recent work has demonstrated PCM arrays with a random write bandwidth of
 1.5~GB/s~\cite{moneta};
 for a 10~GB memory constantly written at this rate,
 these savings translate to extending the array's lifetime
@@ -1391,8 +1391,9 @@ Moving from ECP$_2$ to ECP$_6$ extends the lifetime of a precise memory array
 by 45\% under main-memory wear or 17\% under persistent-storage wear.
 Our
 results for approximate main-memory storage with ECP$_2$ provide a
-portion of these benefits (\result{recycle-mean-qos-ext} lifetime extension) while incurring no
-additional error-correction overhead. In the persistent-storage case, the
+portion of these benefits (\result{recycle-mean-qos-ext} lifetime extension)
+without incurring any
+additional correction overhead. In the persistent-storage case, the
 lifetime extension for approximate storage (\result{recycle-mean-nv-ext}) is greater than for
 increasing the ECP budget.
 

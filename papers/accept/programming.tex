@@ -19,7 +19,8 @@ We originally designed EnerJ to bound the effects of unreliable hardware
 components that introduce errors at a fine grain;
 here, we extend the idea to coarse-grained compiler transformations.
 This way, \sysname follows the best-of-both-worlds principle in
-Section~\ref{sec:princ:granularity}: it combines a fine-grained programming model with
+Section~\ref{sec:princ:granularity}: it combines a fine-grained programming
+model with more efficient,
 coarse-grained approximation techniques.
 
 \paragraph{Information flow and endorsement}
@@ -62,7 +63,7 @@ Escape hatches from this sound reasoning are critical in a practical
 system that must handle legacy code.
 To enable or disable specific optimizations, the programmer can
 override the compiler's decision about a statement's effects using two
-annotations. The \annpermit annotation forces a statement to
+annotations. First, the \annpermit annotation forces a statement to
 be considered approximate
 and \annforbid forces it to be precise, forbidding
 any relaxations involving it.
@@ -74,8 +75,8 @@ Qualitatively, when annotating programs, we use these
 annotations much less frequently than the primary annotations
 \lil{APPROX} and \lil{ENDORSE}. We find \annpermit to be
 useful when experimentally exploring program behavior before annotating and in
-system programming involving memory-mapped registers.  Conversely,
-\annforbid is useful for marking parts of the program involved in
+system programming involving memory-mapped registers.  Conversely, the
+\annforbid annotation is useful for marking parts of the program involved in
 introspection. Section~\ref{accept:sec:casestudy} gives more detail on these
 experiences.
 

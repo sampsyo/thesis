@@ -20,7 +20,7 @@ and hypothesis testing to verify it statistically.
 This section enumerates the statistical
 properties that \tool applies to simplify distributions.
 
-\paragraph{Closed-Form Operations on Known Distributions}
+\paragraph{Closed-Form Operations over Known Distributions}
 \tool exploits closed-form algebraic operations on the common
 Gaussian, uniform, and Bernoulli distributions.
 For example, if $X \sim N(\mu_x, \sigma^2_x)$ and $Y \sim N(\mu_y,
@@ -48,8 +48,8 @@ independent random variables with
 finite variance tends to a Gaussian.  \tool uses the Central Limit
 Theorem to reduce loops which compute a reduction over random
 variables into a closed-form Gaussian which samples from the body of
-the loop.  This transformation resembles the mean pattern exploited by
-Misailovic et al.~\cite{sasa-sas11}. It is particularly
+the loop.  This transformation resembles
+Misailovic \etal's ``mean pattern''~\cite{sasa-sas11}. It is particularly
 effective on the 
 \bench{sobel} application used in our evaluation, which averages the errors for each pixel in an
 array. \tool reduces this accumulation to a single Gaussian.
@@ -57,7 +57,7 @@ array. \tool reduces this accumulation to a single Gaussian.
 \paragraph{Expectation Propagation}
 \label{passert:sec:expectation}
 
-The prior optimizations all approximately preserve a program's semantics: 
+The prior optimizations approximately preserve a program's semantics: 
 the transformed Bayesian network is approximately equivalent to the original
 Bayesian network.
 However, using statistical laws that apply to inequalities over random
@@ -116,7 +116,7 @@ inequality \code{x >= 5}.
 
 \subsection{Verification}
 \label{passert:sec:verification}
-This section describes how we use a simplified Bayesian network to verify
+This section describes how we use an extracted and simplified Bayesian network to verify
 \passerts using (1) exact (direct) evaluation or (2) sampling and
 statistical hypothesis testing.
 
@@ -195,7 +195,7 @@ upper bound~\cite{Younes20061368}.
 
 \paragraph{Statistical Guarantees}
 
-The prior section describes how \tool turns a \passert statement into
+\tool turns a \passert statement into
 a hypothesis test in order to
 bound error in its estimate. If the property is sufficiently likely
 to hold, \tool verifies the \passert as true.  Likewise, if the \passert is

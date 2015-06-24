@@ -9,15 +9,16 @@ then evaluates the \passert distributions either exactly or with sampling.
 
 \paragraph{Language and Interface}
 
-To use \tool, the programmer adds a \passert to her program and annotates
+To use the verifier system, the programmer adds a \passert to her program and annotates
 certain functions as probability distributions or uses a provided library of
 common distributions. Both constructs are implemented as C macros provided by
 a \texttt{passert.h} header: \texttt{PASSERT(e)} marks an expression that
 \tool will evaluate and \texttt{DISTRIBUTION} marks functions
 that should be treated as a symbolic probability distribution.
 
-The programmer invokes \tool and provides the source files and command-line
-arguments for the execution along with optional $\alpha$ and $\epsilon$ values
+To invoke \tool, the programmer provides arguments comprising the source
+files, command-line
+arguments for the program under test, and optional $\alpha$ and $\epsilon$ values
 that control confidence and accuracy. \tool reports a confidence interval on
 the output probability and the results of the hypothesis test (true, false, or
 unverifiable).
@@ -51,8 +52,8 @@ Since Bayesian networks are acyclic, reference counting is sufficient.
 
 When operating on non-probabilistic values (e.g., when evaluating $1 + 2$),
 \tool avoids constructing nodes in the Bayesian network and instead maintains
-a concrete heap and stack. We use the
-bitcode interpreter that ships with LLVM~\cite{llvminterp} to perform
+a concrete heap and stack. We use
+LLVM's bitcode interpreter~\cite{llvminterp} to perform
 the concrete operations.
 This process can be viewed as an optimization on Bayesian networks for
 operations over point-mass distributions.
@@ -115,7 +116,7 @@ merged into the outer heap using conditional nodes.
 
 \paragraph{Probabilistic Pointers}
 
-\tool adds limited support for symbolic pointers for probabilistic array
+\tool partially supports symbolic pointers for probabilistic array
 indexing. Programs can load and store from \code{arr[i]} where \code{i} is
 probabilistic, which \tool handles with a probabilistic extension of the
 theory of
@@ -163,7 +164,7 @@ inverse nodes that cancel each other out.
 
 
 
-\paragraph{Verification via Direct Evaluation or Sampling}
+\paragraph{Verification}
 As described in Section~\ref{passert:sec:verification}, the prior
 optimizations often produce Bayesian networks that \tool can
 directly evaluate.  In other cases, \tool must sample the

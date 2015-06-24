@@ -41,7 +41,7 @@ probability distributions. Our approach differs from typical symbolic
 execution
 in how it handles control flow (see below).  
 
-When the analysis reaches a statement \passert $e$, \mayhap records the Bayesian network
+When the analysis reaches a statement \passert $e$, the tool records the Bayesian network
 rooted at $e$. It then optimizes the network and samples the
 resulting distribution.
 Compared to sampling the entire program repeatedly, sampling the extracted
@@ -88,7 +88,7 @@ for $b$ conditioned on both possible values for $a$:
     \prob{B \;|\; A = \mathrm{false}} &= \prob{D}
 \end{align*}
 %
-Instead, to simplify the representation of probabilities and to enable more
+Instead, to enable more
 straightforward analysis, we \emph{marginalize} the condition $a$ to
 produce an unconditional distribution for $b$. Using marginalization, we
 write the unconditional distribution $\prob{B}$ as:
@@ -139,7 +139,7 @@ In particular, \tool represents a loop body with a
 \emph{summary node}, where variables read by the loop are
 edges \emph{into} the node and variables written by the loop are edges \emph{out} of the node.
 
-In practice, many loops in probabilistic programs have
+In practice, many loops have
 non-probabilistic bounds. For example, we evaluated an image filter
 (\bench{sobel}) that loops over the pixel array and applies a probabilistic
 convolution to each window. The nested loops resemble:

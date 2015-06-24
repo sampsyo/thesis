@@ -335,10 +335,10 @@ Tuning for the Zynq and MSP430 platforms was not parallelized and took
 \tunestats{time-msp430-mean}, respectively.
 
 \paragraph{Accelerator power and energy}
-We measured power consumption on the Zynq SoC, including its FPGA and DRAM,
+We measured power use on the Zynq system, including its FPGA and DRAM,
 using a Texas Instruments UCD9240 power supply controller while executing each
 benchmark in a loop to reach a steady state.
-Compared to baseline ARM-core--only execution in which the FPGA is
+Compared to baseline ARM-core--only execution where the FPGA is
 not programmed and inactive, power overheads range from
 from 8.6\% (\bench{zynq-sobel})
 to 22.6\% (\bench{zynq-blackscholes}).
@@ -377,7 +377,7 @@ configurations; these results revealed a quality metric that was ignoring
 certain missing values in the output and was therefore too permissive.
 
 
-\paragraph{Initial and iterated annotations}
+\paragraph{Iterated annotations}
 One option when annotating a program for \sysname is to first analyze an
 unannotated program to enumerate all potential optimization sites.
 However, the programmers preferred
@@ -440,9 +440,9 @@ or system calls, which are rarely fruitful approximation opportunities.
 Relaxation sites primarily involved with large data arrays were typically good
 targets.
 
-\paragraph{Encapsulating precise systems programming}
-The ``escape hatches'' from \sysname's safety analysis were crucial for
-low-level systems code.
+\paragraph{Systems programming}
+The escape hatches from \sysname's safety analysis were useful for
+abstracting low-level systems code.
 In \bench{msp430-activity}, a routine manipulates memory-mapped registers to read
 from an accelerometer. The pointers involved in
 communicating with the memory-mapped peripheral are necessarily precise, but

@@ -92,7 +92,7 @@ that fit a wide range of approximate software.
 We use \lang's architecture-aware tuning to examine the implications of
 programs' language-level constraints on approximate hardware.
 Our evaluation finds that using a solver to optimize for a hardware
-configuration can lead to significant efficiency gains over a
+configuration can lead to significant gains over a
 hardware-oblivious approach to assigning probabilities.
 We also demonstrate that multi-level architectures can better exploit the efficiency
 potential in approximate programs than simpler two-level machines, and we
@@ -266,11 +266,11 @@ multiplying an incorrect value by zero.)
 
 The language generalizes the EnerJ language from the previous chapter, where types are either
 completely precise or completely approximate (providing no guarantees).
-In \lang, there is no distinct ``precise'' qualifier---instead, the
+\lang has no distinct ``precise'' qualifier; instead, the
 \code{@Precise} annotation is syntactic sugar for \code{@Approx(1.0)}.
 EnerJ's \code{@Approx} is equivalent to \lang's \code{@Approx(0.0)}.
 In our implementation, as in EnerJ, the precise
-qualifier---\code{@Approx(1.0)}---is the default, so programmers can
+qualifier, \code{@Approx(1.0)}, is the default, so programmers can
 incrementally annotate reliable code to safely enable approximation.
 
 \paragraph{Information flow and subtyping}
@@ -863,7 +863,7 @@ We write this property as $\vdash D , S : \Gamma$.
 \input{semantics/wellformed}
 
 \noindent
-The language's soundness theorem states that $D$ and $S$ remain well-formed
+The soundness theorem states that $D$ and $S$ remain well-formed
 through the small-step statement evaluation semantics.
 
 \input{semantics/soundness-thm}
@@ -880,7 +880,7 @@ its only purpose is to define soundness for the language.
 \label{decaf:sec:eval}
 
 We implemented \lang and evaluated it using a variety of
-approximation-tolerant applications.
+approximate applications.
 The goals of this evaluation were twofold: to gain experience with \lang's
 language features;
 and to apply it as a testbed to examine the implications of application-level
@@ -1019,7 +1019,7 @@ Section~\ref{enerj:sec:res}).
 Table~\ref{decaf:table:bench} lists the applications and statistics about their
 source code and annotations.
 
-The benchmarks' original EnerJ annotations distinguish
+The original EnerJ annotations distinguish
 approximation-tolerant variables (using EnerJ's \code{@Approx}) from reliable variables (the default).
 To adapt the programs for \lang, we left most of these type annotations as the
 inferred \code{@Approx} annotation.
@@ -1168,7 +1168,7 @@ cheaper rounding strategy.
     Darker shades indicate lower probabilities and correspondingly higher
     potential energy savings.
     Bars marked $\star$ used
-    the cheaper rounding strategy instead of solving to determine levels.}
+    the cheaper rounding strategy instead of hardware-specific solving to determine levels.}
     \label{decaf:fig:levels}
 \end{sidewaysfigure}
 
@@ -1228,7 +1228,7 @@ could make larger level counts more tractable.
     higher-reliability operations and the black boxes are
     lower-reliability operations.
     The hatched box indicates approximate operations that are forced to
-    execute reliably by program constraints, even on ideal hardware.}
+    execute reliably by program constraints, even on ideal ``continuous'' hardware.}
     \label{decaf:fig:idealhist}
 \end{figure}
 
