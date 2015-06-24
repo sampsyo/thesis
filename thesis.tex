@@ -398,7 +398,10 @@
 \hypersetup{bookmarksdepth}%back to tocdepth
 
 \label{app:bibliography}
+\begingroup
+\setlength{\emergencystretch}{8em}  % No overflowing here.
 \printbibliography[heading=none]
+\endgroup
 
 % Restore headers.
 \automark[section]{chapter}
