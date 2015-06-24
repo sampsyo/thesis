@@ -144,17 +144,19 @@ Some of the most promising ideas unlock new sources of efficiency that are
 only available in hardware:
 exploiting the analog behavior of transistors, for example,
 or mitigating the cost of error correction in memory modules.
-Even hardware techniques, however, must be co-designed with their software
-abstractions.
 Because approximation techniques have subtle and wide-ranging effects on
-program behavior,
-models that apply them obliviously are unworkable.
-Hardware--software co-design is crucial to any hardware approximation
-technique.
+program behavior, however,
+designs that apply them \emph{obliviously} are unworkable.
+Instead, researchers should co-design hardware techniques with their software
+abstractions to ensure that programmers can control imprecision.
 
-\TODO{Expand this, and possibly discuss the Truffle compiler in the context of
-    efficiency (trivial static guarantees vs. tricky dynamic hardware
-checking).}
+Hardware designs can also rely on guarantees from software---the language or
+compiler---to avoid unnecessary complexity.
+The Truffle approximate CPU~\cite{truffle}, for example, avoids expensive
+hardware consistency checks by exploiting EnerJ's compile-time enforcement of
+type safety.
+Wherever possible, hardware researchers should offload responsibilities to
+complementary software systems.
 
 \subsection{Programming with Probabilistic Reasoning}
 

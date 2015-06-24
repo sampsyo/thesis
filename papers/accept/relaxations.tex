@@ -67,12 +67,14 @@ variables that may be read outside the region;
 \item does not include an unbalanced synchronization statement (locking without
 unlocking or vice versa).
 \end{itemize}
-\TODO{possibly head off the question about printf, etc., which we define as
-not approximatable a priori}
 The analysis begins with the conservative
 assumption that the region is not \precisepure and asserts otherwise only if it
 can prove \precisepurity.
-%
+Functions whose definitions are not available are conservatively considered
+not \precisepure.
+This includes standard-library functions, such as \lil{printf}, where input
+and output make code unsafe to approximate.
+
 For example, this code:
 %
 \begin{lstlisting}

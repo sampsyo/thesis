@@ -306,11 +306,14 @@ class annotation. Such a class exhibits qualifier polymorphism
 \cite{qualifiers}: types within the class definition
 may depend on the qualifier of the instance.
 
-Note that precise class types are not subtypes of their approximate
-counterparts, as is the case with primitive types (Section~\ref{enerj:types});
-such a subtyping relationship would be fundamentally unsound for the
-standard reasons related to mutable references.
-\TODO{explain this reason}
+Precise class types are not subtypes of their approximate
+counterparts, as is the case with primitive types (Section~\ref{enerj:types}).
+Since Java uses references for all object types, this subtyping relationship
+would allow programs to create an approximate alias to a precise object;
+the object could then be mutated through that reference as if it were
+approximate.
+To avoid this source of unsoundness, we make object types invariant with
+respect to EnerJ's type qualifiers.
 
 \subsubsection{Contextual Data Types}
 \label{enerj:context}

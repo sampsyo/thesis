@@ -245,9 +245,12 @@ operations in a program that can safely be made approximate.
 ExpAX~\cite{expax-tr} finds safe-to-approximate operations automatically and
 uses a metaheuristic to find which subset of them to actually approximate.
 
-\TODO{cite \cite{energytypes}}
-
-\TODO{cite \cite{eon}}
+Some other programming systems that focus on energy efficiency include
+approximation ideas:
+Eon~\cite{eon} is a language for long-running embedded systems that can drop
+tasks when energy resources are low,
+and the Energy Types language~\cite{energytypes} incorporates a variety of
+strategies for expressing energy requirements.
 
 
 \section{Exploiting Resilience in Other Systems}
@@ -320,6 +323,7 @@ languages~\cite{uncertaint}. These programming models incorporate algorithmic
 probabilities---such as those inherent in sensor readings or machine learning
 model parameters---but do not yet address the computational probabilities of
 techniques like PCMOS and stochastic processors.
+\TODO{describe UncertainT specifically}
 
 Kozen~\cite{kozen} recognizes the need for semantics for programs
 that use randomness during execution.
