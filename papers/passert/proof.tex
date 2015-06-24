@@ -184,7 +184,7 @@ do not contain \textbf{while} loops.
     $s_1 \to^{*} s_1'$ implies $s_1 ; s_2 \to^{*} s_1' ; s_2$,
     with the expected behavior of the other parameters.)
   \item[$\mathbf{if}\:c\:s_1\:s_2$]
-    First, consider that per lemma~\ref{passert:lem:cond},
+    Per Lemma~\ref{passert:lem:cond},
       we know that if $(H_c, c) \judge_c b$,
       and $(H_s, c) \judge_s \{ x_s \}$,
       then $(\Sigma, x_s) \judge_o b$.
@@ -275,15 +275,15 @@ We require that the symbolic evaluation terminate.
   \item[$s_1 ; s_2$] 
     We must have
     $(n, H_s, s_1) \to_s^{*} (n', H_s'', \mathbf{skip})$,
-    so by induction
+    so by induction we also have
     $(\Sigma, H_c, s_1) \to_c^{*} (\Sigma'', H_c'', \mathbf{skip})$,
     with the usual relation between $\Sigma''$ and $n'$, and between
     $H_s''$ and $H_c''$.
-
-    But then again by induction
+    By induction,
     $(n', H_s'', s_2) \to_s^{*} (m, H_s', \mathbf{skip})$
     implies
     $(\Sigma'', H_c'', s_2) \to_c^{*} (\Sigma', H_c', \mathbf{skip})$.
+
     Thus,
     $(\Sigma, H_c, s_1;s_2) \to_c^{*} (\Sigma', H_c', \mathbf{skip})$,
     and this case is established.
