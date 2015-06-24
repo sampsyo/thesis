@@ -129,14 +129,25 @@ numerical values instead of fetching them from main memory on cache misses.
 
 Recent work has proposed system organizations that apply approximation at a
 coarser grain.
-Yetim et al., for instance,
-describe a technique that uses coarse-grained quality techniques to
+One set of techniques that use external monitoring to
 allow errors even in processor control logic~\cite{martonosi-date, commguard}.
+Other approaches compose separate processing units with different levels of
+reliability~\cite{ersa}.
 Duwe~\cite{duwe-thesis} proposes run-time coalescing of approximate and
 precise computations to reduce the overhead of switching between modes.
 Other work allocates approximation among the lanes of a SIMD
 unit~\cite{tabsh}.
 
+\subsection{Stochastic Computing}
+
+\emph{Stochastic computing} is an alternative computational model where values
+are represented using probabilities~\cite{pcmos, pcmos-cacm,
+palem-dac-position, stochasticproc, storm, lyric, mansinghka-circuits}.
+For example, a wire could carry a random sequence of bits, where the wire's
+value corresponds
+to the probability that a given bit is a 1.
+Multiplication can be implemented in this model using a single \emph{and}
+gate.
 
 
 \section{Exploiting Resilience with Program Transformations}
@@ -196,21 +207,25 @@ See \secref{npu} for a more detailed overview of neural acceleration.
 
 While architecture optimizations and program transformations dominate the
 field of proposed exploitations of approximate software, some recent work has
-explored the same trade-off in other components of computer systems. Network
+explored the same trade-off in other components of computer systems.
+
+Network
 communication, with its reliance on imperfect underlying channels, exhibits
 opportunities for fidelity trade-offs~\cite{softcast, luo-globecom, apex,
 smpmup2006}. Notably, SoftCast~\cite{softcast} transmits images and video by
-making the signal magnitude directly proportional to pixel luminance. BlinkDB,
-a recent instance research on \emph{approximate query answering},
+making the signal magnitude directly proportional to pixel luminance.
+
+BlinkDB,
+a recent instance of research on \emph{approximate query answering},
 is a database system that can respond to queries that include a required
 accuracy band on their output~\cite{blinkdb}.
+
 Uncertain{\textless}T{\textgreater}~\cite{uncertaint} and Lax~\cite{lax}
 propose to expose the approximate, probabilistic behavior of sensors at the
 language and API levels.
-By eschewing redundancy and
-recovery in a fault-tolerant distributed system, researchers at Wisconsin were
-able to make quality trade-offs in a supercomputing
-setting~\cite{dekruijf-icpp}.
+
+In a distributed system or a supercomputer, approximation techniques can
+eschew redundancy and recovery for efficiency~\cite{dekruijf-icpp}.
 
 
 \section{Languages for Expressing Approximation}
@@ -240,23 +255,18 @@ strategies for expressing energy requirements.
 
 \section{Programmer Tools}
 
-\subsection{Exploration and Debugging}
+Aside from programming languages, separate programmer tools can help analyze
+and control the effects of approximation.
 
-\cite{approxdebug}
-
-\cite{qosprof}
-
-\subsection{Algorithm Analysis}
+A quality-of-service profiler helps programmers identify parts of programs
+that may be good targets for approximation techniques~\cite{qosprof}.
+Conversely, debugging tools can identify components where approximation is too
+aggressive~\cite{approxdebug}.
 
 Some verification tools and proof systems help
 the programmer prove relationships between the original program and a
 candidate relaxed version~\cite{carbin-pldi, carbin-races, carbin-pepm,
 rice-transformation-semantics}.
-Another approach constrains the programming model to help express programs
-that refine their results as they run longer, permitting quality trade-offs in
-hard real-time settings~\cite{chung90}.
-
-\subsection{Dynamic Control}
 
 As an alternative to statically bounding errors, dynamic techniques can
 monitor quality degradation at run time.
@@ -268,82 +278,25 @@ output quality~\cite{lwc, approxdebug}.
 Recent work has explored automatic generation of error detectors~\cite{rumba}.
 A variety of techniques propose mechanisms for run-time or profiling feedback to adapt
 approximation parameters~\cite{dynamicknobs, green, approxit, ansel-autotuning}.
-\TODO{describe these in a little more detail}
 
 
 \section{Probabilistic Languages}
 
-\TODO{way too much in this section}
+One specific research direction, \emph{probabilistic programming languages},
+focuses on expressing statistical models, especially for machine
+learning~\cite{BBGR13, wingate-lightweight, church, chaganty, pfeffersample,
+probdsl, koller, sriram-pldi}.
+The goal is to enable efficient statistical inference over arbitrary models
+written in the probabilistic programming language.
 
-Several research projects have proposed radically different models of
-computation that, rather than adapting existing software to expose its error
-resilience, are based exclusively on probabilistic reasoning. Most
-prominently, Probabilistic CMOS~\cite{pcmos, pcmos-cacm, palem-dac-position}
-and stochastic processors~\cite{stochasticproc, storm} expose the probabilistic
-behavior of transistors as part of their ISA.
-\TODO{More detail on stochastic computing.}
-Other preliminary efforts from MIT~\cite{batesmit, lyric, mansinghka-circuits} and
-Stanford~\cite{ersa} fall into the same category.
-
-Researchers have proposed several languages and tools to
-help developers better reason about and describe real-world
-probabilistic data, computation, and models~\cite{BBGR13,
-  wingate-lightweight, church, chaganty, pfeffersample, pmonad,
-  infernet, probdsl,uncertaint}.
-The probability monad captures a variable's discrete probability
+Earlier work examines the semantics of probabilistic behavior in more
+traditional programming models~\cite{kozen}.
+Similarly, the probability monad captures a variable's discrete probability
 distribution in functional programs~\cite{pmonad}.
-\TODO{this one specific call-out is awkward}
-
-Sankaranarayanan et al.~\cite{sriram-pldi} check assertions in
-programs that produce probabilistic models using symbolic execution
-and polyhedral volume estimation. The \texttt{estimateProbability} construct
-queries the probability of an outcome, which resembles a probabilistic
-assertion's
-specification of the correct outcome.
-
-Statistical model checking bounds verification error on
-problems where state-space explosion makes exact numerical
-verification intractable (see Legay and Delahaye's
-survey~\cite{legay10}).  Model checking~\cite{Clarke} provides formal guarantees,
-usually expressed in temporal logic for finite state
-based models, often of hardware. For example, the
-PRISM tool performs statistical verification of real-time
-systems~\cite{KNP11}. Our work borrows the idea of hypothesis
-testing to bound error in verification~\cite{Younes,Younes20061368}
-and
-relies on efficient sampling to avoid
-the need for exhaustive state space exploration.
-
-Similarly, recent work has sought to express
-uncertainties in the context of traditional, imperative programming
-languages~\cite{uncertaint}. These programming models incorporate algorithmic
-probabilities---such as those inherent in sensor readings or machine learning
-model parameters---but do not yet address the computational probabilities of
-techniques like PCMOS and stochastic processors.
-\TODO{describe UncertainT specifically}
-
-Kozen~\cite{kozen} recognizes the need for semantics for programs
-that use randomness during execution.
-That work provides two semantics for a simple probabilistic
-language---one that models sampling and one that computes on probability
-distributions directly---and proves them equivalent.
-Similarly, we prove equivalence between sampling an original program and
-sampling its extracted Bayesian network representation.
-Kozen predates the coinage and popularization of Bayesian networks, so
-the semantics in that work are very different from the graphical-model approach
-presented here.
-Our Bayesian-network representation enables statistical optimizations that
-make probabilistic assertion verification efficient.
-\TODO{this paragraph has dangling references to the passert paper}
-
-\subsection{Probabilistic Programming Languages}
-
-The field of \emph{probabilistic programming} seeks to enable efficient
-construction and querying of statistical models~\cite{BBGR13, wingate-lightweight,
-  church, chaganty, pfeffersample, probdsl, koller}.  Experts write
-generative models as programs and then inference algorithms answer questions
-about the model's parameters. The canonical probabilistic programming example
-answers, ``given that the grass is wet, was it due to rain or the sprinkler?''
+Statistical model checking tools can analyze programs to prove statistical
+properties~\cite{legay10, KNP11}.
+Recently, \citet{uncertaint} proposed a construct for explicitly representing
+probability distributions in a mainstream programming language.
 
 
 \section{Robustness Analysis}
