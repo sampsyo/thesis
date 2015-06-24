@@ -59,15 +59,14 @@ operations over point-mass distributions.
 
 \input{results/optsdata}
 
-\begin{table}[t!]
+\begin{sidewaystable}
     \centering
-    \footnotesize
-    \makebox[\textwidth][c]{%
+    \small
     \begin{tabular}{l
     >{\raggedright\arraybackslash} p{2.7in}
     r r r
     r r r}
-        % \toprule
+        \toprule
         &&\multicolumn{3}{c}{Time (seconds)}
         &\multicolumn{3}{c}{Optimization Counts}
         \\ \cmidrule(lr){3-5} \cmidrule(lr){6-8}
@@ -82,9 +81,8 @@ operations over point-mass distributions.
         \\
         \midrule
         \input{results/benchtable.tex}
-        % \bottomrule
+        \bottomrule
     \end{tabular}
-    }
     \caption{
         Programs used in the evaluation.
         The \passert for each application describes a probabilistic
@@ -97,7 +95,7 @@ operations over point-mass distributions.
         Theorem optimization (CLT).
     }
     \label{passert:table:apps}
-\end{table}
+\end{sidewaystable}
 
 \paragraph{Conditionals}
 

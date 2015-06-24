@@ -900,10 +900,9 @@ constraints for hardware research.
     \dynops{#1-dyn}
 }
 
-\begin{table}
+\begin{sidewaystable}
     \centering
-    \footnotesize
-    \makebox[\textwidth][c]{%
+    \small
     \begin{tabular}{l l r r r r r r r}
         \toprule
         Application & Description &
@@ -926,7 +925,6 @@ constraints for hardware research.
 
         \bottomrule
     \end{tabular}
-    }
     \caption{Benchmarks used in the evaluation. The middle set of columns show
     the static density of \lang annotations in the Java source code. The final
     two columns show the dynamic proportion of operations in the program that
@@ -934,7 +932,7 @@ constraints for hardware research.
     tracked (both approximate and reliable operations can be dynamically
     tracked).}
     \label{decaf:table:bench}
-\end{table}
+\end{sidewaystable}
 
 
 \subsection{Implementation}
@@ -1161,12 +1159,10 @@ cheaper rounding strategy.
 
 \paragraph{Probability granularity}
 
-\begin{figure}
-    \makebox[\textwidth][c]{%
-        \centering
-        \input{plots/levelbreakdown}
-        \hspace{-10em}
-    }
+\begin{sidewaysfigure}
+    \centering
+    \input{plots/levelbreakdown}
+    \hspace{-10em}
     \caption{Operator probability breakdowns. Each bar shows a hardware
     configuration with a different number of levels.
     Darker shades indicate lower probabilities and correspondingly higher
@@ -1174,7 +1170,7 @@ cheaper rounding strategy.
     Bars marked $\star$ used
     the cheaper rounding strategy instead of solving to determine levels.}
     \label{decaf:fig:levels}
-\end{figure}
+\end{sidewaysfigure}
 
 More hardware probability levels can enable greater efficiency gains by
 closely matching applications' probability requirements.
