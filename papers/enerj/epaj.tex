@@ -337,8 +337,9 @@ Consider the following class definition:
   }
 }
 \end{lstlisting}
-If \ilcode{a} is an approximate instance of \ilcode{IntPair}, then the fields
-\ilcode{a.x}, \ilcode{a.y}, and \ilcode{a.numAdditions} are all of approximate
+If \ilcode{a} is an approximate instance of \ilcode{IntPair}, then the three
+fields on the object,
+\ilcode{a.x}, \ilcode{a.y}, and \ilcode{a.numAdditions}, are all of approximate
 integer type. However, if \ilcode{p} is a precise instance of the class, then
 \ilcode{p.x} and \ilcode{p.y} are precise but \ilcode{p.numAdditions} is still
 approximate. Furthermore, the argument to the invocation \ilcode{p.addToBoth()}
