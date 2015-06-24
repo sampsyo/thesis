@@ -1,12 +1,15 @@
 Approximate computing research combines insights from hardware engineering,
 architecture, system design, programming languages, and even application
-domains like machine learning. I have confined this section to describe work
-that considers the possibility of exposing errors, incorrectness, and
-uncertainty to applications. I will not discuss the large body of work on
-traditional fault tolerance, which attempts to recover from faults to compute
-results without error.
+domains like machine learning.
+This chapter summarizes research on implementing, exploiting,
+controlling, and reasoning about approximation in computer systems.
+To confine the scope, the survey focuses on work that exposes error to
+applications (unlike fault tolerance, which seeks to \emph{hide}
+errors),
+and work that is in some sense general (not, for example, a new approximation
+strategy for one specific graphics algorithm).
 
-\section{Application-Level Error Tolerance}
+\section{Application Tolerance Studies}
 \label{sec:related:studies}
 
 Many authors have identified the property of error tolerance in existing
@@ -16,32 +19,20 @@ injecting errors into certain parts of applications and assessing the
 execution quality in terms of both crashes and output fidelity~\cite{li06,
 li07, li08, dekruijf-selse09, wong-selse06, palem-arcs, freton, besteffort,
 yeh, thaker-iiswc06, efc, llfi, chippa-dac}.
-
-It is a consensus among many of these studies that different parts of the
-application have different impacts on reliability and fidelity. Some conclude
+Related
+studies have evaluated error-resilience in
+integrated circuit designs~\cite{breuer, scalable-effort-hardware}.
+This category of study repeatedly finds that
+different parts of the
+application have different impacts on reliability and fidelity.
+Some conclude
 that there is a useful distinction between critical and non-critical program
-points (typically instructions)~\cite{palem-arcs, thaker-iiswc06, flikker,
+points, typically instructions~\cite{palem-arcs, thaker-iiswc06, flikker,
 llfi}.
-The work tends to assume that at least the instructions involved in control
-flow are critical~\cite{thaker-iiswc06}. In my work, I use this idea of
-distinguishing between critical and noncritical components to help the
-programmer express approximations with bounded effects on the program as a
-whole. In each of the approximate system components I have designed, the
-execution substrate supports precise (traditional) and relaxed operation to
-exploit this distinction. An important question, however, is the granularity
-at which to switch between these two modes. \secref{princ:granularity} discusses
-this challenge in more detail.
-
-This class of work also typically attempts to classify the kinds of programs
-that can tolerate error injection gracefully. For example, papers have focused
-on video~\cite{freton}, recognition and mining~\cite{besteffort}, physical
-simulation~\cite{yeh}, and optimization~\cite{hogwild}.
-
-Aside from existing software, some studies have evaluated error-resilience in
-integrated circuit designs~\cite{breuer, scalable-effort-hardware}. These
-studies focus on the kinds of applications that are typically implemented with
-application-specific circuits: media codecs, numerical kernels, and digital
-signal processing.
+This conclusion reflects
+the safety principle in \secref{princ:safety}:
+certain program components, especially those involved in control flow, need to
+be protected from all influence from approximation.
 
 Much of the work on application robustness tends to assume an existing,
 domain-specific notion of ``quality'' for each
@@ -55,14 +46,14 @@ rigorously~\cite{wddd-quality}.
 
 \section{Exploiting Resilience in Architecture}
 
-The existence of a large class of error-resilient applications has motivated
-research into techniques that exploit this property to reduce resource usage.
-Specifically, designs have emerged that extend circuits and processor
-architectures to trade off error for energy, time, manufacturing yield, or
-verification complexity.
+One category of techniques for approximation examines efficiency--accuracy
+trade-offs in hardware.
+These techniques can lead to gains in energy, performance, manufacturing
+yield, or verification complexity.
 
-Since floating-point operations are both expensive and inexact, they make a
-profitable target for this research direction. Researchers have designed units
+\subsection{Functional Units}
+
+Researchers have designed floating-point units
 that dynamically adapt mantissa width~\cite{bitwidthred, hierarchfpu}, ``fuzzily'' memoize
 similar arithmetic computations~\cite{fuzzymemo}, or tolerate timing
 errors~\cite{kumarhpca, hizli, metafunctions}.
@@ -75,6 +66,8 @@ designs, which are allowed to yield incorrect results for some minority of
 input combinations~\cite{uva-adder, palem-adders, impact, adder-metrics,
 configurable-adder, adder-iccad13, adder-tcad, adder-optimal, adder-dac12,
 adder-isic09, adder-date08}.
+
+\subsection{Memory}
 
 SRAM
 structures spend significant static power on retaining data, so they represent
@@ -91,11 +84,24 @@ powerfade, flash-retention-relax}.
 Spintronic memories exhibit similarly favorable trade-offs between access cost
 and error~\cite{spintronic-approx}.
 
+These memory approximation techniques typically
+work by exposing
+soft errors and other analog effects.
+Recent work in security and privacy has exploited these variability-related
+errors to fingerprint hardware and deanonymize users~\cite{deanondram}.
+
+\subsection{Circuit Design}
+
 A broad category of work has proposed general techniques for making quality trade-offs
 when synthesizing and optimizing general hardware
 circuits~\cite{lossysynthesis, palem-pruning, rahimi, axilog, miao-thesis, synthesis-date14, venkataramani-date13, venkataramani-dac12}.
 Other tools focus on analyzing approximate circuit
 designs~\cite{venkatesan-iccad11, tziantzioulis-dac15}.
+
+Near-threshold voltage domains also present a new opportunity for embracing
+unpredictable circuit operation~\cite{soft-ntc}.
+
+\subsection{Relaxed Fault Tolerance}
 
 As a dual to adding errors in some circuits, some researchers have
 explored differential fault protection in the face of universally unreliable
@@ -110,6 +116,8 @@ architecture level to GPUs~\cite{palframan-gpu}.
 Other work has used criticality information to selectively allocate
 software-level error detection and correction
 resources~\cite{khudia-tolerance, shi-cal}.
+
+\subsection{Microarchitecture}
 
 Aside from designing fundamentally approximate circuits, a different direction
 introduces approximation by relaxing traditional microarchitectural
@@ -129,31 +137,17 @@ precise computations to reduce the overhead of switching between modes.
 Other work allocates approximation among the lanes of a SIMD
 unit~\cite{tabsh}.
 
-Near-threshold voltage domains also present a new opportunity for embracing
-unpredictable circuit operation~\cite{soft-ntc}.
-
-Much of this work on hardware-level approximation work by exposing
-soft errors and other analog effects.
-Recent work in security and privacy has exploited these variability-related
-errors to fingerprint hardware and deanonymize users~\cite{deanondram}.
-
-
 
 
 \section{Exploiting Resilience with Program Transformations}
 \label{sec:related:software}
 
-Aside from system-level accuracy trade-offs, there are opportunities for
+Aside from hardware-level accuracy trade-offs, there are opportunities for
 adapting \emph{algorithms} to execute with varying precision. Algorithmic
-quality--complexity trade-offs are not new: approximation algorithms are a
-well-studied area of complexity theory and many domains, notably real-time
-vision and graphics, have ad-hoc ``cheap'' implementations of computations
-that are prohibitively expensive to compute exactly.
-
-In contrast to these
-traditional views on approximation, recent work has sought to provide
-tools for transforming real programs---as opposed to high-level
-algorithmic specifications---to explore practical relaxations.
+quality--complexity trade-offs are not new, but recent work has
+proposed
+tools for \emph{automatically} transforming programs to exhibit these
+trade-offs.
 Transformations include removing portions of a program's dynamic execution
 (termed \emph{code perforation})~\cite{perforation}, unsound
 parallelization of serial programs~\cite{quickstep}, eliminating
@@ -164,37 +158,20 @@ quality~\cite{dynamicknobs}, randomizing portions of deterministic
 programs~\cite{zhu-popl12, sasa-sas11}, dynamically choosing between
 different programmer-provided implementations of the same
 specification~\cite{green, virus, petabricks, taco-soc, ansel-autotuning,
-scalable-classifier}, and replacing pure computations with invocations
-of a trained neural network~\cite{benchnn, temam-isca, emeuro}.
+scalable-classifier}, and replacing subcomputations with invocations
+of a trained neural network~\cite{npu}.
 
-Central to each of these program transformation techniques are the questions
-of automation and quality. For a relaxation to be generally useful, it should
-be applicable automatically with only minimal programmer involvement but
-should still result in transformed code that the programmer is happy with.
-Recently, a set of techniques has been proposed to help constrain the space
-of possible transformations to those that result in a profitable
-quality trade-off. Quality of service profiling~\cite{qosprof} uses many
-executions to identify parts of a program that are likely to be good
-candidates for transformation. Some verification tools and proof systems help
-the programmer prove relationships between the original program and a
-candidate relaxed version~\cite{carbin-pldi, carbin-races, carbin-pepm,
-rice-transformation-semantics}.
-Another approach constrains the programming model to help express programs
-that refine their results as they run longer, permitting quality trade-offs in
-hard real-time settings~\cite{chung90}.
-
-Recent work from Michigan combines pattern-matching code transformations with
-dynamic monitoring to provide approximation trade-offs for GPU
-workloads~\cite{paraprox, sage}.
-Similarly, Sartori and Kumar~\cite{herding} propose to transform GPU programs
-to reduce their control divergence at the cost of correctness.
+Some work on algorithmic approximation targets specific hardware: notably,
+general-purpose GPUs~\cite{paraprox, sage, herding, neuralgpu}.
+In a GPU setting, approximation strategies benefit most by optimizing for
+memory bandwidth and control divergence.
 
 Recently, a research direction has developed in \emph{automated program
 repair} and other approaches to heuristically patching software according to
 programmer-specified criteria.
 These techniques are typically approximate in that they abandon a traditional
 compiler's goal of perfectly preserving the original program's semantics.
-Notably, Schulte et~al.~\cite{schulte} propose to use program evolution to
+Notably, Schulte \etal~\cite{schulte} propose to use program evolution to
 optimize for energy.
 
 Precimonious~\cite{precimonious} addresses the problem of choosing appropriate
@@ -205,7 +182,8 @@ versions of floating-point functions from scratch to meet different accuracy
 requirements with optimal efficiency.
 
 Neural acceleration is a recent technique treading code as a black box and
-transforming it to a neural-network representation.
+transforming it to a neural-network representation~\cite{npu, emeuro, benchnn,
+temam-isca}.
 It is, at its core, an algorithmic transformation, but it integrates tightly
 with hardware support: a digital accelerator~\cite{npu}, analog
 circuits~\cite{anpu}, FPGAs~\cite{snnap},
@@ -214,19 +192,26 @@ resistive memory~\cite{rram-npu} or memristors~\cite{memristor-npu}.
 See \secref{npu} for a more detailed overview of neural acceleration.
 
 
-\section{Dynamically Controlling Approximation}
+\section{Exploiting Resilience in Other Systems}
 
-As an alternative to statically bounding errors, dynamic techniques can
-monitor quality degradation at run time.
-The critical challenge for these techniques is balancing detection accuracy
-with the added cost, which takes away from the efficiency advantages of
-approximation.
-Some work has suggested that programmers can provide domain-specific checks on
-output quality~\cite{lwc, approxdebug}.
-Recent work has explored automatic generation of error detectors~\cite{rumba}.
-A variety of techniques propose mechanisms for run-time or profiling feedback to adapt
-approximation parameters~\cite{dynamicknobs, green, approxit, ansel-autotuning}.
-\TODO{describe these in a little more detail}
+While architecture optimizations and program transformations dominate the
+field of proposed exploitations of approximate software, some recent work has
+explored the same trade-off in other components of computer systems. Network
+communication, with its reliance on imperfect underlying channels, exhibits
+opportunities for fidelity trade-offs~\cite{softcast, luo-globecom, apex,
+smpmup2006}. Notably, SoftCast~\cite{softcast} transmits images and video by
+making the signal magnitude directly proportional to pixel luminance. BlinkDB,
+a recent instance research on \emph{approximate query answering},
+is a database system that can respond to queries that include a required
+accuracy band on their output~\cite{blinkdb}.
+Uncertain{\textless}T{\textgreater}~\cite{uncertaint} and Lax~\cite{lax}
+propose to expose the approximate, probabilistic behavior of sensors at the
+language and API levels.
+By eschewing redundancy and
+recovery in a fault-tolerant distributed system, researchers at Wisconsin were
+able to make quality trade-offs in a supercomputing
+setting~\cite{dekruijf-icpp}.
+
 
 \section{Languages for Expressing Approximation}
 
@@ -253,28 +238,42 @@ and the Energy Types language~\cite{energytypes} incorporates a variety of
 strategies for expressing energy requirements.
 
 
-\section{Exploiting Resilience in Other Systems}
+\section{Programmer Tools}
 
-While architecture optimizations and program transformations dominate the
-field of proposed exploitations of approximate software, some recent work has
-explored the same trade-off in other components of computer systems. Network
-communication, with its reliance on imperfect underlying channels, exhibits
-opportunities for fidelity trade-offs~\cite{softcast, luo-globecom, apex,
-smpmup2006}. Notably, SoftCast~\cite{softcast} transmits images and video by
-making the signal magnitude directly proportional to pixel luminance. BlinkDB,
-a recent instance research on \emph{approximate query answering},
-is a database system that can respond to queries that include a required
-accuracy band on their output~\cite{blinkdb}.
-Uncertain{\textless}T{\textgreater}~\cite{uncertaint} and Lax~\cite{lax}
-propose to expose the approximate, probabilistic behavior of sensors at the
-language and API levels.
-By eschewing redundancy and
-recovery in a fault-tolerant distributed system, researchers at Wisconsin were
-able to make quality trade-offs in a supercomputing
-setting~\cite{dekruijf-icpp}.
+\subsection{Exploration and Debugging}
+
+\cite{approxdebug}
+
+\cite{qosprof}
+
+\subsection{Algorithm Analysis}
+
+Some verification tools and proof systems help
+the programmer prove relationships between the original program and a
+candidate relaxed version~\cite{carbin-pldi, carbin-races, carbin-pepm,
+rice-transformation-semantics}.
+Another approach constrains the programming model to help express programs
+that refine their results as they run longer, permitting quality trade-offs in
+hard real-time settings~\cite{chung90}.
+
+\subsection{Dynamic Control}
+
+As an alternative to statically bounding errors, dynamic techniques can
+monitor quality degradation at run time.
+The critical challenge for these techniques is balancing detection accuracy
+with the added cost, which takes away from the efficiency advantages of
+approximation.
+Some work has suggested that programmers can provide domain-specific checks on
+output quality~\cite{lwc, approxdebug}.
+Recent work has explored automatic generation of error detectors~\cite{rumba}.
+A variety of techniques propose mechanisms for run-time or profiling feedback to adapt
+approximation parameters~\cite{dynamicknobs, green, approxit, ansel-autotuning}.
+\TODO{describe these in a little more detail}
 
 
-\section{Probabilistic Computation}
+\section{Probabilistic Languages}
+
+\TODO{way too much in this section}
 
 Several research projects have proposed radically different models of
 computation that, rather than adapting existing software to expose its error
@@ -285,8 +284,6 @@ behavior of transistors as part of their ISA.
 \TODO{More detail on stochastic computing.}
 Other preliminary efforts from MIT~\cite{batesmit, lyric, mansinghka-circuits} and
 Stanford~\cite{ersa} fall into the same category.
-
-\section{Probabilistic Semantics}
 
 Researchers have proposed several languages and tools to
 help developers better reason about and describe real-world
@@ -349,14 +346,15 @@ about the model's parameters. The canonical probabilistic programming example
 answers, ``given that the grass is wet, was it due to rain or the sprinkler?''
 
 
-
-
 \section{Robustness Analysis}
 
 As the studies in Section~\ref{sec:related:studies} repeatedly find, error
 tolerance varies greatly in existing software, both within and between
-programs. Several program analysis approaches have been proposed to evaluate
-and enhance error resilience properties. SJava analyzes programs to prove that
+programs.
+Independent of approximate computing, programming-languages researchers have
+sought to identify and enhance error resilience properties.
+
+SJava analyzes programs to prove that
 errors only temporarily disrupt the execution path of a program~\cite{sjava}.
 Program smoothing~\cite{smoothing-cav, smoothing-pldi, smoothing-fse} and
 ``robustification''~\cite{robustification} both find continuous, mathematical
