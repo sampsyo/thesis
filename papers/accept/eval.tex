@@ -194,35 +194,34 @@ averaged the running times.
 \subsection{Results}
 \label{accept:sec:results}
 
-\begin{figure}[t]
+\begin{sidewaysfigure}
 \centering
 \makebox[\textwidth][c]{%
-\begin{subfigure}[b]{2.35in}
+\begin{subfigure}[b]{2.45in}
 \input{plots/speedup-all.tex}\vspace{2.5ex}
 \caption{Main results (all optimizations)}
 \label{accept:fig:speedup-all}
 \end{subfigure}
-\begin{subfigure}[b]{2.05in}
+\begin{subfigure}[b]{2.15in}
 \input{plots/speedup-loopperf.tex}\vspace{2.5ex}
 \caption{Loop perforation}
 \label{accept:fig:speedup-loopperf}
 \end{subfigure}
-\begin{subfigure}[b]{1.15in}
+\begin{subfigure}[b]{1.25in}
 \input{plots/speedup-desync.tex}\vspace{2.5ex}
 \caption{Sync.~elision}
 \label{accept:fig:speedup-desync}
 \end{subfigure}
-\begin{subfigure}[b]{1.3in}
+\begin{subfigure}[b]{1.4in}
 \input{plots/speedup-npu.tex}\vspace{2.5ex}
 \caption{Neural acceleration}
 \label{accept:fig:speedup-npu}
 \end{subfigure}
 }
 \caption{Speedup for each application, including all
-    optimizations (a) and each optimization in isolation (b--d). \TODO{can
-this be formatted better?}}
+optimizations (a) and each optimization in isolation (b--d).}
 \label{accept:fig:performance}
-\end{figure}
+\end{sidewaysfigure}
 
 \begin{table}
 \centering
