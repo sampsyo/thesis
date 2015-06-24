@@ -223,6 +223,13 @@ optimizations (a) and each optimization in isolation (b--d).}
 \label{accept:fig:performance}
 \end{sidewaysfigure}
 
+\begin{figure}
+\centering
+\input{plots/pareto-all.tex}
+\caption{Pareto frontiers for benchmarks with at least two optima.}
+\label{accept:fig:frontier}
+\end{figure}
+
 \begin{table}
 \centering
 \footnotesize
@@ -272,10 +279,16 @@ the
 programmer can select the configuration that strikes the best
 quality--performance balance for a particular deployment.
 %
-Table~\ref{accept:table:stats} shows the range of output error rates and speedups in
-the frontiers for our benchmarks.
-\TODO{Can we show some curves?}
+Figure~\ref{accept:fig:frontier} shows \sysname's Pareto frontier for each
+benchmark where the frontier contains at least two points.
+(Configurations are considered ``optimal'' when no other configuration has
+both better speedup and better output quality \emph{up to the standard error
+of the mean}, so some configurations that appear suboptimal are included in
+the figure due to uncertainty.)
 %
+Table~\ref{accept:table:stats} shows the range of output error rates and
+speedups in the frontiers.
+
 We highlight \bench{canneal} as an example.
 For this program, \sysname identifies \result{pareto-canneal-count}
 configurations with output error ranging from \result{pareto-canneal-err-min} to
