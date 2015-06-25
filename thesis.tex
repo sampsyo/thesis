@@ -129,8 +129,9 @@
 \hyphenation{analy-ses analy-sis proto-type}
 
 % ToC fonts!
-\renewcommand\cftpartfont{\normalfont\color{Violet}}
-\renewcommand\cftpartpagefont{\normalfont\color{Violet}}
+\definecolor{thecolor}{RGB}{38,90,18}
+\renewcommand\cftpartfont{\normalfont\color{thecolor}}
+\renewcommand\cftpartpagefont{\normalfont\color{thecolor}}
 
 \newcommand{\etal}{et~al.\@\xspace}
 \newcommand{\TODO}[1]{\textcolor{red}{{\bf TODO:} #1}}
@@ -198,8 +199,8 @@
         \hfill
         \vfill
         \begingroup
-            \color{Violet}\spacedallcaps{Hardware and Software} \\
-            \color{Violet}\spacedallcaps{for Approximate Computing} \\ \bigskip
+            \color{thecolor}\spacedallcaps{Hardware and Software} \\
+            \color{thecolor}\spacedallcaps{for Approximate Computing} \\ \bigskip
         \endgroup
         \spacedlowsmallcaps{Adrian Sampson}
         \vfill
@@ -248,7 +249,7 @@
 \begin{center}
     \spacedlowsmallcaps{Abstract} \\
     \bigskip
-    {\color{Violet}
+    {\color{thecolor}
     \spacedallcaps{Hardware and Software} \\
     \spacedallcaps{for Approximate Computing} \\
     }
