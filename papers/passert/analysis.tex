@@ -15,6 +15,12 @@ deterministic components as concrete.
 The process is similar to symbolic execution and to lazy evaluation in
 functional languages.
 
+Distribution extraction produces a Bayesian network that is equivalent to the
+original program but is more amenable to statistical optimizations (enumerated
+in the next section).
+Appendix~\ref{app:passert} formalizes the process and proves an equivalence
+theorem.
+
 \paragraph{Distributions as Symbolic Values}
 \mayhap performs a forward pass over the program, concretely
 evaluating deterministic computations and introducing symbolic
