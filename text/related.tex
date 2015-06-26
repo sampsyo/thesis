@@ -6,7 +6,7 @@ controlling, and reasoning about approximation in computer systems.
 To confine the scope, the survey focuses on work that exposes error to
 applications (unlike fault tolerance, which seeks to \emph{hide}
 errors),
-and work that is in some sense general (not, for example, a new approximation
+and on work that is in some sense general (not, for example, a new approximation
 strategy for one specific graphics algorithm).
 
 \section{Application Tolerance Studies}
@@ -32,7 +32,7 @@ llfi}.
 This conclusion reflects
 the safety principle in \secref{princ:safety}:
 certain program components, especially those involved in control flow, need to
-be protected from all influence from approximation.
+be protected from all of approximation's effects.
 
 This work tends to assume an existing,
 domain-specific notion of ``quality'' for each
@@ -40,14 +40,17 @@ application.
 As the principle in \secref{princ:appspecific} suggests, these quality metrics
 need careful consideration: one quality metric is not necessarily just as good
 as another.
-Recent work has proposed guidelines for measuring quality
-rigorously~\cite{wddd-quality}.
+Recent work has proposed guidelines for rigorous quality
+measurement~\cite{wddd-quality}.
 
 
 \section{Exploiting Resilience in Architecture}
 
 Hardware techniques for approximation can lead to gains in energy, performance, manufacturing
 yield, or verification complexity.
+We categorize hardware-based approximation strategies according to the
+hardware component they affect: computational units, memories, or entire
+system architectures.
 
 \subsection{Functional Units}
 
@@ -107,13 +110,12 @@ circuits. As process sizes continue to shrink, it is likely that reliable
 transistors will become the minority; redundancy and checking will be
 necessary to provide reliable operation~\cite{li-asplos08}. Circuit design
 techniques have been proposed that reduce the cost of redundancy by providing
-it selectively for certain instructions in a CPU~\cite{wreft} or certain
-blocks in a DSP~\cite{unequal-protection, ant, micropower-dsp}.
-Researchers at Wisconsin have applied relaxed error tolerance at the
-architecture level to GPUs~\cite{palframan-gpu}.
+it selectively for certain instructions in a CPU~\cite{wreft}, certain
+blocks in a DSP~\cite{unequal-protection, ant, micropower-dsp},
+or to components of a GPU~\cite{palframan-gpu}.
 Other work has used criticality information to selectively allocate
 software-level error detection and correction
-resources~\cite{khudia-tolerance, shi-cal}.
+resources~\cite{khudia-tolerance, shi-cal, relax}.
 
 \subsection{Microarchitecture}
 
@@ -126,7 +128,7 @@ numerical values instead of fetching them from main memory on cache misses.
 
 Recent work has proposed system organizations that apply approximation at a
 coarser grain.
-One set of techniques that use external monitoring to
+One set of techniques uses external monitoring to
 allow errors even in processor control logic~\cite{martonosi-date, commguard}.
 Other approaches compose separate processing units with different levels of
 reliability~\cite{ersa}.
@@ -134,6 +136,11 @@ Duwe~\cite{duwe-thesis} proposes run-time coalescing of approximate and
 precise computations to reduce the overhead of switching between modes.
 Other work allocates approximation among the lanes of a SIMD
 unit~\cite{tabsh}.
+In all cases, the gains from approximation can be larger than for lower-level
+techniques that affect individual operations.
+As the granularity principle from \secref{princ:granularity} outlines,
+techniques like these that approximate entire computations, including control
+flow, have the greatest efficiency potential.
 
 \subsection{Stochastic Computing}
 
@@ -144,7 +151,11 @@ For example, a wire could carry a random sequence of bits, where the wire's
 value corresponds
 to the probability that a given bit is a 1.
 Multiplication can be implemented in this model using a single \emph{and}
-gate.
+gate, so simple circuits can be low-power and area-efficient.
+A persistent challenge in stochastic circuits, however, is that reading and
+output value requires a number of bits that is exponential in the value's
+magnitude.
+Relaxing this constraint represents an opportunity for an time--accuracy trade-off.
 
 
 \section{Exploiting Resilience with Program Transformations}
@@ -154,8 +165,8 @@ Aside from hardware-level accuracy trade-offs, there are opportunities for
 adapting \emph{algorithms} to execute with varying precision. Algorithmic
 quality--complexity trade-offs are not new, but recent work has
 proposed
-tools for \emph{automatically} transforming programs to exhibit these
-trade-offs.
+tools for \emph{automatically} transforming programs to take advantage of
+them.
 Transformations include removing portions of a program's dynamic execution
 (termed \emph{code perforation})~\cite{perforation}, unsound
 parallelization of serial programs~\cite{quickstep}, eliminating
@@ -189,8 +200,8 @@ Similarly, STOKE's floating-point extension~\cite{stoke-fp} synthesizes new
 versions of floating-point functions from scratch to meet different accuracy
 requirements with optimal efficiency.
 
-Neural acceleration is a recent technique treading code as a black box and
-transforming it to a neural-network representation~\cite{npu, emeuro, benchnn,
+Neural acceleration is a recent technique that treats code as a black box and
+transforms it into a neural network~\cite{npu, emeuro, benchnn,
 temam-isca}.
 It is, at its core, an algorithmic transformation, but it integrates tightly
 with hardware support: a digital accelerator~\cite{npu}, analog
@@ -211,16 +222,16 @@ communication, with its reliance on imperfect underlying channels, exhibits
 opportunities for fidelity trade-offs~\cite{softcast, luo-globecom, apex,
 smpmup2006}. Notably, SoftCast~\cite{softcast} transmits images and video by
 making the signal magnitude directly proportional to pixel luminance.
-
+%
 BlinkDB,
 a recent instance of research on \emph{approximate query answering},
 is a database system that can respond to queries that include a required
 accuracy band on their output~\cite{blinkdb}.
-
+%
 Uncertain{\textless}T{\textgreater}~\cite{uncertaint} and Lax~\cite{lax}
 propose to expose the probabilistic behavior of sensors to
 programs.
-
+%
 In a distributed system or a supercomputer, approximation techniques can
 eschew redundancy and recovery for efficiency~\cite{dekruijf-icpp}.
 
@@ -259,7 +270,7 @@ A quality-of-service profiler helps programmers identify parts of programs
 that may be good targets for approximation techniques~\cite{qosprof}.
 Conversely, debugging tools can identify components where approximation is too
 aggressive~\cite{approxdebug}.
-
+%
 Some verification tools and proof systems help
 the programmer prove relationships between the original program and a
 candidate relaxed version~\cite{carbin-pldi, carbin-races, carbin-pepm,
@@ -292,7 +303,7 @@ Similarly, the probability monad captures a variable's discrete probability
 distribution in functional programs~\cite{pmonad}.
 Statistical model checking tools can analyze programs to prove statistical
 properties~\cite{legay10, KNP11}.
-Recently, \citet{uncertaint} proposed a construct for explicitly representing
+Recently, Bornholt \etal~\cite{uncertaint} proposed a construct for explicitly representing
 probability distributions in a mainstream programming language.
 
 
@@ -307,7 +318,7 @@ sought to identify and enhance error resilience properties.
 SJava analyzes programs to prove that
 errors only temporarily disrupt the execution path of a program~\cite{sjava}.
 Program smoothing~\cite{smoothing-cav, smoothing-pldi, smoothing-fse} and
-``robustification''~\cite{robustification} both find continuous, mathematical
+\textit{robustification}~\cite{robustification} both find continuous, mathematical
 functions that resemble the input--output behavior of numerical programs.
 Auto-tuning approaches can help empirically identify error-resilient
 components~\cite{asac}.
